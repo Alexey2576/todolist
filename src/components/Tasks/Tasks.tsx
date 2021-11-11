@@ -1,25 +1,24 @@
-import Task from "./Task/Task";
 import {TodoListType} from "../TodoList";
-
-export type TasksType = {
-    text: string,
-    isChecked: boolean
-}
 
 function Tasks(props: TodoListType) {
     return (
         <div>
-            <span>{props.titleTasks}</span>
-
+            <h3>{props.titleTasks}</h3>
             <input type="text"/>
-            <span> + </span>
-            <span> - </span>
-            {
-                props.tasks.map(t => {
-                        return <Task isChecked={t.isChecked} text={t.text}/>
-                    }
-                )
-            }
+            <button>Add</button>
+            <button>Remove</button>
+            {props.tasks.map(t => {
+                return (
+                    <div>
+                        <span>{t.text}</span>
+                        <button onClick={() => { props.removeTask(t.id)}}>Remove</button>
+                    </div>)
+            })}
+            <div>
+                <button onClick={() => {  }}>All</button>
+                <button>Active</button>
+                <button>Reading</button>
+            </div>
         </div>
     )
 }
