@@ -1,28 +1,47 @@
 import React, {useState} from 'react';
 import './App.css';
 import TodoList from "./components/TodoList";
+import {v1} from "uuid";
 
-function App() {
+export type TaskType = {
+   id: string
+   text: string
+   isChecked: boolean
+}
+export type FilterType = 'all' | 'active' | 'done'
 
-    let [tasks, setTasks] = useState([
-        {id: 1, text: "book", isChecked: true},
-        {id: 2, text: "car", isChecked: false},
-        {id: 3, text: "food", isChecked: true}
-    ])
+export const removeTask = (id: string, tasks: TaskType[]): TaskType[] => tasks.filter(t => t.id !== id)
+export const filerTasks = (filter: FilterType, tasks: TaskType[]): TaskType[] => {
+   switch (filter) {
+      case "active": return tasks.filter(t => !t.isChecked);
+      case "done": return tasks.filter(t => t.isChecked);
+      default: return tasks;
+   }
+}
+export const addTasks = (value: string, tasks: TaskType[]): TaskType[] => [...tasks, {id: v1(), text: value, isChecked: false}]
 
-    const removeTask = (id: number) => {
-        setTasks(tasks.filter(t => t.id !== id));
-    }
+const App = () => {
+   const [tasks, setTasks] = useState<TaskType[]>([
+      {id: v1(), text: "book", isChecked: true},
+      {id: v1(), text: "car", isChecked: false},
+      {id: v1(), text: "food", isChecked: true}
+   ])
+   const [filter, setFilter] = useState<FilterType>("all")
 
-    return (
-        <div className="App">
-            <TodoList titleTasks="Todo List"
-                      tasks={tasks}
-                      countTasks={3}
-                      removeTask={removeTask}
-            />
-        </div>
-    );
+   const removeTaskCallback = (id: string) => setTasks(removeTask(id, tasks))
+   const addTasksCallback = (value: string) => setTasks(addTasks(value, tasks))
+   const filteredTasks = filerTasks(filter, tasks)
+
+   return (
+      <div className="App">
+         <TodoList titleTasks="Todo List"
+                   tasks={filteredTasks}
+                   setFilter={setFilter}
+                   removeTaskCallback={removeTaskCallback}
+                   addTasksCallback={addTasksCallback}
+         />
+      </div>
+   );
 }
 
 export default App;
