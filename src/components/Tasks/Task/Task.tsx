@@ -1,19 +1,17 @@
-import React from "react";
+import React, {MouseEvent} from "react";
 
 export type TasksType = {
    id: string
    text: string
    isChecked: boolean
-   removeTaskCallback: (id: string) => void
+   removeTaskCallback: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 const Task: React.FC<TasksType> = ({id, text, isChecked, removeTaskCallback}) => {
-   const removeTask = () => {removeTaskCallback(id)}
-
    return (
       <div>
          <span>{text}</span>
-         <button onClick={removeTask}>X</button>
+         <button onClick={removeTaskCallback} id={id}>X</button>
       </div>
    )
 }

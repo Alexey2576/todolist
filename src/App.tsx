@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {MouseEvent, useState} from 'react';
 import './App.css';
 import TodoList from "./components/TodoList";
 import {v1} from "uuid";
@@ -28,17 +28,17 @@ const App = () => {
    ])
    const [filter, setFilter] = useState<FilterType>("all")
 
-   const removeTaskCallback = (id: string) => setTasks(removeTask(id, tasks))
    const addTasksCallback = (value: string) => setTasks(addTasks(value, tasks))
    const filteredTasks = filerTasks(filter, tasks)
+   const removeTaskCallback = (e: MouseEvent<HTMLButtonElement>) => {setTasks(removeTask(e.currentTarget.id, tasks))}
 
    return (
       <div className="App">
          <TodoList titleTasks="Todo List"
                    tasks={filteredTasks}
                    setFilter={setFilter}
-                   removeTaskCallback={removeTaskCallback}
                    addTasksCallback={addTasksCallback}
+                   removeTaskCallback={removeTaskCallback}
          />
       </div>
    );

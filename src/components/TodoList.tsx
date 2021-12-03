@@ -1,16 +1,16 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, MouseEvent, useState} from "react";
 import Task from "./Tasks/Task/Task";
 import {FilterType, TaskType} from "../App";
 
 export type TodoListType = {
    titleTasks: string
    tasks: TaskType[]
-   removeTaskCallback: (id: string) => void
    addTasksCallback: (value: string) => void
    setFilter: (filter: FilterType) => void
+   removeTaskCallback: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
-const TodoList: React.FC<TodoListType> = ({titleTasks, tasks, removeTaskCallback, setFilter, addTasksCallback}) => {
+const TodoList: React.FC<TodoListType> = ({titleTasks, tasks, setFilter, addTasksCallback, removeTaskCallback}) => {
    const [value, setValue] = useState<string>("")
    const [error, setError] = useState<string>("")
    const [isDisabled, setIsDisabled] = useState<boolean>(true)
@@ -59,7 +59,8 @@ const TodoList: React.FC<TodoListType> = ({titleTasks, tasks, removeTaskCallback
                                id={t.id}
                                text={t.text}
                                isChecked={t.isChecked}
-                               removeTaskCallback={removeTaskCallback}/>)}
+                               removeTaskCallback={removeTaskCallback}
+         />)}
 
          {/* === Filter buttons === */}
          <div>
