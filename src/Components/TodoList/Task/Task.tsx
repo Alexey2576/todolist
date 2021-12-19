@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import s from './Task.module.css'
-import {FilterType} from "../../App";
-import EditableSpan from "../EditableSpan/EditableSpan";
+import {FilterType} from "../../../App";
+import EditableSpan from "../../EditableSpan/EditableSpan";
 
 export type TaskType = {
    task_ID: string,

@@ -2,7 +2,7 @@ import React, {useReducer, useState} from 'react';
 import {TodoList} from "./Components/TodoList/TodoList";
 import {v1} from "uuid";
 import s from './App.module.css'
-import {TaskType} from "./Components/Task/Task";
+import {TaskType} from "./Components/TodoList/Task/Task";
 import InputText from "./Components/Input/InputText";
 import Button from "./Components/Button/Button";
 import {SelectStateType} from "./Components/Select/Select";
@@ -12,7 +12,7 @@ import {
    setNewSelectAC,
    setSelectItemAC,
    setVisibleAC
-} from "./Components/Select/SelectReducer";
+} from "./Components/Select/SelectBlockItems/SelectReducer/SelectReducer";
 
 export type TodoListsType = {
    todoList_ID: string

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import s from './TodoList.module.css'
-import Task, {TaskType} from "../Task/Task";
+import Task, {TaskType} from "./Task/Task";
 import EditableSpan from "../EditableSpan/EditableSpan";
 import InputText from "../Input/InputText";
 import Button from "../Button/Button";

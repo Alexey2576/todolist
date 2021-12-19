@@ -1,5 +1,5 @@
-import {SelectStateType} from "./Select";
-import {FilterType} from "../../App";
+import {SelectStateType} from "../../Select";
+import {FilterType} from "../../../../App";
 
 const SET_VISIBLE = "SET_VISIBLE"
 const SET_SELECT_ITEM = "SET_SELECT_ITEM"
@@ -23,7 +23,6 @@ export const selectReducer = (state: SelectStateType, action: DispatchType): Sel
                visible: !action.visible
             }
          }
-
       case SET_SELECT_ITEM: {
          return {
             ...state,
