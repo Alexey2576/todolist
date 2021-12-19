@@ -1,0 +1,37 @@
+.select {
+    width: 80px;
+    height: 100%;
+}
+
+.selected-item {
+    position: relative;
+}
+
+.selected-item button {
+    background-color: #cbffda;
+    border: 2px solid #2d8646;
+    border-radius: 5px;
+    width: 80px;
+    padding: 3px;
+    cursor: default;
+    font-size: 18px;
+}
+
+.list-item {
+    position: absolute;
+    width: 80px;
+    background-color: #cbffda;
+    border: 2px solid #2d8646;
+    border-radius: 5px;
+}
+
+.select-item {
+    cursor: default;
+    font-size: 20px;
+}
+
+
+
+.selected-item-in-block {
+    background-color: #8dffac;
+}
