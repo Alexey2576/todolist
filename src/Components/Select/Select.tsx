@@ -39,7 +39,6 @@ export const Select: React.FC<SelectType> = (
    const setNextValue = (e: KeyboardEvent<HTMLDivElement>) => {
       setNextValueCallBack(e.key)
    }
-
    return (
       <div className={"select"}>
          <div className={"selected-item"}

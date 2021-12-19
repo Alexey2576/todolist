@@ -10,17 +10,17 @@ export type DispatchType = {
    type: string,
    title: FilterType
    todoList_ID: string
+   visible?: boolean
 }
 
 export const selectReducer = (state: SelectStateType, action: DispatchType): SelectStateType => {
    switch (action.type) {
       case SET_VISIBLE:
-         debugger
          return {
             ...state,
             [action.todoList_ID]: {
                ...state[action.todoList_ID],
-               visible: !state[action.todoList_ID].visible
+               visible: !action.visible
             }
          }
 
@@ -61,8 +61,9 @@ export const selectReducer = (state: SelectStateType, action: DispatchType): Sel
 
 export const setVisibleAC = (
    dispatch: (dispatch: DispatchType) => void,
-   todoList_ID: string
-) => dispatch({type: SET_VISIBLE, title: "High", todoList_ID})
+   todoList_ID: string,
+   visible: boolean
+) => dispatch({type: SET_VISIBLE, title: "High", todoList_ID, visible})
 
 export const setSelectItemAC = (
    dispatch: (dispatch: DispatchType) => void,
@@ -77,4 +78,4 @@ export const setHoveredItemAC = (
 export const setNewSelectAC = (
    dispatch: (dispatch: DispatchType) => void,
    todoList_ID: string
-) => dispatch({type: SET_VISIBLE, title: "High", todoList_ID})
+) => dispatch({type: SET_NEW_SELECT, title: "High", todoList_ID})

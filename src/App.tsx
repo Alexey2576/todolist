@@ -54,7 +54,7 @@ const App = () => {
          ],
          selectItem: "High",
          hoveredItem: "High",
-         visible: false
+         visible: true
       },
       [todoList_ID_2]: {
          list: [
@@ -63,8 +63,8 @@ const App = () => {
             {id: 2, title: "Low"},
          ],
          selectItem: "High",
-         hoveredItem: "All",
-         visible: false
+         hoveredItem: "High",
+         visible: true
       }
    }
    const [stateSelect, dispatch] = useReducer(selectReducer, initialState)
@@ -133,14 +133,14 @@ const App = () => {
             const setMiddleHandler = () => changeFilterTodoList(tl.todoList_ID, "Middle")
             const setLowHandler = () => changeFilterTodoList(tl.todoList_ID, "Low")
 
-            const onClickSelectedItem = () => setVisibleAC(dispatch, tl.todoList_ID)
+            const onClickSelectedItem = () => setVisibleAC(dispatch, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
             const setSelectItemCallback = (title: FilterType) => {
                setSelectItemAC(dispatch, title, tl.todoList_ID)
-               setVisibleAC(dispatch, tl.todoList_ID)
+               setVisibleAC(dispatch, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
             }
             const onBlurSelectBlockItems = () => {
                setSelectItemAC(dispatch, stateSelect[tl.todoList_ID].hoveredItem, tl.todoList_ID)
-               setVisibleAC(dispatch, tl.todoList_ID)
+               setVisibleAC(dispatch, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
             }
             const setNextValueCallBack = (key: string) => {
                const item = stateSelect[tl.todoList_ID].list.find(
