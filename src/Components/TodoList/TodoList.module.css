@@ -1,0 +1,68 @@
+.todoList {
+    text-align: center;
+}
+.todoList_title_block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.title_input {
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-right: 10px;
+    font-size: 22px;
+    cursor: default;
+    width: 150px;
+}
+
+.title_btn {
+    font-size: 10px;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
+.add_task_block {
+    display: flex;
+    margin: 5px;
+    align-items: center;
+}
+
+.add_task_input {
+    width: 200px;
+    margin-right: 5px;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 2px 10px;
+}
+
+.add_task_button {
+    font-size: 20px;
+    border-radius: 5px;
+    background-color: #ffefcb;
+    border: 2px solid #dcb242;
+    padding: 2px 10px;
+    margin-bottom: 15px;
+}
+.task_block {
+    display: flex;
+    align-items: center;
+    margin: 10px 5px;
+    background-color: #acfdfd;
+    border: 2px solid #34a4a4;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.task_button {
+    margin-left: 10px;
+    font-size: 14px;
+    border-radius: 50%;
+    background-color: #e5bbff;
+    border: 2px solid #ba44ff;
+    padding: 2px 5px;
+    cursor: pointer;
+}
