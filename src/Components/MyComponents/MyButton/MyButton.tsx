@@ -7,7 +7,7 @@ type ButtonPropsType = DefaultButtonPropsType & {
    errorButton?: string
 }
 
-const Button: React.FC<ButtonPropsType> = (
+const MyButton: React.FC<ButtonPropsType> = (
    {
       error,
       className,
@@ -25,4 +25,4 @@ const Button: React.FC<ButtonPropsType> = (
    )
 }
 
-export default Button
+export default MyButton

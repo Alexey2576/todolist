@@ -1,5 +1,5 @@
 import React, {DetailedHTMLProps, HTMLAttributes, InputHTMLAttributes, useState} from 'react'
-import InputText from "../Input/InputText";
+import MyInputText from "../MyInput/MyInputText";
 
 type DefaultInputPropsType = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 type DefaultSpanPropsType = DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>
@@ -13,7 +13,7 @@ type EditableSpanType = DefaultInputPropsType & {
    spanProps?: DefaultSpanPropsType // пропсы для спана
 }
 
-const EditableSpan: React.FC<EditableSpanType> = (
+const MyEditableSpan: React.FC<EditableSpanType> = (
    {
       autoFocus, // игнорировать изменение этого пропса
       onBlur,
@@ -48,12 +48,12 @@ const EditableSpan: React.FC<EditableSpanType> = (
       <>
          {editMode
             ? (
-               <InputText autoFocus
-                          onBlur={onBlurHandler}
-                          onEnter={onEnterCallback}
-                          className={restProps.className}
-                          spanClassName={restProps.spanClassName}
-                          {...restProps}/>)
+               <MyInputText autoFocus
+                            onBlur={onBlurHandler}
+                            onEnter={onEnterCallback}
+                            className={restProps.className}
+                            spanClassName={restProps.spanClassName}
+                            {...restProps}/>)
             : (
                <span onDoubleClick={onDoubleClickCallBack}
                      className={spanClassName}
@@ -68,4 +68,4 @@ const EditableSpan: React.FC<EditableSpanType> = (
    )
 }
 
-export default EditableSpan
+export default MyEditableSpan

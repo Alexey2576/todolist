@@ -1,4 +1,4 @@
-import {SelectStateType} from "../../Select";
+import {SelectStateType} from "../../MySelect";
 import {FilterType} from "../../../../App";
 
 export type DispatchSelectType = {

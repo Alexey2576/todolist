@@ -9,7 +9,7 @@ type SelectBlockItemsType = {
    setHoveredItem: (title: FilterType) => void
 }
 
-export const SelectBlockItems: React.FC<SelectBlockItemsType> = (
+export const MySelectBlockItems: React.FC<SelectBlockItemsType> = (
    {
       list,
       setSelectItemCallback,

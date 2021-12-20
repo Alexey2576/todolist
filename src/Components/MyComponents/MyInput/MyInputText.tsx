@@ -12,7 +12,7 @@ type InputTextPropsType = DefaultInputPropsType & {
    label?: string
 }
 
-const InputText: React.FC<InputTextPropsType> = (
+const MyInputText: React.FC<InputTextPropsType> = (
    {
       type, // достаём и игнорируем чтоб нельзя было задать другой тип инпута
       onChange, onChangeText,
@@ -60,4 +60,4 @@ const InputText: React.FC<InputTextPropsType> = (
    )
 }
 
-export default InputText
+export default MyInputText

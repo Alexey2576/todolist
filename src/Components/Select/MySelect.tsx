@@ -1,8 +1,8 @@
 import React, {KeyboardEvent} from "react";
 import {MySelectItemType} from "./SelectBlockItems/SelectItem/MySelectItem";
-import {SelectBlockItems} from "./SelectBlockItems/SelectBlockItems";
+import {MySelectBlockItems} from "./SelectBlockItems/MySelectBlockItems";
 import {FilterType} from "../../App";
-import './Select.css'
+import './MySelect.css'
 
 
 type SelectType = {
@@ -24,7 +24,7 @@ export type SelectStateType = {
    }
 }
 
-export const Select: React.FC<SelectType> = (
+export const MySelect: React.FC<SelectType> = (
    {
       todoList_ID,
       stateSelect,
@@ -46,10 +46,10 @@ export const Select: React.FC<SelectType> = (
               onClick={onClickSelectedItem}>
             <button autoFocus onBlur={onBlurSelectBlockItems}>{stateSelect[todoList_ID].selectItem}</button>
          </div>
-         {stateSelect[todoList_ID].visible && <SelectBlockItems list={stateSelect[todoList_ID].list}
-                                                                setSelectItemCallback={setSelectItemCallback}
-                                                                hoveredItem={stateSelect[todoList_ID].hoveredItem}
-                                                                setHoveredItem={setHoveredItem}/>
+         {stateSelect[todoList_ID].visible && <MySelectBlockItems list={stateSelect[todoList_ID].list}
+                                                                  setSelectItemCallback={setSelectItemCallback}
+                                                                  hoveredItem={stateSelect[todoList_ID].hoveredItem}
+                                                                  setHoveredItem={setHoveredItem}/>
          }
       </div>
    )

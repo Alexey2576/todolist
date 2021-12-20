@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import s from './TodoList.module.css'
 import Task, {TaskType} from "./Task/Task";
-import EditableSpan from "../EditableSpan/EditableSpan";
-import InputText from "../Input/InputText";
-import Button from "../Button/Button";
-import {Select, SelectStateType} from "../Select/Select";
+import {MySelect, SelectStateType} from "../Select/MySelect";
 import {FilterType} from "../../App";
+import MyEditableSpan from "../MyComponents/MyEditableSpan/MyEditableSpan";
+import MyButton from "../MyComponents/MyButton/MyButton";
+import MyInputText from "../MyComponents/MyInput/MyInputText";
 
 export type TodoListType = {
    todoList_ID: string
@@ -55,28 +55,28 @@ export const TodoList: React.FC<TodoListType> = (
    return (
       <div className={s.todoList}>
          <div className={s.todoList_title_block}>
-            <EditableSpan value={valueTitle}
-                          spanProps={{children: title ? undefined : valueTitle}}
-                          onChangeText={onChangeTextTitle}
-                          className={s.title_input}/>
-            <Button className={s.title_btn}
-                    onClick={onClickRemoveTodoList}>X</Button>
+            <MyEditableSpan value={valueTitle}
+                            spanProps={{children: title ? undefined : valueTitle}}
+                            onChangeText={onChangeTextTitle}
+                            className={s.title_input}/>
+            <MyButton className={s.title_btn}
+                      onClick={onClickRemoveTodoList}>X</MyButton>
          </div>
          <div className={s.add_task_block}>
-            <InputText value={valueTask}
-                       onChangeText={onChangeTextTask}
-                       className={s.add_task_input}/>
-            <Select todoList_ID={todoList_ID}
-                    onClickSelectedItem={onClickSelectedItem}
-                    setSelectItemCallback={setSelectItemCallback}
-                    onBlurSelectBlockItems={onBlurSelectBlockItems}
-                    setNextValueCallBack={setNextValueCallBack}
-                    setHoveredItem={setHoveredItem}
-                    stateSelect={stateSelect}
-                    key={todoList_ID}/>
+            <MyInputText value={valueTask}
+                         onChangeText={onChangeTextTask}
+                         className={s.add_task_input}/>
+            <MySelect todoList_ID={todoList_ID}
+                      onClickSelectedItem={onClickSelectedItem}
+                      setSelectItemCallback={setSelectItemCallback}
+                      onBlurSelectBlockItems={onBlurSelectBlockItems}
+                      setNextValueCallBack={setNextValueCallBack}
+                      setHoveredItem={setHoveredItem}
+                      stateSelect={stateSelect}
+                      key={todoList_ID}/>
          </div>
-         <Button onClick={onClickAddTask}
-                 className={s.add_task_button}>Add</Button>
+         <MyButton onClick={onClickAddTask}
+                   className={s.add_task_button}>Add</MyButton>
          {tasks.map(t => {
 
             const onClickRemoveTask = () => removeTaskCallback(todoList_ID, t.task_ID)
@@ -87,8 +87,8 @@ export const TodoList: React.FC<TodoListType> = (
                         task_ID={t.task_ID}
                         task_title={t.task_title}
                         task_priority={t.task_priority}/>
-                  <Button className={s.task_button}
-                          onClick={onClickRemoveTask}>X</Button>
+                  <MyButton className={s.task_button}
+                            onClick={onClickRemoveTask}>X</MyButton>
                </div>
             )
          })}
