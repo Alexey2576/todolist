@@ -1,21 +1,16 @@
 import {SelectStateType} from "../../Select";
 import {FilterType} from "../../../../App";
 
-const SET_VISIBLE = "SET_VISIBLE"
-const SET_SELECT_ITEM = "SET_SELECT_ITEM"
-const SET_HOVERED_ITEM = "SET_HOVERED_ITEM"
-const SET_NEW_SELECT = "SET_NEW_SELECT"
-
-export type DispatchType = {
-   type: string,
+export type DispatchSelectType = {
+   type: "SET_VISIBLE" | "SET_SELECT_ITEM" | "SET_HOVERED_ITEM" | "SET_NEW_SELECT"
    title: FilterType
    todoList_ID: string
    visible?: boolean
 }
 
-export const selectReducer = (state: SelectStateType, action: DispatchType): SelectStateType => {
+export const selectReducer = (state: SelectStateType, action: DispatchSelectType): SelectStateType => {
    switch (action.type) {
-      case SET_VISIBLE:
+      case "SET_VISIBLE":
          return {
             ...state,
             [action.todoList_ID]: {
@@ -23,7 +18,7 @@ export const selectReducer = (state: SelectStateType, action: DispatchType): Sel
                visible: !action.visible
             }
          }
-      case SET_SELECT_ITEM: {
+      case "SET_SELECT_ITEM": {
          return {
             ...state,
             [action.todoList_ID]: {
@@ -32,7 +27,7 @@ export const selectReducer = (state: SelectStateType, action: DispatchType): Sel
             }
          }
       }
-      case SET_HOVERED_ITEM: {
+      case "SET_HOVERED_ITEM": {
          return {
             ...state,
             [action.todoList_ID]: {
@@ -41,7 +36,7 @@ export const selectReducer = (state: SelectStateType, action: DispatchType): Sel
             }
          }
       }
-      case SET_NEW_SELECT: {
+      case "SET_NEW_SELECT": {
          state[action.todoList_ID] = {
             list: [
                {id: 0, title: "High"},
@@ -59,22 +54,22 @@ export const selectReducer = (state: SelectStateType, action: DispatchType): Sel
 }
 
 export const setVisibleAC = (
-   dispatch: (dispatch: DispatchType) => void,
+   dispatch: (dispatch: DispatchSelectType) => void,
    todoList_ID: string,
    visible: boolean
-) => dispatch({type: SET_VISIBLE, title: "High", todoList_ID, visible})
+) => dispatch({type: "SET_VISIBLE", title: "High", todoList_ID, visible})
 
 export const setSelectItemAC = (
-   dispatch: (dispatch: DispatchType) => void,
+   dispatch: (dispatch: DispatchSelectType) => void,
    title: FilterType, todoList_ID: string
-) => dispatch({type: SET_SELECT_ITEM, title, todoList_ID})
+) => dispatch({type: "SET_SELECT_ITEM", title, todoList_ID})
 
 export const setHoveredItemAC = (
-   dispatch: (dispatch: DispatchType) => void,
+   dispatch: (dispatch: DispatchSelectType) => void,
    title: FilterType, todoList_ID: string
-) => dispatch({type: SET_HOVERED_ITEM, title, todoList_ID})
+) => dispatch({type: "SET_HOVERED_ITEM", title, todoList_ID})
 
 export const setNewSelectAC = (
-   dispatch: (dispatch: DispatchType) => void,
+   dispatch: (dispatch: DispatchSelectType) => void,
    todoList_ID: string
-) => dispatch({type: SET_NEW_SELECT, title: "High", todoList_ID})
+) => dispatch({type: "SET_NEW_SELECT", title: "High", todoList_ID})

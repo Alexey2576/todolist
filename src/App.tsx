@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import {TodoList} from "./Components/TodoList/TodoList";
 import {v1} from "uuid";
 import s from './App.module.css'
@@ -13,6 +13,15 @@ import {
    setSelectItemAC,
    setVisibleAC
 } from "./Components/Select/SelectBlockItems/SelectReducer/SelectReducer";
+import {
+   addTaskAC,
+   addTodoListAC,
+   removeTaskAC,
+   removeTodoListAC,
+   setFilterTodoListAC,
+   setValueInputAddTodoListAC,
+   todoListReducer
+} from "./Components/TodoList/TodoListReducer/TodoListReducer";
 
 export type TodoListsType = {
    todoList_ID: string
@@ -23,29 +32,39 @@ export type TasksType = {
    [todoList_ID: string]: TaskType[]
 }
 export type FilterType = "High" | "Middle" | "Low" | "All"
+export type TodoListStateType = {
+   todoLists: TodoListsType[]
+   tasks: TasksType
+   valueInputAddTodoList: string
+   error: string
+}
 
 const App = () => {
    const todoList_ID_1 = v1()
    const todoList_ID_2 = v1()
 
-   const [todoLists, setTodoLists] = useState<TodoListsType[]>([
-      {todoList_ID: todoList_ID_1, title: "TodoList 1", filter: "All"},
-      {todoList_ID: todoList_ID_2, title: "TodoList 2", filter: "All"},
-   ])
-   const [tasks, setTasks] = useState<TasksType>({
-      [todoList_ID_1]: [
-         {task_ID: "1", task_title: "HTML", task_priority: "High"},
-         {task_ID: "2", task_title: "CSS", task_priority: "Middle"},
-         {task_ID: "3", task_title: "REACT", task_priority: "Low"}
+   //========================================== INITIAL STATES ========================================================
+   const initialTodoListState: TodoListStateType = {
+      todoLists: [
+         {todoList_ID: todoList_ID_1, title: "TodoList 1", filter: "All"},
+         {todoList_ID: todoList_ID_2, title: "TodoList 2", filter: "All"},
       ],
-      [todoList_ID_2]: [
-         {task_ID: "1", task_title: "HTML5", task_priority: "High"},
-         {task_ID: "2", task_title: "CSS3", task_priority: "Middle"},
-         {task_ID: "3", task_title: "REDUX", task_priority: "Low"}
-      ]
-   })
-
-   const initialState: SelectStateType = {
+      tasks: {
+         [todoList_ID_1]: [
+            {task_ID: "1", task_title: "HTML", task_priority: "High"},
+            {task_ID: "2", task_title: "CSS", task_priority: "Middle"},
+            {task_ID: "3", task_title: "REACT", task_priority: "Low"}
+         ],
+         [todoList_ID_2]: [
+            {task_ID: "1", task_title: "HTML5", task_priority: "High"},
+            {task_ID: "2", task_title: "CSS3", task_priority: "Middle"},
+            {task_ID: "3", task_title: "REDUX", task_priority: "Low"}
+         ]
+      },
+      valueInputAddTodoList: "",
+      error: ""
+   }
+   const initialSelectState: SelectStateType = {
       [todoList_ID_1]: {
          list: [
             {id: 0, title: "High"},
@@ -67,80 +86,63 @@ const App = () => {
          visible: true
       }
    }
-   const [stateSelect, dispatch] = useReducer(selectReducer, initialState)
 
-   const [value, setValue] = useState<string>("")
-   const [error, setError] = useState<string>("")
+   //==================================== TODOLIST AND SELECT REDUCERS=================================================
+   const [stateTodoList, dispatchTodoList] = useReducer(todoListReducer, initialTodoListState)
+   const [stateSelect, dispatchSelect] = useReducer(selectReducer, initialSelectState)
 
-   const onClickAddTodoList = () => {
-      if (error === "" && value.length) {
-         const newTodoList: TodoListsType = {todoList_ID: v1(), title: value, filter: "All"}
-         setTodoLists([...todoLists, newTodoList])
-         setTasks({...tasks, [newTodoList.todoList_ID]: []})
-         setNewSelectAC(dispatch, newTodoList.todoList_ID)
-         setValue("")
+   //========================================= TODOLIST CALLBACKS =====================================================
+   const addTodoListHandler = () => {
+      if (stateTodoList.error === "" && stateTodoList.valueInputAddTodoList.length) {
+         const newTodoList_ID = v1()
+         addTodoListAC(dispatchTodoList, newTodoList_ID)
+         setNewSelectAC(dispatchSelect, newTodoList_ID)
       }
    }
    const addTaskCallback = (todoList_ID: string, value: string) => {
-      if (error === "" && value.length) {
-         const newTask: TaskType = {
-            task_ID: v1(),
-            task_title: value,
-            task_priority: stateSelect[todoList_ID].selectItem
-         }
-         setTasks({...tasks, [todoList_ID]: [...tasks[todoList_ID], newTask]})
-      }
+      stateTodoList.error === "" && value.length
+      && addTaskAC(dispatchTodoList, value, todoList_ID, stateSelect[todoList_ID].selectItem)
    }
-   const removeTaskCallback = (todoList_ID: string, task_ID: string) => {
-      tasks[todoList_ID] = tasks[todoList_ID].filter(t => t.task_ID !== task_ID)
-      setTasks({...tasks})
-   }
-   const removeTodoListCallback = (todoList_ID: string) => {
-      const newTodoLists = todoLists.filter(tl => tl.todoList_ID !== todoList_ID)
-      setTodoLists(newTodoLists)
-      delete tasks[todoList_ID]
-      setTasks({...tasks})
-   }
-   const onChangeTextNewTodoList = (value: string) => setValue(value)
-   const onEnter = () => setValue(value)
+   const removeTaskCallback = (todoList_ID: string, task_ID: string) => removeTaskAC(dispatchTodoList, todoList_ID, task_ID)
+   const removeTodoListCallback = (todoList_ID: string) => removeTodoListAC(dispatchTodoList, todoList_ID)
+   const changeTextNewTodoListHandler = (value: string) => setValueInputAddTodoListAC(dispatchTodoList, value)
    const filterTasks = (todoList_ID: string, filter: FilterType): TaskType[] => {
-      if (filter === "High") return tasks[todoList_ID].filter(t => t.task_priority === "High")
-      else if (filter === "Middle") return tasks[todoList_ID].filter(t => t.task_priority === "Middle")
-      else if (filter === "Low") return tasks[todoList_ID].filter(t => t.task_priority === "Low")
-      else return tasks[todoList_ID]
+      if (filter === "High") return stateTodoList.tasks[todoList_ID].filter(t => t.task_priority === "High")
+      else if (filter === "Middle") return stateTodoList.tasks[todoList_ID].filter(t => t.task_priority === "Middle")
+      else if (filter === "Low") return stateTodoList.tasks[todoList_ID].filter(t => t.task_priority === "Low")
+      else return stateTodoList.tasks[todoList_ID]
    }
-   const changeFilterTodoList = (todoList_ID: string, filter: FilterType) => setTodoLists(
-      todoLists.map(tl => tl.todoList_ID === todoList_ID ? {
-         ...tl,
-         filter: filter
-      } : tl)
-   )
+   const changeFilterTodoList = (todoList_ID: string, filter: FilterType) => setFilterTodoListAC(dispatchTodoList, todoList_ID, filter)
 
    return (
       <div className={s.todoLists}>
-         <div className={s.add_todoList}>
-            <InputText value={value}
-                       onChangeText={onChangeTextNewTodoList}
-                       onEnter={onEnter}
-                       className={s.add_todoList_input}
-            />
-            <Button onClick={onClickAddTodoList} className={s.add_todoList_button}>Add</Button>
-         </div>
-         {todoLists.map(tl => {
 
+         {/* ============================ ADD NEW TODOLIST BLOCK ===============================*/}
+         <div className={s.add_todoList}>
+            <InputText value={stateTodoList.valueInputAddTodoList}
+                       onChangeText={changeTextNewTodoListHandler}
+                       onEnter={addTodoListHandler}
+                       className={s.add_todoList_input}/>
+            <Button onClick={addTodoListHandler}
+                    className={s.add_todoList_button}>Add</Button>
+         </div>
+         {stateTodoList.todoLists.map(tl => {
+
+            //====================================== FILTER BUTTONS HANDLERS ==========================================
             const setAllHandler = () => changeFilterTodoList(tl.todoList_ID, "All")
             const setHighHandler = () => changeFilterTodoList(tl.todoList_ID, "High")
             const setMiddleHandler = () => changeFilterTodoList(tl.todoList_ID, "Middle")
             const setLowHandler = () => changeFilterTodoList(tl.todoList_ID, "Low")
 
-            const onClickSelectedItem = () => setVisibleAC(dispatch, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
+            //========================================= SELECT CALLBACKS ==============================================
+            const onClickSelectedItem = () => setVisibleAC(dispatchSelect, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
             const setSelectItemCallback = (title: FilterType) => {
-               setSelectItemAC(dispatch, title, tl.todoList_ID)
-               setVisibleAC(dispatch, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
+               setSelectItemAC(dispatchSelect, title, tl.todoList_ID)
+               setVisibleAC(dispatchSelect, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
             }
             const onBlurSelectBlockItems = () => {
-               setSelectItemAC(dispatch, stateSelect[tl.todoList_ID].hoveredItem, tl.todoList_ID)
-               setVisibleAC(dispatch, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
+               setSelectItemAC(dispatchSelect, stateSelect[tl.todoList_ID].hoveredItem, tl.todoList_ID)
+               setVisibleAC(dispatchSelect, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
             }
             const setNextValueCallBack = (key: string) => {
                const item = stateSelect[tl.todoList_ID].list.find(
@@ -152,11 +154,11 @@ const App = () => {
                   if (key === "ArrowDown") {
                      if (nextIdIndex < stateSelect[tl.todoList_ID].list.length) {
                         setHoveredItemAC(
-                           dispatch,
+                           dispatchSelect,
                            stateSelect[tl.todoList_ID].list[nextIdIndex].title, tl.todoList_ID
                         )
                         setSelectItemAC(
-                           dispatch,
+                           dispatchSelect,
                            stateSelect[tl.todoList_ID].list[nextIdIndex].title, tl.todoList_ID
                         )
                      }
@@ -164,16 +166,16 @@ const App = () => {
                   if (key === "ArrowUp") {
                      if (prevIdIndex >= 0) {
                         setHoveredItemAC(
-                           dispatch, stateSelect[tl.todoList_ID].list[prevIdIndex].title, tl.todoList_ID
+                           dispatchSelect, stateSelect[tl.todoList_ID].list[prevIdIndex].title, tl.todoList_ID
                         )
                         setSelectItemAC(
-                           dispatch, stateSelect[tl.todoList_ID].list[prevIdIndex].title, tl.todoList_ID
+                           dispatchSelect, stateSelect[tl.todoList_ID].list[prevIdIndex].title, tl.todoList_ID
                         )
                      }
                   }
                }
             }
-            const setHoveredItem = (title: FilterType) => setHoveredItemAC(dispatch, title, tl.todoList_ID)
+            const setHoveredItem = (title: FilterType) => setHoveredItemAC(dispatchSelect, title, tl.todoList_ID)
 
             return (
                <div className={s.todoList}>
@@ -192,6 +194,8 @@ const App = () => {
                             setSelectItemCallback={setSelectItemCallback}
                             setHoveredItem={setHoveredItem}
                   />
+
+                  {/* ============================ FILTER BUTTON BLOCK ===============================*/}
                   <div className={s.filter_button_block}>
                      <Button onClick={setAllHandler} className={s.filter_button}>All</Button>
                      <Button onClick={setHighHandler} className={s.filter_button}>High</Button>
