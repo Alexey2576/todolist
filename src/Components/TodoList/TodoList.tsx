@@ -1,43 +1,31 @@
-import React, {useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import s from './TodoList.module.css'
 import Task, {TaskType} from "./Task/Task";
-import {MySelect, SelectStateType} from "../Select/MySelect";
-import {FilterType} from "../../App";
-import MyEditableSpan from "../MyComponents/MyEditableSpan/MyEditableSpan";
+import {EditableSpan} from "../MyComponents/MyEditableSpan/MyEditableSpan";
 import MyButton from "../MyComponents/MyButton/MyButton";
-import MyInputText from "../MyComponents/MyInput/MyInputText";
+import {FilterType} from "../../App";
 
 export type TodoListType = {
    todoList_ID: string
    title: string
+   selectValue: FilterType
    tasks: TaskType[]
-   addTaskCallback: (todoList_ID: string, value: string) => void
+   addTaskCallback: (todoList_ID: string, value: string, selectValue: FilterType) => void
    removeTaskCallback: (todoList_ID: string, task_ID: string) => void
    removeTodoListCallback: (todoList_ID: string) => void
-
-   stateSelect: SelectStateType
-   onClickSelectedItem: () => void
-   setSelectItemCallback: (title: FilterType) => void
-   onBlurSelectBlockItems: () => void
-   setNextValueCallBack: (key: string) => void
-   setHoveredItem: (title: FilterType) => void
+   changeValueSelectCallback: (todoList_ID: string, selectValue: FilterType) => void
 }
 
 export const TodoList: React.FC<TodoListType> = (
    {
       todoList_ID,
       title,
+      selectValue,
       tasks,
       addTaskCallback,
       removeTaskCallback,
       removeTodoListCallback,
-
-      setHoveredItem,
-      onClickSelectedItem,
-      stateSelect,
-      onBlurSelectBlockItems,
-      setSelectItemCallback,
-      setNextValueCallBack
+      changeValueSelectCallback
    }
 ) => {
 
@@ -47,34 +35,28 @@ export const TodoList: React.FC<TodoListType> = (
    const onChangeTextTitle = (value: string) => setValueTitle(value)
    const onChangeTextTask = (value: string) => setValueTask(value)
    const onClickAddTask = () => {
-      addTaskCallback(todoList_ID, valueTask)
+      addTaskCallback(todoList_ID, valueTask, selectValue)
       setValueTask("")
    }
    const onClickRemoveTodoList = () => removeTodoListCallback(todoList_ID)
-
+   const changeValueSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+      changeValueSelectCallback(todoList_ID, e.target.value as FilterType)
+   }
    return (
       <div className={s.todoList}>
          <div className={s.todoList_title_block}>
-            <MyEditableSpan value={valueTitle}
-                            spanProps={{children: title ? undefined : valueTitle}}
-                            onChangeText={onChangeTextTitle}
-                            className={s.title_input}/>
+            <EditableSpan value={valueTitle}
+                          onChangeTextTitle={onChangeTextTitle}/>
             <MyButton className={s.title_btn}
                       onClick={onClickRemoveTodoList}>X</MyButton>
          </div>
-         <div className={s.add_task_block}>
-            <MyInputText value={valueTask}
-                         onChangeText={onChangeTextTask}
-                         className={s.add_task_input}/>
-            <MySelect todoList_ID={todoList_ID}
-                      onClickSelectedItem={onClickSelectedItem}
-                      setSelectItemCallback={setSelectItemCallback}
-                      onBlurSelectBlockItems={onBlurSelectBlockItems}
-                      setNextValueCallBack={setNextValueCallBack}
-                      setHoveredItem={setHoveredItem}
-                      stateSelect={stateSelect}
-                      key={todoList_ID}/>
-         </div>
+         <input type="text" value={valueTask} onChange={(e) => {onChangeTextTask(e.currentTarget.value)}}/>
+         <select value={selectValue} onChange={changeValueSelectHandler}>
+            <option value="High">High</option>
+            <option value="Middle">Middle</option>
+            <option value="Low">Low</option>
+         </select>
+
          <MyButton onClick={onClickAddTask}
                    className={s.add_task_button}>Add</MyButton>
          {tasks.map(t => {

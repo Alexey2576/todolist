@@ -3,21 +3,13 @@ import {TodoList} from "./Components/TodoList/TodoList";
 import {v1} from "uuid";
 import s from './App.module.css'
 import {TaskType} from "./Components/TodoList/Task/Task";
-import {SelectStateType} from "./Components/Select/MySelect";
-import {
-   selectReducer,
-   setHoveredItemAC,
-   setNewSelectAC,
-   setSelectItemAC,
-   setVisibleAC
-} from "./Components/Select/SelectBlockItems/SelectReducer/SelectReducer";
 import {
    addTaskAC,
    addTodoListAC,
    removeTaskAC,
    removeTodoListAC,
    setFilterTodoListAC,
-   setValueInputAddTodoListAC,
+   setValueInputAddTodoListAC, setValueSelectAC,
    todoListReducer
 } from "./Components/TodoList/TodoListReducer/TodoListReducer";
 import {FilterButtons} from "./Components/FilterButtons/FilterButtons";
@@ -27,6 +19,7 @@ export type TodoListsType = {
    todoList_ID: string
    title: string
    filter: FilterType
+   selectValue: FilterType
 }
 export type TasksType = {
    [todoList_ID: string]: TaskType[]
@@ -47,8 +40,8 @@ const App = () => {
    //========================================== INITIAL STATES ========================================================
    const initialTodoListState: TodoListStateType = {
       todoLists: [
-         {todoList_ID: todoList_ID_1, title: "TodoList 1", filter: "All"},
-         {todoList_ID: todoList_ID_2, title: "TodoList 2", filter: "All"},
+         {todoList_ID: todoList_ID_1, title: "TodoList 1", filter: "All", selectValue: "High"},
+         {todoList_ID: todoList_ID_2, title: "TodoList 2", filter: "All", selectValue: "High",},
       ],
       tasks: {
          [todoList_ID_1]: [
@@ -65,49 +58,26 @@ const App = () => {
       valueInputAddTodoList: "",
       error: ""
    }
-   const initialSelectState: SelectStateType = {
-      [todoList_ID_1]: {
-         list: [
-            {id: 0, title: "High"},
-            {id: 1, title: "Middle"},
-            {id: 2, title: "Low"},
-         ],
-         selectItem: "High",
-         hoveredItem: "High",
-         visible: true
-      },
-      [todoList_ID_2]: {
-         list: [
-            {id: 0, title: "High"},
-            {id: 1, title: "Middle"},
-            {id: 2, title: "Low"},
-         ],
-         selectItem: "High",
-         hoveredItem: "High",
-         visible: true
-      }
-   }
 
    //==================================== TODOLIST AND SELECT REDUCERS=================================================
    const [stateTodoList, dispatchTodoList] = useReducer(todoListReducer, initialTodoListState)
-   const [stateSelect, dispatchSelect] = useReducer(selectReducer, initialSelectState)
 
    //========================================= TODOLIST CALLBACKS =====================================================
    const addTodoListCallback = () => {
       if (stateTodoList.error === "" && stateTodoList.valueInputAddTodoList.length) {
          const newTodoList_ID = v1()
          addTodoListAC(dispatchTodoList, newTodoList_ID)
-         setNewSelectAC(dispatchSelect, newTodoList_ID)
       }
    }
-   const addTaskCallback = (todoList_ID: string, value: string) => {
+   const addTaskCallback = (todoList_ID: string, value: string, selectValue: FilterType) => {
       stateTodoList.error === "" && value.length
-      && addTaskAC(dispatchTodoList, value, todoList_ID, stateSelect[todoList_ID].selectItem)
+      && addTaskAC(dispatchTodoList, value, todoList_ID, selectValue)
    }
    const removeTaskCallback = (todoList_ID: string, task_ID: string) => removeTaskAC(dispatchTodoList, todoList_ID, task_ID)
    const removeTodoListCallback = (todoList_ID: string) => removeTodoListAC(dispatchTodoList, todoList_ID)
    const changeTextNewTodoListCallback = (value: string) => setValueInputAddTodoListAC(dispatchTodoList, value)
    const changeFilterTodoListCallback = (todoList_ID: string, filter: FilterType) => setFilterTodoListAC(dispatchTodoList, todoList_ID, filter)
+   const changeValueSelectCallback = (todoList_ID: string, selectValue: FilterType) => setValueSelectAC(dispatchTodoList, todoList_ID, selectValue)
 
    //========================================= FILTERED TASKS ========================================================
    const setFilteredTasks = (todoList_ID: string, filter: FilterType): TaskType[] => {
@@ -124,66 +94,17 @@ const App = () => {
                          changeTextNewTodoListCallback={changeTextNewTodoListCallback}/>
 
          { stateTodoList.todoLists.map(tl => {
-
-            //========================================= SELECT CALLBACKS ==============================================
-            const onClickSelectedItem = () => setVisibleAC(dispatchSelect, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
-            const setSelectItemCallback = (title: FilterType) => {
-               setSelectItemAC(dispatchSelect, title, tl.todoList_ID)
-               setVisibleAC(dispatchSelect, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
-            }
-            const onBlurSelectBlockItems = () => {
-               setSelectItemAC(dispatchSelect, stateSelect[tl.todoList_ID].hoveredItem, tl.todoList_ID)
-               setVisibleAC(dispatchSelect, tl.todoList_ID, stateSelect[tl.todoList_ID].visible)
-            }
-            const setNextValueCallBack = (key: string) => {
-               const item = stateSelect[tl.todoList_ID].list.find(
-                  l => l.title === stateSelect[tl.todoList_ID].hoveredItem
-               )
-               if (item) {
-                  const nextIdIndex = stateSelect[tl.todoList_ID].list.indexOf(item) + 1
-                  const prevIdIndex = stateSelect[tl.todoList_ID].list.indexOf(item) - 1
-                  if (key === "ArrowDown") {
-                     if (nextIdIndex < stateSelect[tl.todoList_ID].list.length) {
-                        setHoveredItemAC(
-                           dispatchSelect,
-                           stateSelect[tl.todoList_ID].list[nextIdIndex].title, tl.todoList_ID
-                        )
-                        setSelectItemAC(
-                           dispatchSelect,
-                           stateSelect[tl.todoList_ID].list[nextIdIndex].title, tl.todoList_ID
-                        )
-                     }
-                  }
-                  if (key === "ArrowUp") {
-                     if (prevIdIndex >= 0) {
-                        setHoveredItemAC(
-                           dispatchSelect, stateSelect[tl.todoList_ID].list[prevIdIndex].title, tl.todoList_ID
-                        )
-                        setSelectItemAC(
-                           dispatchSelect, stateSelect[tl.todoList_ID].list[prevIdIndex].title, tl.todoList_ID
-                        )
-                     }
-                  }
-               }
-            }
-            const setHoveredItem = (title: FilterType) => setHoveredItemAC(dispatchSelect, title, tl.todoList_ID)
-
             return (
                <div className={s.todoList}>
                   <TodoList key={tl.todoList_ID}
                             todoList_ID={tl.todoList_ID}
                             title={tl.title}
+                            selectValue={tl.selectValue}
                             addTaskCallback={addTaskCallback}
                             removeTaskCallback={removeTaskCallback}
                             removeTodoListCallback={removeTodoListCallback}
+                            changeValueSelectCallback={changeValueSelectCallback}
                             tasks={setFilteredTasks(tl.todoList_ID, tl.filter)}
-
-                            onClickSelectedItem={onClickSelectedItem}
-                            onBlurSelectBlockItems={onBlurSelectBlockItems}
-                            setNextValueCallBack={setNextValueCallBack}
-                            stateSelect={stateSelect}
-                            setSelectItemCallback={setSelectItemCallback}
-                            setHoveredItem={setHoveredItem}
                   />
 
                   {/* ============================ FILTER BUTTON BLOCK ===============================*/}
