@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import s from "../../App.module.css";
-import MyInputText from "../MyComponents/MyInput/MyInputText";
 import MyButton from "../MyComponents/MyButton/MyButton";
 
 export type AddNewTodoListType = {
@@ -18,14 +17,12 @@ export const AddNewTodoList: React.FC<AddNewTodoListType> = (
 ) => {
 
    const addTodoListHandler = () => addTodoListCallback()
-   const changeTextNewTodoListHandler = () => changeTextNewTodoListCallback(value)
-
+   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => changeTextNewTodoListCallback(e.currentTarget.value)
    return (
       <div className={s.add_todoList}>
-         <MyInputText value={value}
-                      onChangeText={changeTextNewTodoListHandler}
-                      onEnter={addTodoListHandler}
-                      className={s.add_todoList_input}/>
+         <input type="text"
+                value={value}
+                onChange={onChangeHandler}/>
          <MyButton onClick={addTodoListHandler}
                    className={s.add_todoList_button}>Add</MyButton>
       </div>

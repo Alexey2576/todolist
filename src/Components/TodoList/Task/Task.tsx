@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import s from './Task.module.css'
 import {FilterType} from "../../../App";
-import MyEditableSpan from '../../MyComponents/MyEditableSpan/MyEditableSpan';
+import {EditableSpan} from "../../MyComponents/MyEditableSpan/MyEditableSpan";
 
 export type TaskType = {
    task_ID: string,
@@ -21,7 +21,7 @@ const Task: React.FC<TaskType> = (
    return (
       <div className={s.task}>
          <div className={s.task_title}>
-            <MyEditableSpan value={value} onChangeText={onChangeText}/>
+            <EditableSpan value={value} onChangeTextTitle={onChangeText}/>
          </div>
          <div className={s.task_priority}>
             <span>{task_priority}</span>
