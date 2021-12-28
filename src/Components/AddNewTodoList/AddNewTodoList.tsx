@@ -1,6 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import s from "../../App.module.css";
-import MyButton from "../MyComponents/MyButton/MyButton";
+import {IconButton, TextField} from "@material-ui/core";
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 
 export type AddNewTodoListType = {
    value: string
@@ -20,11 +21,17 @@ export const AddNewTodoList: React.FC<AddNewTodoListType> = (
    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => changeTextNewTodoListCallback(e.currentTarget.value)
    return (
       <div className={s.add_todoList}>
-         <input type="text"
-                value={value}
-                onChange={onChangeHandler}/>
-         <MyButton onClick={addTodoListHandler}
-                   className={s.add_todoList_button}>Add</MyButton>
+         <TextField
+            id="outlined-textarea"
+            label="Multiline Placeholder"
+            placeholder="Placeholder"
+            multiline
+            variant="outlined"
+            value={value}
+            onChange={onChangeHandler}/>
+         <IconButton onClick={addTodoListHandler}>
+            <CreateNewFolderIcon/>
+         </IconButton>
       </div>
    );
 };

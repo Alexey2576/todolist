@@ -1,15 +1,32 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
+import {TextField, Typography} from "@material-ui/core";
 
 
 type EditableSpanType = {
    value: string
    onChangeTextTitle: (value: string) => void
+   variant: 'h1'
+      | 'h2'
+      | 'h3'
+      | 'h4'
+      | 'h5'
+      | 'h6'
+      | 'subtitle1'
+      | 'subtitle2'
+      | 'body1'
+      | 'body2'
+      | 'caption'
+      | 'button'
+      | 'overline'
+      | 'srOnly'
+      | 'inherit'
 }
 
 export const EditableSpan: React.FC<EditableSpanType> = (
    {
       value,
-      onChangeTextTitle
+      onChangeTextTitle,
+      variant
    }
 ) => {
    const [editMode, setEditMode] = useState<boolean>(false)
@@ -19,16 +36,18 @@ export const EditableSpan: React.FC<EditableSpanType> = (
    const onDoubleClickHandler = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => setEditMode(true)
    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => onChangeTextTitle(e.currentTarget.value)
    return (
-      <>
+      <div>
          {editMode
-            ? <input type="text"
-                     autoFocus
-                     value={value}
-                     onChange={onChangeHandler}
-                     onBlur={onBlurHandler}
-                     onKeyPress={onKeyPressHandler}/>
-            : <span onDoubleClick={onDoubleClickHandler}>{value}</span>
+            ? <TextField autoFocus
+                         id="standard-basic" size={"small"}
+                         value={value}
+                         onChange={onChangeHandler}
+                         onBlur={onBlurHandler}
+                         onKeyPress={onKeyPressHandler}/>
+            : <Typography gutterBottom
+                          variant={variant}
+                          onDoubleClick={onDoubleClickHandler}>{value}</Typography>
          }
-      </>
+      </div>
    )
 }

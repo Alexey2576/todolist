@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
-import s from './Task.module.css'
 import {FilterType} from "../../../App";
 import {EditableSpan} from "../../MyComponents/MyEditableSpan/MyEditableSpan";
+import {Typography} from "@material-ui/core";
 
 export type TaskType = {
    task_ID: string,
+   checked: boolean
    task_title: string
    task_priority: FilterType
 }
-const Task: React.FC<TaskType> = (
+export const Task: React.FC<TaskType> = (
    {
-      task_ID,
       task_title,
       task_priority
    }
@@ -19,15 +19,11 @@ const Task: React.FC<TaskType> = (
 
    const onChangeText = (value: string) => setValue(value)
    return (
-      <div className={s.task}>
-         <div className={s.task_title}>
-            <EditableSpan value={value} onChangeTextTitle={onChangeText}/>
-         </div>
-         <div className={s.task_priority}>
-            <span>{task_priority}</span>
-         </div>
-      </div>
+      <>
+         <EditableSpan value={value} variant={"button"}
+                       onChangeTextTitle={onChangeText}/>
+         <Typography gutterBottom
+                     variant={"button"} style={{fontSize: "12px"}}>{task_priority}</Typography>
+      </>
    );
 };
-
-export default Task;
