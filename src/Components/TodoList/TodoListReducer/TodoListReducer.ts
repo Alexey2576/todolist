@@ -1,4 +1,4 @@
-import {FilterType, TodoListStateType} from "../../../App";
+import {FilterCheckedTaskType, FilterPriorityTaskType, TodoListStateType} from "../../../App";
 import {v1} from "uuid";
 
 export type DispatchType =
@@ -7,7 +7,8 @@ export type DispatchType =
    | ReturnType<typeof removeTaskAC>
    | ReturnType<typeof removeTodoListAC>
    | ReturnType<typeof setValueInputAddTodoListAC>
-   | ReturnType<typeof setFilterTodoListAC>
+   | ReturnType<typeof setFilterCheckedTodoListAC>
+   | ReturnType<typeof setFilterPriorityTodoListAC>
    | ReturnType<typeof setValueSelectAC>
    | ReturnType<typeof setCheckedTaskAC>
 
@@ -19,7 +20,8 @@ export const todoListReducer = (state: TodoListStateType, action: DispatchType):
             todoLists: [...state.todoLists, {
                todoList_ID: action.todoList_ID,
                title: state.valueInputAddTodoList,
-               filter: "All",
+               filterChecked: "All",
+               filterPriority: "All",
                selectValue: "High"
             }],
             tasks: {...state.tasks, [action.todoList_ID]: []},
@@ -63,12 +65,21 @@ export const todoListReducer = (state: TodoListStateType, action: DispatchType):
             valueInputAddTodoList: action.title
          }
       }
-      case "SET_FILTER_TODOLIST": {
+      case "SET_FILTER_CHECKED_TODOLIST": {
          return {
             ...state,
             todoLists: state.todoLists.map(tl => tl.todoList_ID === action.todoList_ID ? {
                ...tl,
-               filter: action.filter
+               filterChecked: action.filterChecked
+            } : tl)
+         }
+      }
+      case "SET_FILTER_PRIORITY_TODOLIST": {
+         return {
+            ...state,
+            todoLists: state.todoLists.map(tl => tl.todoList_ID === action.todoList_ID ? {
+               ...tl,
+               filterPriority: action.filterPriority
             } : tl)
          }
       }
@@ -94,10 +105,11 @@ export const todoListReducer = (state: TodoListStateType, action: DispatchType):
 }
 
 export const addTodoListAC = (todoList_ID: string) => ({type: "ADD_TODOLIST", todoList_ID} as const)
-export const addTaskAC = (title: string, todoList_ID: string, selectValue: FilterType) => ({type: "ADD_TASK", title, todoList_ID, selectValue} as const)
+export const addTaskAC = (title: string, todoList_ID: string, selectValue: FilterPriorityTaskType) => ({type: "ADD_TASK", title, todoList_ID, selectValue} as const)
 export const removeTaskAC = (todoList_ID: string, task_ID: string) => ({type: "REMOVE_TASK", todoList_ID, task_ID} as const)
 export const removeTodoListAC = (todoList_ID: string) => ({type: "REMOVE_TODOLIST", todoList_ID} as const)
 export const setValueInputAddTodoListAC = (title: string) => ({type: "SET_VALUE_INPUT_ADD_TODOLIST", title: title} as const)
-export const setFilterTodoListAC = (todoList_ID: string, filter: FilterType) => ({type: "SET_FILTER_TODOLIST", todoList_ID, filter} as const)
-export const setValueSelectAC = (todoList_ID: string, selectValue: FilterType) => ({type: "SET_VALUE_SELECT", todoList_ID, selectValue} as const)
+export const setFilterCheckedTodoListAC = (todoList_ID: string, filterChecked: FilterCheckedTaskType) => ({type: "SET_FILTER_CHECKED_TODOLIST", todoList_ID, filterChecked} as const)
+export const setFilterPriorityTodoListAC = (todoList_ID: string, filterPriority: FilterPriorityTaskType) => ({type: "SET_FILTER_PRIORITY_TODOLIST", todoList_ID, filterPriority} as const)
+export const setValueSelectAC = (todoList_ID: string, selectValue: FilterPriorityTaskType) => ({type: "SET_VALUE_SELECT", todoList_ID, selectValue} as const)
 export const setCheckedTaskAC = (todoList_ID: string, task_ID: string, checked: boolean) => ({type: "SET_CHECKED_TASK", todoList_ID, task_ID, checked} as const)

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FilterType} from "../../../App";
+import {FilterPriorityTaskType} from "../../../App";
 import {EditableSpan} from "../../MyComponents/MyEditableSpan/MyEditableSpan";
 import {Typography} from "@material-ui/core";
 
@@ -7,7 +7,7 @@ export type TaskType = {
    task_ID: string,
    checked: boolean
    task_title: string
-   task_priority: FilterType
+   task_priority: FilterPriorityTaskType
 }
 export const Task: React.FC<TaskType> = (
    {

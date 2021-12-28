@@ -7,8 +7,7 @@ import {
    addTaskAC,
    addTodoListAC,
    removeTaskAC,
-   removeTodoListAC, setCheckedTaskAC,
-   setFilterTodoListAC,
+   removeTodoListAC, setCheckedTaskAC, setFilterCheckedTodoListAC, setFilterPriorityTodoListAC,
    setValueInputAddTodoListAC,
    setValueSelectAC,
    todoListReducer
@@ -21,13 +20,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 export type TodoListsType = {
    todoList_ID: string
    title: string
-   filter: FilterType
-   selectValue: FilterType
+   filterPriority: FilterPriorityTaskType
+   filterChecked: FilterCheckedTaskType
+   selectValue: FilterPriorityTaskType
 }
 export type TasksType = {
    [todoList_ID: string]: TaskType[]
 }
-export type FilterType = "High" | "Middle" | "Low" | "All" | null
+export type FilterPriorityTaskType = "High" | "Middle" | "Low" | "All" | null
+export type FilterCheckedTaskType = "All" | "Completed" | "Active"
 export type TodoListStateType = {
    todoLists: TodoListsType[]
    tasks: TasksType
@@ -41,8 +42,8 @@ const App = () => {
 
    const initialState: TodoListStateType = {
       todoLists: [
-         {todoList_ID: todoList_ID_1, title: "TodoList 1", filter: "All", selectValue: null},
-         {todoList_ID: todoList_ID_2, title: "TodoList 2", filter: "All", selectValue: null},
+         {todoList_ID: todoList_ID_1, title: "TodoList 1", filterPriority: "All", filterChecked: "All", selectValue: null},
+         {todoList_ID: todoList_ID_2, title: "TodoList 2", filterPriority: "All", filterChecked: "All", selectValue: null}
       ],
       tasks: {
          [todoList_ID_1]: [
@@ -68,7 +69,7 @@ const App = () => {
          dispatch(addTodoListAC(newTodoList_ID))
       }
    }
-   const addTaskCallback = (todoList_ID: string, value: string, selectValue: FilterType) => {
+   const addTaskCallback = (todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => {
       !error
       && value.length
       && dispatch(addTaskAC(value, todoList_ID, selectValue))
@@ -76,16 +77,29 @@ const App = () => {
    const removeTaskCallback = (todoList_ID: string, task_ID: string) => dispatch(removeTaskAC(todoList_ID, task_ID))
    const removeTodoListCallback = (todoList_ID: string) => dispatch(removeTodoListAC(todoList_ID))
    const changeTextNewTodoListCallback = (value: string) => dispatch(setValueInputAddTodoListAC(value))
-   const changeFilterTodoListCallback = (todoList_ID: string, filter: FilterType) => dispatch(setFilterTodoListAC(todoList_ID, filter))
-   const changeValueSelectCallback = (todoList_ID: string, selectValue: FilterType) => dispatch(setValueSelectAC(todoList_ID, selectValue))
+   const changeFilterCheckedTodoList = (todoList_ID: string, filterChecked: FilterCheckedTaskType) => dispatch(setFilterCheckedTodoListAC(todoList_ID, filterChecked))
+   const changeFilterPriorityTodoList = (todoList_ID: string, filterPriority: FilterPriorityTaskType) => dispatch(setFilterPriorityTodoListAC(todoList_ID, filterPriority))
+   const changeValueSelectCallback = (todoList_ID: string, selectValue: FilterPriorityTaskType) => dispatch(setValueSelectAC(todoList_ID, selectValue))
    const changeCheckedTaskCallback = (todoList_ID: string, task_ID: string, checked: boolean) => dispatch(setCheckedTaskAC(todoList_ID, task_ID, checked))
 
    //========================================= FILTERED TASKS ========================================================
-   const setFilteredTasks = (todoList_ID: string, filter: FilterType): TaskType[] => {
-      if (filter === "High") return state.tasks[todoList_ID].filter(t => t.task_priority === "High")
-      else if (filter === "Middle") return state.tasks[todoList_ID].filter(t => t.task_priority === "Middle")
-      else if (filter === "Low") return state.tasks[todoList_ID].filter(t => t.task_priority === "Low")
-      else return state.tasks[todoList_ID]
+   const getFilteredPriorityTasks = (todoList_ID: string, filterPriority: FilterPriorityTaskType): TaskType[] => {
+      switch (filterPriority) {
+         case "High": return state.tasks[todoList_ID].filter(t => t.task_priority === "High")
+         case "Middle": return state.tasks[todoList_ID].filter(t => t.task_priority === "Middle")
+         case "Low": return state.tasks[todoList_ID].filter(t => t.task_priority === "Low")
+         default: return state.tasks[todoList_ID]
+      }
+   }
+
+   const getFilteredCheckedTasks = (todoList_ID: string, filterChecked: FilterCheckedTaskType, filterPriority: FilterPriorityTaskType): TaskType[] => {
+
+      const filteredPriorityState = getFilteredPriorityTasks(todoList_ID, filterPriority)
+      switch (filterChecked) {
+         case "Active": return filteredPriorityState.filter(t => !t.checked)
+         case "Completed": return filteredPriorityState.filter(t => t.checked)
+         default: return filteredPriorityState
+      }
    }
 
    return (
@@ -122,6 +136,7 @@ const App = () => {
                   return (
                      <Grid item spacing={6} md={4} xs={3}>
                         <Paper elevation={7} style={{padding: "10px"}}>
+                           <Grid item>
                            <TodoList key={tl.todoList_ID}
                                      todoList_ID={tl.todoList_ID}
                                      title={tl.title}
@@ -131,11 +146,16 @@ const App = () => {
                                      removeTodoListCallback={removeTodoListCallback}
                                      changeValueSelectCallback={changeValueSelectCallback}
                                      changeCheckedTaskCallback={changeCheckedTaskCallback}
-                                     tasks={setFilteredTasks(tl.todoList_ID, tl.filter)}/>
+                                     tasks={getFilteredCheckedTasks(tl.todoList_ID, tl.filterChecked, tl.filterPriority)}/>
+                           </Grid>
                            {/* ============================ FILTER BUTTON BLOCK ===============================*/}
+                           <Grid item style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                            <FilterButtons todoList_ID={tl.todoList_ID}
-                                          filter={tl.filter}
-                                          changeFilterTodoList={changeFilterTodoListCallback}/>
+                                          filterChecked={tl.filterChecked}
+                                          filterPriority={tl.filterPriority}
+                                          changeFilterPriorityTodoList={changeFilterPriorityTodoList}
+                                          changeFilterCheckedTodoList={changeFilterCheckedTodoList}/>
+                           </Grid>
                         </Paper>
                      </Grid>
                   )

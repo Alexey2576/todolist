@@ -1,7 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {Task, TaskType} from "./Task/Task";
 import {EditableSpan} from "../MyComponents/MyEditableSpan/MyEditableSpan";
-import {FilterType} from "../../App";
+import {FilterPriorityTaskType} from "../../App";
 import {
    Checkbox,
    FormControl, FormHelperText,
@@ -20,12 +20,12 @@ import AddIcon from '@material-ui/icons/Add';
 export type TodoListType = {
    todoList_ID: string
    title: string
-   selectValue: FilterType
+   selectValue: FilterPriorityTaskType
    tasks: TaskType[]
-   addTaskCallback: (todoList_ID: string, value: string, selectValue: FilterType) => void
+   addTaskCallback: (todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => void
    removeTaskCallback: (todoList_ID: string, task_ID: string) => void
    removeTodoListCallback: (todoList_ID: string) => void
-   changeValueSelectCallback: (todoList_ID: string, selectValue: FilterType) => void
+   changeValueSelectCallback: (todoList_ID: string, selectValue: FilterPriorityTaskType) => void
    changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: boolean) => void
 }
 
@@ -61,7 +61,7 @@ export const TodoList: React.FC<TodoListType> = (
    }
    const onClickRemoveTodoList = () => removeTodoListCallback(todoList_ID)
    const changeValueSelectHandler = (e: ChangeEvent<{ value: unknown }>) => {
-      changeValueSelectCallback(todoList_ID, e.target.value as FilterType)
+      changeValueSelectCallback(todoList_ID, e.target.value as FilterPriorityTaskType)
       setErrorSelect(false)
    }
    const onChangeTextTaskHandler = (e: ChangeEvent<HTMLInputElement>) => {
