@@ -1,19 +1,19 @@
 import React from 'react';
-import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../App";
-import {Button, ButtonGroup, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../../App";
+import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-export type FilterButtonsType ={
+export type FilterButtonsType = {
    todoList_ID: string
    filterPriority: FilterPriorityTaskType
    filterChecked: FilterCheckedTaskType
    changeFilterCheckedTodoList: (todoList_ID: string, filterChecked: FilterCheckedTaskType) => void
    changeFilterPriorityTodoList: (todoList_ID: string, filterPriority: FilterPriorityTaskType) => void
 }
+
 export const FilterButtons: React.FC<FilterButtonsType> = (
    {
       todoList_ID,
-      filterPriority,
       filterChecked,
       changeFilterCheckedTodoList,
       changeFilterPriorityTodoList
@@ -25,9 +25,7 @@ export const FilterButtons: React.FC<FilterButtonsType> = (
 
    // Menu
    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)
-
    const handleCloseAll = () => {
       changeFilterPriorityTodoList(todoList_ID, "All")
       setAnchorEl(null);
@@ -46,15 +44,19 @@ export const FilterButtons: React.FC<FilterButtonsType> = (
    };
    const handleClose = () => setAnchorEl(null)
 
-
    return (
-      <>
+      <Grid item style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
          <ButtonGroup fullWidth color={"primary"}>
-            <Button onClick={setAllHandler} variant={filterChecked === "All" ? "contained" : "outlined"}>All</Button>
-            <Button onClick={setActiveHandler} variant={filterChecked === "Active" ? "contained" : "outlined"}>Active</Button>
-            <Button onClick={setCompletedHandler} variant={filterChecked === "Completed" ? "contained" : "outlined"}>Completed</Button>
+            <Button onClick={setAllHandler}
+                    variant={filterChecked === "All" ? "contained" : "outlined"}>All</Button>
+            <Button onClick={setActiveHandler}
+                    variant={filterChecked === "Active" ? "contained" : "outlined"}>Active</Button>
+            <Button onClick={setCompletedHandler}
+                    variant={filterChecked === "Completed" ? "contained" : "outlined"}>Completed</Button>
          </ButtonGroup>
-         <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+         <IconButton aria-controls="simple-menu"
+                     aria-haspopup="true"
+                     onClick={handleClick}>
             <MoreVertIcon/>
          </IconButton>
          <Menu
@@ -69,8 +71,7 @@ export const FilterButtons: React.FC<FilterButtonsType> = (
             <MenuItem onClick={handleCloseMiddle}>Middle</MenuItem>
             <MenuItem onClick={handleCloseLow}>Low</MenuItem>
          </Menu>
-      </>
-
+      </Grid>
    );
 };
 

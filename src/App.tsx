@@ -1,21 +1,22 @@
 import React, {useReducer, useState} from 'react';
-import {TodoList} from "./Components/TodoList/TodoList";
 import {v1} from "uuid";
 import s from './App.module.css'
-import {TaskType} from "./Components/TodoList/Task/Task";
 import {
    addTaskAC,
    addTodoListAC,
    removeTaskAC,
-   removeTodoListAC, setCheckedTaskAC, setFilterCheckedTodoListAC, setFilterPriorityTodoListAC,
+   removeTodoListAC,
+   setCheckedTaskAC,
+   setFilterCheckedTodoListAC,
+   setFilterPriorityTodoListAC,
    setValueInputAddTodoListAC,
    setValueSelectAC,
    todoListReducer
-} from "./Components/TodoList/TodoListReducer/TodoListReducer";
-import {FilterButtons} from "./Components/FilterButtons/FilterButtons";
+} from "./Components/TodoLists/TodoList/TodoListReducer/TodoListReducer";
 import {AddNewTodoList} from "./Components/AddNewTodoList/AddNewTodoList";
-import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
-import MenuIcon from '@material-ui/icons/Menu';
+import {TaskType} from "./Components/TodoLists/TodoList/ListTasksTodoList/TaskTodoList/TaskTodoList";
+import {TodoLists} from "./Components/TodoLists/TodoLists";
+import {AppBarTodoList} from "./Components/AppBarTodoList/AppBarTodoList";
 
 export type TodoListsType = {
    todoList_ID: string
@@ -42,8 +43,20 @@ const App = () => {
 
    const initialState: TodoListStateType = {
       todoLists: [
-         {todoList_ID: todoList_ID_1, title: "TodoList 1", filterPriority: "All", filterChecked: "All", selectValue: null},
-         {todoList_ID: todoList_ID_2, title: "TodoList 2", filterPriority: "All", filterChecked: "All", selectValue: null}
+         {
+            todoList_ID: todoList_ID_1,
+            title: "TodoList 1",
+            filterPriority: "All",
+            filterChecked: "All",
+            selectValue: null
+         },
+         {
+            todoList_ID: todoList_ID_2,
+            title: "TodoList 2",
+            filterPriority: "All",
+            filterChecked: "All",
+            selectValue: null
+         }
       ],
       tasks: {
          [todoList_ID_1]: [
@@ -85,83 +98,43 @@ const App = () => {
    //========================================= FILTERED TASKS ========================================================
    const getFilteredPriorityTasks = (todoList_ID: string, filterPriority: FilterPriorityTaskType): TaskType[] => {
       switch (filterPriority) {
-         case "High": return state.tasks[todoList_ID].filter(t => t.task_priority === "High")
-         case "Middle": return state.tasks[todoList_ID].filter(t => t.task_priority === "Middle")
-         case "Low": return state.tasks[todoList_ID].filter(t => t.task_priority === "Low")
-         default: return state.tasks[todoList_ID]
+         case "High":
+            return state.tasks[todoList_ID].filter(t => t.task_priority === "High")
+         case "Middle":
+            return state.tasks[todoList_ID].filter(t => t.task_priority === "Middle")
+         case "Low":
+            return state.tasks[todoList_ID].filter(t => t.task_priority === "Low")
+         default:
+            return state.tasks[todoList_ID]
       }
    }
-
    const getFilteredCheckedTasks = (todoList_ID: string, filterChecked: FilterCheckedTaskType, filterPriority: FilterPriorityTaskType): TaskType[] => {
-
       const filteredPriorityState = getFilteredPriorityTasks(todoList_ID, filterPriority)
       switch (filterChecked) {
-         case "Active": return filteredPriorityState.filter(t => !t.checked)
-         case "Completed": return filteredPriorityState.filter(t => t.checked)
-         default: return filteredPriorityState
+         case "Active":
+            return filteredPriorityState.filter(t => !t.checked)
+         case "Completed":
+            return filteredPriorityState.filter(t => t.checked)
+         default:
+            return filteredPriorityState
       }
    }
 
    return (
       <div className={s.todoLists}>
-         {/*========================================= APP BAR =============================================*/}
-         <AppBar position="static">
-            <Toolbar>
-               <IconButton edge="start"
-                           color="inherit"
-                           aria-label="menu">
-                  <MenuIcon/>
-               </IconButton>
-               <Typography variant="h6">
-                  TodoLists
-               </Typography>
-               <Button color="inherit">Login</Button>
-            </Toolbar>
-         </AppBar>
-         <Container>
-            <Grid container
-                  style={{
-                     margin: "20px 0",
-                     display: "flex",
-                     justifyContent: "center",
-                     alignItems: "center"}}>
-               <Grid item>
-                  <AddNewTodoList value={state.valueInputAddTodoList}
-                                  addTodoListCallback={addTodoListCallback}
-                                  changeTextNewTodoListCallback={changeTextNewTodoListCallback}/>
-               </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-               {state.todoLists.map(tl => {
-                  return (
-                     <Grid item spacing={6} md={4} xs={3}>
-                        <Paper elevation={7} style={{padding: "10px"}}>
-                           <Grid item>
-                           <TodoList key={tl.todoList_ID}
-                                     todoList_ID={tl.todoList_ID}
-                                     title={tl.title}
-                                     selectValue={tl.selectValue}
-                                     addTaskCallback={addTaskCallback}
-                                     removeTaskCallback={removeTaskCallback}
-                                     removeTodoListCallback={removeTodoListCallback}
-                                     changeValueSelectCallback={changeValueSelectCallback}
-                                     changeCheckedTaskCallback={changeCheckedTaskCallback}
-                                     tasks={getFilteredCheckedTasks(tl.todoList_ID, tl.filterChecked, tl.filterPriority)}/>
-                           </Grid>
-                           {/* ============================ FILTER BUTTON BLOCK ===============================*/}
-                           <Grid item style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                           <FilterButtons todoList_ID={tl.todoList_ID}
-                                          filterChecked={tl.filterChecked}
-                                          filterPriority={tl.filterPriority}
-                                          changeFilterPriorityTodoList={changeFilterPriorityTodoList}
-                                          changeFilterCheckedTodoList={changeFilterCheckedTodoList}/>
-                           </Grid>
-                        </Paper>
-                     </Grid>
-                  )
-               })}
-            </Grid>
-         </Container>
+         <AppBarTodoList/>
+         <AddNewTodoList value={state.valueInputAddTodoList}
+                         addTodoListCallback={addTodoListCallback}
+                         changeTextNewTodoListCallback={changeTextNewTodoListCallback}/>
+         <TodoLists state={state}
+                    addTaskCallback={addTaskCallback}
+                    removeTaskCallback={removeTaskCallback}
+                    removeTodoListCallback={removeTodoListCallback}
+                    changeFilterCheckedTodoList={changeFilterCheckedTodoList}
+                    changeFilterPriorityTodoList={changeFilterPriorityTodoList}
+                    changeValueSelectCallback={changeValueSelectCallback}
+                    changeCheckedTaskCallback={changeCheckedTaskCallback}
+                    getFilteredCheckedTasks={getFilteredCheckedTasks}/>
       </div>
    );
 };

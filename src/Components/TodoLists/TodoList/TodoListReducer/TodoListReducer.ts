@@ -1,4 +1,4 @@
-import {FilterCheckedTaskType, FilterPriorityTaskType, TodoListStateType} from "../../../App";
+import {FilterCheckedTaskType, FilterPriorityTaskType, TodoListStateType} from "../../../../App";
 import {v1} from "uuid";
 
 export type DispatchType =
