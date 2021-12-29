@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {EditableSpan} from "../../../EditableSpan/EditableSpan";
+import {EditableSpan} from "../../EditableSpan/EditableSpan";
 import {Grid, IconButton} from "@material-ui/core";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
 
@@ -16,10 +16,12 @@ export const TitleTodoList: React.FC<TitleTodoListType> = (
       removeTodoListCallback
    }
 ) => {
+
+
    const [valueTitle, setValueTitle] = useState<string>(title)
    const onChangeTextTitleHandler = (value: string) => setValueTitle(value)
    const onClickRemoveTodoListHandler = () => removeTodoListCallback(todoList_ID)
-
+   console.log("TitleTodoList")
    return (
       <Grid container
             style={{
@@ -36,3 +38,4 @@ export const TitleTodoList: React.FC<TitleTodoListType> = (
       </Grid>
    );
 }
+

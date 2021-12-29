@@ -1,9 +1,12 @@
 import React from 'react';
-import {TodoList} from "./TodoList/TodoList";
 import {FilterButtons} from "./FilterButtons/FilterButtons";
-import {Grid} from "@material-ui/core";
+import {Grid, Paper} from "@material-ui/core";
 import {FilterCheckedTaskType, FilterPriorityTaskType, TodoListStateType} from "../../App";
-import {TaskType} from "./TodoList/ListTasksTodoList/TaskTodoList/TaskTodoList";
+import {AddTaskTodoList} from "./AddTaskTodoList/AddTaskTodoList";
+import {LinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
+import {TitleTodoList} from "./TitleTodoList/TitleTodoList";
+import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
+import {TaskType} from "./ListTasksTodoList/TaskTodoList/TaskTodoList";
 
 export type TodoListsType = {
    state: TodoListStateType
@@ -34,22 +37,28 @@ export const TodoLists: React.FC<TodoListsType> = (
       <Grid container spacing={3}>
          {state.todoLists.map(tl => {
             return (
-               <><TodoList key={tl.todoList_ID}
-                           todoList_ID={tl.todoList_ID}
-                           title={tl.title}
-                           selectValue={tl.selectValue}
-                           addTaskCallback={addTaskCallback}
-                           removeTaskCallback={removeTaskCallback}
-                           removeTodoListCallback={removeTodoListCallback}
-                           changeValueSelectCallback={changeValueSelectCallback}
-                           changeCheckedTaskCallback={changeCheckedTaskCallback}
-                           tasks={getFilteredCheckedTasks(tl.todoList_ID, tl.filterChecked, tl.filterPriority)}/>
-                  {/* ============================ FILTER BUTTON BLOCK ===============================*/}
-                  <FilterButtons todoList_ID={tl.todoList_ID}
-                                 filterChecked={tl.filterChecked}
-                                 filterPriority={tl.filterPriority}
-                                 changeFilterPriorityTodoList={changeFilterPriorityTodoList}
-                                 changeFilterCheckedTodoList={changeFilterCheckedTodoList}/></>
+               <Grid item spacing={6} md={4} xs={3}>
+                  <Paper elevation={7} style={{padding: "10px"}}>
+                     <TitleTodoList todoList_ID={tl.todoList_ID}
+                                    title={tl.title}
+                                    removeTodoListCallback={removeTodoListCallback}/>
+                     <AddTaskTodoList todoList_ID={tl.todoList_ID}
+                                      selectValue={tl.selectValue}
+                                      addTaskCallback={addTaskCallback}
+                                      changeValueSelectCallback={changeValueSelectCallback}/>
+                     <LinearProgressTasks numberOfAllTasks={state.tasks[tl.todoList_ID].length}
+                                          numberOfCompletedTasks={state.tasks[tl.todoList_ID].filter(t => t.checked).length}/>
+                     <ListTasksTodoList todoList_ID={tl.todoList_ID}
+                                        tasks={getFilteredCheckedTasks(tl.todoList_ID, tl.filterChecked, tl.filterPriority)}
+                                        changeCheckedTaskCallback={changeCheckedTaskCallback}
+                                        removeTaskCallback={removeTaskCallback}/>
+                     <FilterButtons todoList_ID={tl.todoList_ID}
+                                    filterChecked={tl.filterChecked}
+                                    filterPriority={tl.filterPriority}
+                                    changeFilterPriorityTodoList={changeFilterPriorityTodoList}
+                                    changeFilterCheckedTodoList={changeFilterCheckedTodoList}/>
+                  </Paper>
+               </Grid>
             )
          })}
       </Grid>

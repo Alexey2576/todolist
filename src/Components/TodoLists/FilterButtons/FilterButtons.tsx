@@ -43,7 +43,7 @@ export const FilterButtons: React.FC<FilterButtonsType> = (
       setAnchorEl(null);
    };
    const handleClose = () => setAnchorEl(null)
-
+   console.log("FilterButtons")
    return (
       <Grid item style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
          <ButtonGroup fullWidth color={"primary"}>

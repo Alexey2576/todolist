@@ -12,11 +12,12 @@ import {
    setValueInputAddTodoListAC,
    setValueSelectAC,
    todoListReducer
-} from "./Components/TodoLists/TodoList/TodoListReducer/TodoListReducer";
+} from "./Components/TodoListReducer/TodoListReducer";
 import {AddNewTodoList} from "./Components/AddNewTodoList/AddNewTodoList";
-import {TaskType} from "./Components/TodoLists/TodoList/ListTasksTodoList/TaskTodoList/TaskTodoList";
 import {TodoLists} from "./Components/TodoLists/TodoLists";
 import {AppBarTodoList} from "./Components/AppBarTodoList/AppBarTodoList";
+import {Container} from "@material-ui/core";
+import {TaskType} from "./Components/TodoLists/ListTasksTodoList/TaskTodoList/TaskTodoList";
 
 export type TodoListsType = {
    todoList_ID: string
@@ -75,6 +76,7 @@ const App = () => {
 
    const [state, dispatch] = useReducer(todoListReducer, initialState)
    const [error, setError] = useState<boolean>(false)
+
    //========================================= TODOLIST CALLBACKS =====================================================
    const addTodoListCallback = () => {
       if (!error && state.valueInputAddTodoList.length) {
@@ -123,18 +125,20 @@ const App = () => {
    return (
       <div className={s.todoLists}>
          <AppBarTodoList/>
-         <AddNewTodoList value={state.valueInputAddTodoList}
-                         addTodoListCallback={addTodoListCallback}
-                         changeTextNewTodoListCallback={changeTextNewTodoListCallback}/>
-         <TodoLists state={state}
-                    addTaskCallback={addTaskCallback}
-                    removeTaskCallback={removeTaskCallback}
-                    removeTodoListCallback={removeTodoListCallback}
-                    changeFilterCheckedTodoList={changeFilterCheckedTodoList}
-                    changeFilterPriorityTodoList={changeFilterPriorityTodoList}
-                    changeValueSelectCallback={changeValueSelectCallback}
-                    changeCheckedTaskCallback={changeCheckedTaskCallback}
-                    getFilteredCheckedTasks={getFilteredCheckedTasks}/>
+         <Container>
+            <AddNewTodoList value={state.valueInputAddTodoList}
+                            addTodoListCallback={addTodoListCallback}
+                            changeTextNewTodoListCallback={changeTextNewTodoListCallback}/>
+            <TodoLists state={state}
+                       addTaskCallback={addTaskCallback}
+                       removeTaskCallback={removeTaskCallback}
+                       removeTodoListCallback={removeTodoListCallback}
+                       changeFilterCheckedTodoList={changeFilterCheckedTodoList}
+                       changeFilterPriorityTodoList={changeFilterPriorityTodoList}
+                       changeValueSelectCallback={changeValueSelectCallback}
+                       changeCheckedTaskCallback={changeCheckedTaskCallback}
+                       getFilteredCheckedTasks={getFilteredCheckedTasks}/>
+         </Container>
       </div>
    );
 };
