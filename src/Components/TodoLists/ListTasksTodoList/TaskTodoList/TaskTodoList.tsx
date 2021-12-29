@@ -3,6 +3,7 @@ import {Checkbox, Grid, IconButton} from "@material-ui/core";
 import {TaskTitle} from "./TaskTittle/TaskTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {FilterPriorityTaskType} from "../../../../App";
+import {makeStyles} from "@material-ui/core/styles";
 
 export type TaskType = {
    task_ID: string,
@@ -17,7 +18,21 @@ export type TaskTodoListType = {
    changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: boolean) => void
 }
 
-export const TaskTodoList: React.FC<TaskTodoListType> = (
+const useStyles = makeStyles({
+   grid_container: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+   },
+   grid_item: {
+      width: "100%",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+   }
+});
+
+const TaskTodoList: React.FC<TaskTodoListType> = (
    {
       todoList_ID,
       task,
@@ -25,22 +40,16 @@ export const TaskTodoList: React.FC<TaskTodoListType> = (
       changeCheckedTaskCallback
    }
 ) => {
+   // ============================= USE STYLES CONSTANT ================================================================
+   const classes = useStyles();
+
+   // =================================== HANDLERS =====================================================================
    const onClickRemoveTaskHandler = () => removeTaskCallback(todoList_ID, task.task_ID)
    const onChangeCheckedTaskHandler = () => changeCheckedTaskCallback(todoList_ID, task.task_ID, !task.checked)
 
    return (
-         <Grid container
-               style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center"
-               }}>
-            <Grid item style={{
-               width: "100%",
-               display: "flex",
-               justifyContent: "space-between",
-               alignItems: "center"
-            }}>
+         <Grid container className={classes.grid_container}>
+            <Grid item className={classes.grid_item}>
                <Checkbox
                   checked={task.checked}
                   onChange={onChangeCheckedTaskHandler}
@@ -57,3 +66,5 @@ export const TaskTodoList: React.FC<TaskTodoListType> = (
          </Grid>
    );
 };
+
+export const MemoizedTaskTodoList = React.memo(TaskTodoList)

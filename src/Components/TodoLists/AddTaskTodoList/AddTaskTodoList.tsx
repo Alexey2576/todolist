@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import {FilterPriorityTaskType} from "../../../App";
+import {makeStyles} from "@material-ui/core/styles";
 
 export type AddTaskTodoListType = {
    todoList_ID: string
@@ -19,7 +20,23 @@ export type AddTaskTodoListType = {
    addTaskCallback: (todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => void
 }
 
-export const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
+const useStyles = makeStyles({
+   grid_container: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "start",
+      marginBottom: "7px",
+      height: "45px"
+   },
+   select: {
+      width: "100px"
+   },
+   form_helper_text: {
+      color: "red"
+   }
+});
+
+const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
    {
       todoList_ID,
       changeValueSelectCallback,
@@ -27,14 +44,22 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
       addTaskCallback
    }
 ) => {
-   const [valueTask, setValueTask] = useState<string>("")
+   // ============================= USE STYLES CONSTANT ================================================================
+   const classes = useStyles();
 
-   const [errorSelect, setErrorSelect] = useState<boolean>(false)
-   const [errorInput, setErrorInput] = useState<boolean>(false)
+   // ============================= USE STATES =========================================================================
+   const [valueTask, setValueTask] = useState("")
+   const [errorSelect, setErrorSelect] = useState(false)
+   const [errorInput, setErrorInput] = useState(false)
 
+   // ============================= HANDLERS ===========================================================================
    const onClickAddTaskHandler = () => {
-      if (!selectValue) setErrorSelect(true)
-      else if (!valueTask.trim()) setErrorInput(true)
+      if (!selectValue) {
+         setErrorSelect(true)
+      }
+      else if (!valueTask.trim()) {
+         setErrorInput(true)
+      }
       else if (!errorInput && !errorSelect) {
          addTaskCallback(todoList_ID, valueTask.trim(), selectValue)
          setValueTask("")
@@ -50,19 +75,11 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
       setErrorInput(false)
    }
    const onEnterHandler = (e: KeyboardEvent<HTMLDivElement>) => {
-      e.key === "Enter"
-      && onClickAddTaskHandler()
+      e.key === "Enter" && onClickAddTaskHandler()
    }
 
    return (
-      <Grid container
-            style={{
-               display: "flex",
-               justifyContent: "space-between",
-               alignItems: "start",
-               marginBottom: "7px",
-               height: "45px"
-            }}>
+      <Grid container className={classes.grid_container}>
          <TextField id="outlined-basic"
                     label="Add new task title"
                     variant="outlined"
@@ -76,7 +93,7 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
             <InputLabel id="demo-simple-select-outlined-label">Priority</InputLabel>
             <Select
                labelId="demo-simple-select-outlined-label"
-               style={{width: "100px"}}
+               className={classes.select}
                id="demo-simple-select-outlined"
                value={selectValue}
                error={errorSelect}
@@ -86,7 +103,7 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
                <MenuItem value={"Middle"}>Middle</MenuItem>
                <MenuItem value={"Low"}>Low</MenuItem>
             </Select>
-            {errorSelect && <FormHelperText style={{color: "red"}}>Enter priority</FormHelperText>}
+            {errorSelect && <FormHelperText className={classes.form_helper_text}>Enter priority</FormHelperText>}
          </FormControl>
          <IconButton onClick={onClickAddTaskHandler}>
             <AddIcon/>
@@ -94,3 +111,5 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
       </Grid>
    );
 }
+
+export const MemoizedAddTaskTodoList = React.memo(AddTaskTodoList)

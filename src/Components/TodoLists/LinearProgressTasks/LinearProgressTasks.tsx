@@ -10,25 +10,26 @@ export type LinearProgressTasksType = {
 }
 
 const useStyles = makeStyles({
-   root: {
+   linear_progress_tasks: {
       width: '100%',
    },
 });
 
-export const LinearProgressTasks: React.FC<LinearProgressTasksType> = (
+const LinearProgressTasks: React.FC<LinearProgressTasksType> = (
    {
       numberOfAllTasks,
       numberOfCompletedTasks
    }
 ) => {
+   // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
+   // THE FUNCTION OF CALCULATING THE PERCENTAGE OF COMPLETED TASKS ====================================================
    const getProgress = () => (numberOfCompletedTasks / numberOfAllTasks) * 100
 
-   console.log("LinearProgressTasks")
    return (
-      <div className={classes.root}>
-         <LinearProgressWithLabel value={getProgress()} />
+      <div className={classes.linear_progress_tasks}>
+         <LinearProgressWithLabel value={getProgress()}/>
       </div>
    );
 }
@@ -48,6 +49,6 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
    );
 }
 
-
+export const MemoizedLinearProgressTasks = React.memo(LinearProgressTasks)
 
 

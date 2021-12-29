@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {FilterPriorityTaskType} from "../../../../../../App";
-import {EditableSpan} from "../../../../../EditableSpan/EditableSpan";
 import {ListItem, Typography} from "@material-ui/core";
+import {FilterPriorityTaskType} from "../../../../../App";
+import {EditableSpan} from "../../../../EditableSpan/EditableSpan";
 
 export type TaskTitleType = {
    checked: boolean

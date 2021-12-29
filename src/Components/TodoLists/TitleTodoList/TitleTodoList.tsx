@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {EditableSpan} from "../../EditableSpan/EditableSpan";
 import {Grid, IconButton} from "@material-ui/core";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
+import {makeStyles} from "@material-ui/core/styles";
 
 export type TitleTodoListType = {
    todoList_ID: string
@@ -9,27 +10,34 @@ export type TitleTodoListType = {
    removeTodoListCallback: (todoList_ID: string) => void
 }
 
-export const TitleTodoList: React.FC<TitleTodoListType> = (
+const useStyles = makeStyles({
+   grid_container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: "15px"
+   }
+});
+
+const TitleTodoLists: React.FC<TitleTodoListType> = (
    {
       todoList_ID,
       title,
       removeTodoListCallback
    }
 ) => {
+   // ============================= USE STYLES CONSTANT ================================================================
+   const classes = useStyles();
 
+   // ============================= USE STATES =========================================================================
+   const [valueTitle, setValueTitle] = useState(title)
 
-   const [valueTitle, setValueTitle] = useState<string>(title)
+   // ============================= HANDLERS ===========================================================================
    const onChangeTextTitleHandler = (value: string) => setValueTitle(value)
    const onClickRemoveTodoListHandler = () => removeTodoListCallback(todoList_ID)
-   console.log("TitleTodoList")
+
    return (
-      <Grid container
-            style={{
-               display: "flex",
-               justifyContent: "center",
-               alignItems: "center",
-               marginBottom: "15px"
-            }}>
+      <Grid container className={classes.grid_container}>
          <EditableSpan value={valueTitle} variant={"h5"}
                        onChangeTextTitle={onChangeTextTitleHandler}/>
          <IconButton size="small" onClick={onClickRemoveTodoListHandler}>
@@ -38,4 +46,6 @@ export const TitleTodoList: React.FC<TitleTodoListType> = (
       </Grid>
    );
 }
+
+export const MemoizedTitleTodoLists = React.memo(TitleTodoLists)
 

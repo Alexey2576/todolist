@@ -1,6 +1,6 @@
 import React from 'react';
 import {List} from "@material-ui/core";
-import {TaskTodoList, TaskType} from "./TaskTodoList/TaskTodoList";
+import {MemoizedTaskTodoList, TaskType} from "./TaskTodoList/TaskTodoList";
 
 export type ListTasksTodoListType = {
    todoList_ID: string
@@ -20,14 +20,10 @@ export const ListTasksTodoList: React.FC<ListTasksTodoListType> = (
    return (
       <List component="nav"
             aria-label="mailbox folders">
-         {tasks.map(task => {
-            return (
-               <TaskTodoList todoList_ID={todoList_ID}
-                             task={task}
-                             removeTaskCallback={removeTaskCallback}
-                             changeCheckedTaskCallback={changeCheckedTaskCallback}/>
-            )
-         })}
+         {tasks.map(task => <MemoizedTaskTodoList todoList_ID={todoList_ID}
+                                                  task={task}
+                                                  removeTaskCallback={removeTaskCallback}
+                                                  changeCheckedTaskCallback={changeCheckedTaskCallback}/>)}
       </List>
    );
 };

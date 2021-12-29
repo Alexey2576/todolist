@@ -2,6 +2,7 @@ import React from 'react';
 import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../../App";
 import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {makeStyles} from "@material-ui/core/styles";
 
 export type FilterButtonsType = {
    todoList_ID: string
@@ -11,7 +12,15 @@ export type FilterButtonsType = {
    changeFilterPriorityTodoList: (todoList_ID: string, filterPriority: FilterPriorityTaskType) => void
 }
 
-export const FilterButtons: React.FC<FilterButtonsType> = (
+const useStyles = makeStyles({
+   grid_item: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+   },
+});
+
+const FilterButtons: React.FC<FilterButtonsType> = (
    {
       todoList_ID,
       filterChecked,
@@ -19,33 +28,42 @@ export const FilterButtons: React.FC<FilterButtonsType> = (
       changeFilterPriorityTodoList
    }
 ) => {
+   // ============================= USE STYLES CONSTANT ================================================================
+   const classes = useStyles();
+
+   // =================================== USE STATE ====================================================================
+   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+   // =================================== HANDLERS =====================================================================
+   // ==== Button Group ===
    const setAllHandler = () => changeFilterCheckedTodoList(todoList_ID, "All")
    const setActiveHandler = () => changeFilterCheckedTodoList(todoList_ID, "Active")
    const setCompletedHandler = () => changeFilterCheckedTodoList(todoList_ID, "Completed")
 
-   // Menu
-   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)
-   const handleCloseAll = () => {
+   // ==== Menu (DOTS) ===
+   const handleClickHandler = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)
+   const handleCloseHandler = () => setAnchorEl(null)
+
+   // ==== Menu ===
+   const handleCloseAllHandler = () => {
       changeFilterPriorityTodoList(todoList_ID, "All")
       setAnchorEl(null);
    };
-   const handleCloseHigh = () => {
+   const handleCloseHighHandler = () => {
       changeFilterPriorityTodoList(todoList_ID, "High")
       setAnchorEl(null);
    };
-   const handleCloseMiddle = () => {
+   const handleCloseMiddleHandler = () => {
       changeFilterPriorityTodoList(todoList_ID, "Middle")
       setAnchorEl(null);
    };
-   const handleCloseLow = () => {
+   const handleCloseLowHandler = () => {
       changeFilterPriorityTodoList(todoList_ID, "Low")
       setAnchorEl(null);
    };
-   const handleClose = () => setAnchorEl(null)
-   console.log("FilterButtons")
+
    return (
-      <Grid item style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+      <Grid item className={classes.grid_item}>
          <ButtonGroup fullWidth color={"primary"}>
             <Button onClick={setAllHandler}
                     variant={filterChecked === "All" ? "contained" : "outlined"}>All</Button>
@@ -56,7 +74,7 @@ export const FilterButtons: React.FC<FilterButtonsType> = (
          </ButtonGroup>
          <IconButton aria-controls="simple-menu"
                      aria-haspopup="true"
-                     onClick={handleClick}>
+                     onClick={handleClickHandler}>
             <MoreVertIcon/>
          </IconButton>
          <Menu
@@ -64,14 +82,16 @@ export const FilterButtons: React.FC<FilterButtonsType> = (
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
-            onClose={handleClose}
+            onClose={handleCloseHandler}
          >
-            <MenuItem onClick={handleCloseAll}>All</MenuItem>
-            <MenuItem onClick={handleCloseHigh}>High</MenuItem>
-            <MenuItem onClick={handleCloseMiddle}>Middle</MenuItem>
-            <MenuItem onClick={handleCloseLow}>Low</MenuItem>
+            <MenuItem onClick={handleCloseAllHandler}>All</MenuItem>
+            <MenuItem onClick={handleCloseHighHandler}>High</MenuItem>
+            <MenuItem onClick={handleCloseMiddleHandler}>Middle</MenuItem>
+            <MenuItem onClick={handleCloseLowHandler}>Low</MenuItem>
          </Menu>
       </Grid>
    );
 };
+
+export const MemoizedFilterButtons = React.memo(FilterButtons)
 
