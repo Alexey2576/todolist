@@ -18,7 +18,6 @@ import {TodoLists} from "./Components/TodoLists/TodoLists";
 import {AppBarTodoList} from "./Components/AppBarTodoList/AppBarTodoList";
 import {Container} from "@material-ui/core";
 import {TaskType} from "./Components/TodoLists/ListTasksTodoList/TaskTodoList/TaskTodoList";
-import {useTheme} from "@material-ui/core/styles";
 import {SideBar} from "./Components/SideBar/SideBar";
 
 export type TodoListsType = {
@@ -77,20 +76,10 @@ const App = () => {
 
    //========================================= USE STATE AND REDUCER ===================================================
    const [state, dispatch] = useReducer(todoListReducer, initialState)
-   const [error, setError] = useState<boolean>(false)
 
    //========================================= TODOLIST CALLBACKS ==========================================================================================================================================================================
-   const addTodoListCallback = useCallback(() => {
-      if (!error && state.valueInputAddTodoList.length) {
-         const newTodoList_ID = v1()
-         dispatch(addTodoListAC(newTodoList_ID))
-      }
-   }, [addTodoListAC])
-   const addTaskCallback = useCallback((todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => {
-      !error
-      && value.length
-      && dispatch(addTaskAC(value, todoList_ID, selectValue))
-   }, [addTaskAC])
+   const addTodoListCallback = useCallback(() => dispatch(addTodoListAC(v1())), [addTodoListAC])
+   const addTaskCallback = useCallback((todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => value.length && dispatch(addTaskAC(value, todoList_ID, selectValue)), [addTaskAC])
    const removeTaskCallback = useCallback((todoList_ID: string, task_ID: string) => dispatch(removeTaskAC(todoList_ID, task_ID)), [removeTaskAC])
    const removeTodoListCallback = useCallback((todoList_ID: string) => dispatch(removeTodoListAC(todoList_ID)), [removeTodoListAC])
    const changeTextNewTodoListCallback = useCallback((value: string) => dispatch(setValueInputAddTodoListAC(value)), [setValueInputAddTodoListAC])

@@ -22,7 +22,7 @@ export const todoListReducer = (state: TodoListStateType, action: DispatchType):
                title: state.valueInputAddTodoList,
                filterChecked: "All",
                filterPriority: "All",
-               selectValue: "High"
+               selectValue: null
             }],
             tasks: {...state.tasks, [action.todoList_ID]: []},
             valueInputAddTodoList: ""
