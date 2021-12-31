@@ -1,6 +1,10 @@
 import React from 'react';
+import clsx from 'clsx';
 import {AppBar, Button, IconButton, Toolbar, Typography} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
