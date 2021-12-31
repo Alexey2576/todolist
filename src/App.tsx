@@ -18,6 +18,8 @@ import {TodoLists} from "./Components/TodoLists/TodoLists";
 import {AppBarTodoList} from "./Components/AppBarTodoList/AppBarTodoList";
 import {Container} from "@material-ui/core";
 import {TaskType} from "./Components/TodoLists/ListTasksTodoList/TaskTodoList/TaskTodoList";
+import {useTheme} from "@material-ui/core/styles";
+import {SideBar} from "./Components/SideBar/SideBar";
 
 export type TodoListsType = {
    todoList_ID: string
@@ -122,9 +124,16 @@ const App = () => {
       }
    }
 
+   //=========================================================
+   const [open, setOpen] = React.useState(false);
+
+   const handleDrawerCloseCallback = () => setOpen(false)
+   const handleDrawerOpenCallback = () => setOpen(true)
+
    return (
       <div className={s.todoLists}>
-         <AppBarTodoList/>
+         <AppBarTodoList open={open} handleDrawerOpenCallback={handleDrawerOpenCallback}/>
+         <SideBar open={open} handleDrawerCloseCallback={handleDrawerCloseCallback}/>
          <Container>
             <MemoizedAddNewTodoList value={state.valueInputAddTodoList}
                                     addTodoListCallback={addTodoListCallback}

@@ -11,7 +11,7 @@ export type AddNewTodoListType = {
 
 const useStyles = makeStyles({
    grid_container: {
-      margin: "20px 0",
+      margin: "100px 0 40px 0",
       display: "flex",
       justifyContent: "center",
       alignItems: "center"
