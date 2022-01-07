@@ -1,7 +1,7 @@
-import {FilterPriorityTaskType} from "../../App";
+import {FilterPriorityTaskType} from "../../../App";
 import {v1} from "uuid";
-import {addTodoListAC, removeTodoListAC} from "./todoListReducer";
-import {TaskType} from "../TodoLists/ListTasksTodoList/TaskTodoList/TaskTodoList";
+import {addTodoListAC, removeTodoListAC} from "../todoListReducer";
+import {TaskType} from "../../TodoLists/ListTasksTodoList/TaskTodoList/TaskTodoList";
 
 export type TasksStateType = {
    [todoList_ID: string]: TaskType[]
