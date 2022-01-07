@@ -1,5 +1,5 @@
-import React from 'react';
-import {Checkbox, Grid, IconButton} from "@material-ui/core";
+import React, {useState} from 'react';
+import {Checkbox, Grid, IconButton, ListItem} from "@material-ui/core";
 import {TaskTitle} from "./TaskTittle/TaskTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {FilterPriorityTaskType} from "../../../../App";
@@ -36,6 +36,7 @@ const TaskTodoList: React.FC<TaskTodoListType> = (
    {
       todoList_ID,
       task,
+
       removeTaskCallback,
       changeCheckedTaskCallback
    }
@@ -43,27 +44,44 @@ const TaskTodoList: React.FC<TaskTodoListType> = (
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
+   const [isDisable, setIsDisable] = useState(true)
+
    // =================================== HANDLERS =====================================================================
    const onClickRemoveTaskHandler = () => removeTaskCallback(todoList_ID, task.task_ID)
    const onChangeCheckedTaskHandler = () => changeCheckedTaskCallback(todoList_ID, task.task_ID, !task.checked)
 
+   const opacityTask = !task.checked ? "100%" : "40%"
+   const opacityIconButton = isDisable ? "0%" : "100%"
+
    return (
-         <Grid container className={classes.grid_container}>
-            <Grid item className={classes.grid_item}>
+      <Grid container className={classes.grid_container}>
+         <Grid item className={classes.grid_item} >
+            <ListItem button
+                      divider
+                      onMouseOver={() => setIsDisable(false)}
+                      onMouseOut={() => setIsDisable(true)}
+                      style={{
+                         opacity: opacityTask,
+                         padding: "2px"
+                      }}>
                <Checkbox
                   checked={task.checked}
                   onChange={onChangeCheckedTaskHandler}
                   inputProps={{'aria-label': 'controlled'}}/>
                <TaskTitle key={task.task_ID}
-                          checked={task.checked}
                           task_title={task.task_title}
                           task_priority={task.task_priority}/>
-
-               <IconButton aria-label="delete" onClick={onClickRemoveTaskHandler}>
+               <IconButton aria-label="delete"
+                           style={{
+                              opacity: opacityIconButton
+                           }}
+                           onClick={onClickRemoveTaskHandler}
+                           size={"small"}>
                   <DeleteIcon/>
                </IconButton>
-            </Grid>
+            </ListItem>
          </Grid>
+      </Grid>
    );
 };
 

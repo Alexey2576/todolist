@@ -1,15 +1,18 @@
 import React from 'react';
 import {MemoizedFilterButtons} from "./FilterButtons/FilterButtons";
 import {Grid, Paper} from "@material-ui/core";
-import {FilterCheckedTaskType, FilterPriorityTaskType, TodoListStateType} from "../../App";
+import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../App";
 import {MemoizedAddTaskTodoList} from "./AddTaskTodoList/AddTaskTodoList";
 import {MemoizedLinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
 import {MemoizedTitleTodoLists} from "./TitleTodoList/TitleTodoList";
 import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
 import {TaskType} from "./ListTasksTodoList/TaskTodoList/TaskTodoList";
+import {TasksStateType} from "../Reducer/TasksReducer/tasksReducer";
+import {TodoListsStateType} from "../Reducer/TodoListsReducer/todoListsReducer";
 
 export type TodoListsType = {
-   state: TodoListStateType
+   tasksState: TasksStateType
+   todoListsState: TodoListsStateType[]
    addTaskCallback: (todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => void
    removeTaskCallback: (todoList_ID: string, task_ID: string) => void
    removeTodoListCallback: (todoList_ID: string) => void
@@ -22,7 +25,8 @@ export type TodoListsType = {
 
 export const TodoLists: React.FC<TodoListsType> = (
    {
-      state,
+      tasksState,
+      todoListsState,
       changeCheckedTaskCallback,
       removeTaskCallback,
       changeFilterPriorityTodoList,
@@ -35,7 +39,7 @@ export const TodoLists: React.FC<TodoListsType> = (
 ) => {
    return (
       <Grid container spacing={3}>
-         {state.todoLists.map(tl => {
+         {todoListsState.map(tl => {
             return (
                <Grid item spacing={6} md={4} xs={3}>
                   <Paper elevation={7} style={{padding: "10px"}}>
@@ -46,8 +50,8 @@ export const TodoLists: React.FC<TodoListsType> = (
                                               selectValue={tl.selectValue}
                                               addTaskCallback={addTaskCallback}
                                               changeValueSelectCallback={changeValueSelectCallback}/>
-                     <MemoizedLinearProgressTasks numberOfAllTasks={state.tasks[tl.todoList_ID].length}
-                                                  numberOfCompletedTasks={state.tasks[tl.todoList_ID].filter(t => t.checked).length}/>
+                     <MemoizedLinearProgressTasks numberOfAllTasks={tasksState[tl.todoList_ID].length}
+                                                  numberOfCompletedTasks={tasksState[tl.todoList_ID].filter(t => t.checked).length}/>
                      <ListTasksTodoList todoList_ID={tl.todoList_ID}
                                         tasks={getFilteredCheckedTasksCallback(tl.todoList_ID, tl.filterChecked, tl.filterPriority)}
                                         changeCheckedTaskCallback={changeCheckedTaskCallback}

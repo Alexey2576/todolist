@@ -24,7 +24,7 @@ const LinearProgressTasks: React.FC<LinearProgressTasksType> = (
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
-   // THE FUNCTION OF CALCULATING THE PERCENTAGE OF COMPLETED TASKS ====================================================
+   // ================== THE FUNCTION OF CALCULATING THE PERCENTAGE OF COMPLETED TASKS =================================
    const getProgress = () => (numberOfCompletedTasks / numberOfAllTasks) * 100
 
    return (
@@ -41,9 +41,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
             <LinearProgress variant="determinate" {...props} />
          </Box>
          <Box minWidth={35}>
-            <Typography variant="body2" color="textSecondary">{`${Math.round(
-               props.value,
-            )}%`}</Typography>
+            <Typography variant="body2" color="textSecondary">{`${Math.round(props.value,)}%`}</Typography>
          </Box>
       </Box>
    );

@@ -8,7 +8,7 @@ export type TodoListsStateType = {
    selectValue: FilterPriorityTaskType
 }
 
-export type DispatchType =
+export type TodoListActionsType =
    ReturnType<typeof removeTodoListAC>
    | ReturnType<typeof addTodoListAC>
    | ReturnType<typeof changeFilterCheckedTodoListAC>
@@ -16,7 +16,24 @@ export type DispatchType =
    | ReturnType<typeof setValueSelectAC>
    | ReturnType<typeof changeTitleTodoListAC>
 
-export const todoListsReducer = (state: TodoListsStateType[], action: DispatchType): TodoListsStateType[] => {
+export const initialTodoListsState: TodoListsStateType[] = [
+   {
+      todoList_ID: "todoList_ID_1",
+      title: "TodoList 1",
+      filterPriority: "All",
+      filterChecked: "All",
+      selectValue: null
+   },
+   {
+      todoList_ID: "todoList_ID_2",
+      title: "TodoList 2",
+      filterPriority: "All",
+      filterChecked: "All",
+      selectValue: null
+   }
+]
+
+export const todoListsReducer = (state: TodoListsStateType[], action: TodoListActionsType): TodoListsStateType[] => {
    switch (action.type) {
       case "REMOVE_TODOLIST":
          return state.filter(tl => tl.todoList_ID !== action.todoList_ID)
@@ -33,8 +50,7 @@ export const todoListsReducer = (state: TodoListsStateType[], action: DispatchTy
          return state.map(tl => tl.todoList_ID === action.todoList_ID ? {...tl, filterPriority: action.filterPriority} : tl)
       case "SET_VALUE_SELECT":
          return state.map(tl => tl.todoList_ID === action.todoList_ID ? {...tl, selectValue: action.selectValue} : tl)
-      default:
-         return state
+      default: return state
    }
 }
 

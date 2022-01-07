@@ -6,8 +6,10 @@ import {startTodoListState} from "./TodoListsReducer/todoListsReducer.test";
 
 test('tests tasks and todoLists for adding new todoList should be corrected', () => {
    const action = addTodoListAC(v1(), "New TodoList")
+
    const endTasksState = tasksReducer(startTasksState, action)
    const endTodoListsState = todoListsReducer(startTodoListState, action)
+
    const keys = Object.keys(endTasksState)
    expect(keys.length).toBe(3)
    expect(endTodoListsState[2]).toBeDefined()

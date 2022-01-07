@@ -1,12 +1,10 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {Grid, IconButton, TextField} from "@material-ui/core";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import {makeStyles} from "@material-ui/core/styles";
 
 export type AddNewTodoListType = {
-   value: string
-   addTodoListCallback: () => void
-   changeTextNewTodoListCallback: (value: string) => void
+   addTodoListCallback: (title: string) => void
 }
 
 const useStyles = makeStyles({
@@ -20,17 +18,18 @@ const useStyles = makeStyles({
 
 const AddNewTodoList: React.FC<AddNewTodoListType> = (
    {
-      value,
       addTodoListCallback,
-      changeTextNewTodoListCallback
    }
 ) => {
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
+   // ============================= USE STYLES CONSTANT ================================================================
+   const [newTodoListTitle, setNewTodoListTitle] = useState("")
+
    // ============================= HANDLERS ===========================================================================
-   const addTodoListHandler = () => addTodoListCallback()
-   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => changeTextNewTodoListCallback(e.currentTarget.value)
+   const addTodoListHandler = () => addTodoListCallback(newTodoListTitle)
+   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTodoListTitle(e.currentTarget.value)
 
    return (
       <Grid container className={classes.grid_container}>
@@ -41,7 +40,7 @@ const AddNewTodoList: React.FC<AddNewTodoListType> = (
                placeholder="Placeholder"
                multiline
                variant="outlined"
-               value={value}
+               value={newTodoListTitle}
                onChange={onChangeHandler}/>
             <IconButton onClick={addTodoListHandler}>
                <CreateNewFolderIcon/>
