@@ -23,7 +23,7 @@ export const todoListsReducer = (state: TodoListsStateType[], action: DispatchTy
       case "ADD_TODOLIST":
          return [
             ...state,
-            {todoList_ID: action.todoList_ID, title: "CAP", filterPriority: "All", filterChecked: "All", selectValue: null}
+            {todoList_ID: action.todoList_ID, title: action.title, filterPriority: "All", filterChecked: "All", selectValue: null}
          ]
       case "CHANGE_TITLE_TODOLIST":
          return state.map(tl => tl.todoList_ID === action.todoList_ID ? {...tl, title: action.newTitle} : tl)
@@ -39,7 +39,7 @@ export const todoListsReducer = (state: TodoListsStateType[], action: DispatchTy
 }
 
 export const removeTodoListAC = (todoList_ID: string) => ({type: "REMOVE_TODOLIST", todoList_ID} as const)
-export const addTodoListAC = (todoList_ID: string) => ({type: "ADD_TODOLIST", todoList_ID} as const)
+export const addTodoListAC = (todoList_ID: string, title: string) => ({type: "ADD_TODOLIST", todoList_ID, title} as const)
 export const changeTitleTodoListAC = (todoList_ID: string, newTitle: string) => ({type: "CHANGE_TITLE_TODOLIST", todoList_ID, newTitle} as const)
 export const changeFilterCheckedTodoListAC = (todoList_ID: string, filterChecked: FilterCheckedTaskType) => ({type: "CHANGE_FILTER_CHECKED_TODOLIST", todoList_ID, filterChecked} as const)
 export const changeFilterPriorityTodoListAC = (todoList_ID: string, filterPriority: FilterPriorityTaskType) => ({type: "CHANGE_FILTER_PRIORITY_TODOLIST", todoList_ID, filterPriority} as const)
