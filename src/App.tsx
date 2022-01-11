@@ -20,7 +20,6 @@ import {
    tasksReducer
 } from "./Components/Reducer/TasksReducer/tasksReducer";
 
-//========================================= TYPING ===================================================
 export type FilterPriorityTaskType = "High" | "Middle" | "Low" | "All" | null
 export type FilterCheckedTaskType = "All" | "Completed" | "Active"
 
@@ -32,8 +31,9 @@ const App = () => {
 
    //========================================= TODOLIST CALLBACKS ==========================================================================================================================================================================
    const addTodoListCallback = useCallback((title: string) => {
-      todoListsDispatch(addTodoListAC(v1(), title))
-      tasksDispatch(addTodoListAC(v1(), title))
+      const action = addTodoListAC(v1(), title)
+      todoListsDispatch(action)
+      tasksDispatch(action)
    }, [addTodoListAC])
    const addTaskCallback = useCallback((todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => value.length && tasksDispatch(addTaskAC(value, todoList_ID, selectValue)), [addTaskAC])
    const removeTaskCallback = useCallback((todoList_ID: string, task_ID: string) => tasksDispatch(removeTaskAC(todoList_ID, task_ID)), [removeTaskAC])

@@ -16,6 +16,7 @@ test('correct todoList should be deleted from correct array', () => {
    expect(endState).toEqual([
       {todoList_ID: "todolistId2", title: "What to buy?", filterPriority: "All", filterChecked: "All", selectValue: null},
    ]);
+   expect(endState[0].title).toBe("What to buy?")
 });
 test('correct todoList should be added to array todoLists', () => {
    const action = addTodoListAC("todoListId3", "New TodoList");
