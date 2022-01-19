@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../../App";
 import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -16,18 +16,13 @@ const useStyles = makeStyles({
    grid_item: {
       display: "flex",
       justifyContent: "space-between",
-      alignItems: "center"
+      alignItems: "center",
    },
 });
 
-const FilterButtons: React.FC<FilterButtonsType> = (
-   {
-      todoList_ID,
-      filterChecked,
-      changeFilterCheckedTodoList,
-      changeFilterPriorityTodoList
-   }
-) => {
+export const FilterButtons: React.FC<FilterButtonsType> = React.memo((props) => {
+   const { todoList_ID, filterChecked, changeFilterCheckedTodoList, changeFilterPriorityTodoList, } = props
+
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
@@ -36,31 +31,31 @@ const FilterButtons: React.FC<FilterButtonsType> = (
 
    // =================================== HANDLERS =====================================================================
    // ==== Button Group ===
-   const setAllHandler = () => changeFilterCheckedTodoList(todoList_ID, "All")
-   const setActiveHandler = () => changeFilterCheckedTodoList(todoList_ID, "Active")
-   const setCompletedHandler = () => changeFilterCheckedTodoList(todoList_ID, "Completed")
+   const setAllHandler = useCallback(() => changeFilterCheckedTodoList(todoList_ID, "All"), [changeFilterCheckedTodoList, todoList_ID])
+   const setActiveHandler = useCallback(() => changeFilterCheckedTodoList(todoList_ID, "Active"), [changeFilterCheckedTodoList, todoList_ID])
+   const setCompletedHandler = useCallback(() => changeFilterCheckedTodoList(todoList_ID, "Completed"), [changeFilterCheckedTodoList, todoList_ID])
 
    // ==== Menu (DOTS) ===
-   const handleClickHandler = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)
-   const handleCloseHandler = () => setAnchorEl(null)
+   const handleClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget), [setAnchorEl])
+   const handleCloseHandler = useCallback(() => setAnchorEl(null), [setAnchorEl])
 
    // ==== Menu ===
-   const handleCloseAllHandler = () => {
+   const handleCloseAllHandler = useCallback(() => {
       changeFilterPriorityTodoList(todoList_ID, "All")
       setAnchorEl(null);
-   };
-   const handleCloseHighHandler = () => {
+   }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
+   const handleCloseHighHandler = useCallback(() => {
       changeFilterPriorityTodoList(todoList_ID, "High")
       setAnchorEl(null);
-   };
-   const handleCloseMiddleHandler = () => {
+   }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
+   const handleCloseMiddleHandler = useCallback(() => {
       changeFilterPriorityTodoList(todoList_ID, "Middle")
       setAnchorEl(null);
-   };
-   const handleCloseLowHandler = () => {
+   }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
+   const handleCloseLowHandler = useCallback(() => {
       changeFilterPriorityTodoList(todoList_ID, "Low")
       setAnchorEl(null);
-   };
+   }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
 
    return (
       <Grid item className={classes.grid_item}>
@@ -91,7 +86,5 @@ const FilterButtons: React.FC<FilterButtonsType> = (
          </Menu>
       </Grid>
    );
-};
-
-export const MemoizedFilterButtons = React.memo(FilterButtons)
+});
 

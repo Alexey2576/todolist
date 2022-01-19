@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {EditableSpan} from "../../EditableSpan/EditableSpan";
 import {Grid, IconButton} from "@material-ui/core";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
@@ -15,37 +15,34 @@ const useStyles = makeStyles({
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      marginBottom: "15px"
-   }
+      marginBottom: "15px",
+   },
 });
 
-const TitleTodoLists: React.FC<TitleTodoListType> = (
-   {
-      todoList_ID,
-      title,
-      removeTodoListCallback
-   }
-) => {
+export const TitleTodoLists: React.FC<TitleTodoListType> = React.memo((props) => {
+   // ============================= DESTRUCTURING PROPS  ===============================================================
+   const { todoList_ID, title, removeTodoListCallback, } = props
+
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
-   // ============================= USE STATE =========================================================================
+   // ============================= USE STATE ==========================================================================
    const [valueTitle, setValueTitle] = useState(title)
 
    // ============================= HANDLERS ===========================================================================
-   const onChangeTextTitleHandler = (value: string) => setValueTitle(value)
-   const onClickRemoveTodoListHandler = () => removeTodoListCallback(todoList_ID)
+   const onChangeTextTitleHandler = useCallback((value: string) => setValueTitle(value), [setValueTitle])
+   const onClickRemoveTodoListHandler = useCallback(() => removeTodoListCallback(todoList_ID), [removeTodoListCallback, todoList_ID])
 
    return (
       <Grid container className={classes.grid_container}>
-         <EditableSpan value={valueTitle} variant={"h5"}
+         <EditableSpan value={valueTitle}
+                       variant={"h5"}
                        onChangeTextTitle={onChangeTextTitleHandler}/>
-         <IconButton size="small" onClick={onClickRemoveTodoListHandler}>
+         <IconButton size="small"
+                     onClick={onClickRemoveTodoListHandler}>
             <ClearAllIcon/>
          </IconButton>
       </Grid>
    );
-}
-
-export const MemoizedTitleTodoLists = React.memo(TitleTodoLists)
+});
 

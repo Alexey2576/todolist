@@ -1,14 +1,9 @@
 import React from 'react';
-import {MemoizedFilterButtons} from "./FilterButtons/FilterButtons";
-import {Grid, Paper} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../App";
-import {MemoizedAddTaskTodoList} from "./AddTaskTodoList/AddTaskTodoList";
-import {MemoizedLinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
-import {MemoizedTitleTodoLists} from "./TitleTodoList/TitleTodoList";
-import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
-import {TaskType} from "./ListTasksTodoList/TaskTodoList/TaskTodoList";
 import {TasksStateType} from "../Reducer/TasksReducer/tasksReducer";
 import {TodoListsStateType} from "../Reducer/TodoListsReducer/todoListsReducer";
+import {TodoList} from "./TodoList/TodoList";
 
 export type TodoListsType = {
    tasksState: TasksStateType
@@ -20,51 +15,13 @@ export type TodoListsType = {
    changeFilterPriorityTodoList: (todoList_ID: string, filterPriority: FilterPriorityTaskType) => void
    changeValueSelectCallback: (todoList_ID: string, selectValue: FilterPriorityTaskType) => void
    changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: boolean) => void
-   getFilteredCheckedTasksCallback: (todoList_ID: string, filterChecked: FilterCheckedTaskType, filterPriority: FilterPriorityTaskType) => TaskType[]
 }
 
-export const TodoLists: React.FC<TodoListsType> = (
-   {
-      tasksState,
-      todoListsState,
-      changeCheckedTaskCallback,
-      removeTaskCallback,
-      changeFilterPriorityTodoList,
-      removeTodoListCallback,
-      changeValueSelectCallback,
-      changeFilterCheckedTodoList,
-      addTaskCallback,
-      getFilteredCheckedTasksCallback
-   }
-) => {
+export const TodoLists: React.FC<TodoListsType> = React.memo((props)  => {
    return (
       <Grid container spacing={3}>
-         {todoListsState.map(tl => {
-            return (
-               <Grid item spacing={6} md={4} xs={3}>
-                  <Paper elevation={7} style={{padding: "10px"}}>
-                     <MemoizedTitleTodoLists todoList_ID={tl.todoList_ID}
-                                             title={tl.title}
-                                             removeTodoListCallback={removeTodoListCallback}/>
-                     <MemoizedAddTaskTodoList todoList_ID={tl.todoList_ID}
-                                              selectValue={tl.selectValue}
-                                              addTaskCallback={addTaskCallback}
-                                              changeValueSelectCallback={changeValueSelectCallback}/>
-                     <MemoizedLinearProgressTasks numberOfAllTasks={tasksState[tl.todoList_ID].length}
-                                                  numberOfCompletedTasks={tasksState[tl.todoList_ID].filter(t => t.checked).length}/>
-                     <ListTasksTodoList todoList_ID={tl.todoList_ID}
-                                        tasks={getFilteredCheckedTasksCallback(tl.todoList_ID, tl.filterChecked, tl.filterPriority)}
-                                        changeCheckedTaskCallback={changeCheckedTaskCallback}
-                                        removeTaskCallback={removeTaskCallback}/>
-                     <MemoizedFilterButtons todoList_ID={tl.todoList_ID}
-                                            filterChecked={tl.filterChecked}
-                                            filterPriority={tl.filterPriority}
-                                            changeFilterPriorityTodoList={changeFilterPriorityTodoList}
-                                            changeFilterCheckedTodoList={changeFilterCheckedTodoList}/>
-                  </Paper>
-               </Grid>
-            )
-         })}
+         { props.todoListsState.map(tl => <TodoList todoList={tl} {...props}/>) }
       </Grid>
    );
-};
+});
+

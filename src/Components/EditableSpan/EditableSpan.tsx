@@ -1,6 +1,5 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
+import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react'
 import {TextField, Typography} from "@material-ui/core";
-
 
 type EditableSpanType = {
    value: string
@@ -22,19 +21,18 @@ type EditableSpanType = {
       | 'inherit'
 }
 
-export const EditableSpan: React.FC<EditableSpanType> = (
-   {
-      value,
-      onChangeTextTitle,
-      variant
-   }
-) => {
+export const EditableSpan: React.FC<EditableSpanType> = React.memo((props) => {
+   // ============================= DESTRUCTURING PROPS  ===============================================================
+   const { value, onChangeTextTitle, variant, } =  props
+
+   // ============================= USE STATE ==========================================================================
    const [editMode, setEditMode] = useState<boolean>(false)
 
-   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && setEditMode(false)
-   const onBlurHandler = (e: React.FocusEvent<HTMLInputElement>) => setEditMode(false)
-   const onDoubleClickHandler = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => setEditMode(true)
-   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => onChangeTextTitle(e.currentTarget.value)
+   // ============================= HANDLERS ===========================================================================
+   const onKeyPressHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && setEditMode(false), [setEditMode])
+   const onBlurHandler = useCallback(() => setEditMode(false), [setEditMode])
+   const onDoubleClickHandler = useCallback(() => setEditMode(true), [setEditMode])
+   const onChangeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => onChangeTextTitle(e.currentTarget.value), [onChangeTextTitle])
    return (
       <div>
          {editMode
@@ -50,4 +48,4 @@ export const EditableSpan: React.FC<EditableSpanType> = (
          }
       </div>
    )
-}
+})

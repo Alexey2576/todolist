@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Typography} from "@material-ui/core";
 import {FilterPriorityTaskType} from "../../../../../App";
 import {EditableSpan} from "../../../../EditableSpan/EditableSpan";
@@ -8,15 +8,15 @@ export type TaskTitleType = {
    task_priority: FilterPriorityTaskType
 }
 
-export const TaskTitle: React.FC<TaskTitleType> = (
-   {
-      task_title,
-      task_priority
-   }
-) => {
+export const TaskTitle: React.FC<TaskTitleType> = React.memo((props) => {
+   // ============================= DESTRUCTURING PROPS  ===============================================================
+   const {task_title, task_priority,} = props
+
+   // ============================= USE STATE ==========================================================================
    const [value, setValue] = useState<string>(task_title)
 
-   const onChangeText = (value: string) => setValue(value)
+   // ============================= CALLBACK ===========================================================================
+   const onChangeTextTitle = useCallback((value: string) => setValue(value), [setValue])
 
    return (
       <span style={{
@@ -24,19 +24,18 @@ export const TaskTitle: React.FC<TaskTitleType> = (
          width: "100%",
          display: "flex",
          justifyContent: "space-between",
-         alignItems: "center"
+         alignItems: "center",
       }}>
-         <EditableSpan value={value} variant={"button"}
-                       onChangeTextTitle={onChangeText}/>
+         <EditableSpan value={value}
+                       variant={"button"}
+                       onChangeTextTitle={onChangeTextTitle}/>
          <Typography gutterBottom
                      variant={"button"}
                      style={{
                         width: "50px",
                         fontSize: "12px",
-                        textAlign: "center"
-                     }}>
-            {task_priority}
-         </Typography>
+                        textAlign: "center",
+                     }}>{task_priority}</Typography>
       </span>
    );
-};
+});

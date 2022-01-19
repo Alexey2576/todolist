@@ -1,6 +1,6 @@
 import React from 'react';
 import {List} from "@material-ui/core";
-import {MemoizedTaskTodoList, TaskType} from "./TaskTodoList/TaskTodoList";
+import {TaskTodoList, TaskType} from "./TaskTodoList/TaskTodoList";
 
 export type ListTasksTodoListType = {
    todoList_ID: string
@@ -9,21 +9,13 @@ export type ListTasksTodoListType = {
    changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: boolean) => void
 }
 
-export const ListTasksTodoList: React.FC<ListTasksTodoListType> = (
-   {
-      todoList_ID,
-      tasks,
-      removeTaskCallback,
-      changeCheckedTaskCallback
-   }
-) => {
+export const ListTasksTodoList: React.FC<ListTasksTodoListType> = React.memo((props) => {
+   // ============================= DESTRUCTURING PROPS  ===============================================================
+   const { tasks, } = props
    return (
       <List component="nav"
             aria-label="mailbox folders">
-         {tasks.map(task => <MemoizedTaskTodoList todoList_ID={todoList_ID}
-                                                  task={task}
-                                                  removeTaskCallback={removeTaskCallback}
-                                                  changeCheckedTaskCallback={changeCheckedTaskCallback}/>)}
+         { tasks.map(task => <TaskTodoList task={task} {...props}/>) }
       </List>
    );
-};
+});

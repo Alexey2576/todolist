@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import LinearProgress, {LinearProgressProps} from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
@@ -15,26 +15,24 @@ const useStyles = makeStyles({
    },
 });
 
-const LinearProgressTasks: React.FC<LinearProgressTasksType> = (
-   {
-      numberOfAllTasks,
-      numberOfCompletedTasks
-   }
-) => {
+export const LinearProgressTasks: React.FC<LinearProgressTasksType> = React.memo((props) => {
+   // ============================= DESTRUCTURING PROPS  ===============================================================
+   const { numberOfAllTasks, numberOfCompletedTasks, } = props
+
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
    // ================== THE FUNCTION OF CALCULATING THE PERCENTAGE OF COMPLETED TASKS =================================
-   const getProgress = () => (numberOfCompletedTasks / numberOfAllTasks) * 100
+   const getProgress = useCallback(() => (numberOfCompletedTasks / numberOfAllTasks) * 100, [numberOfCompletedTasks, numberOfAllTasks])
 
    return (
       <div className={classes.linear_progress_tasks}>
          <LinearProgressWithLabel value={getProgress()}/>
       </div>
    );
-}
+});
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+const LinearProgressWithLabel = React.memo((props: LinearProgressProps & { value: number }) => {
    return (
       <Box display="flex" alignItems="center">
          <Box width="100%" mr={1}>
@@ -45,8 +43,6 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
          </Box>
       </Box>
    );
-}
-
-export const MemoizedLinearProgressTasks = React.memo(LinearProgressTasks)
+})
 
 

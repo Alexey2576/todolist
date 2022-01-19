@@ -12,19 +12,15 @@ const useStyles = makeStyles({
       margin: "100px 0 40px 0",
       display: "flex",
       justifyContent: "center",
-      alignItems: "center"
-   }
+      alignItems: "center",
+   },
 })
 
-const AddNewTodoList: React.FC<AddNewTodoListType> = (
-   {
-      addTodoListCallback,
-   }
-) => {
+export const AddNewTodoList: React.FC<AddNewTodoListType> = React.memo(({ addTodoListCallback, }) => {
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
-   // ============================= USE STYLES CONSTANT ================================================================
+   // ============================= USE STATE ================================================================
    const [newTodoListTitle, setNewTodoListTitle] = useState("")
 
    // ============================= HANDLERS ===========================================================================
@@ -48,6 +44,4 @@ const AddNewTodoList: React.FC<AddNewTodoListType> = (
          </Grid>
       </Grid>
    );
-};
-
-export const MemoizedAddNewTodoList = React.memo(AddNewTodoList)
+});

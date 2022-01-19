@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react';
 import {
    FormControl,
    FormHelperText,
@@ -26,24 +26,20 @@ const useStyles = makeStyles({
       justifyContent: "space-between",
       alignItems: "start",
       marginBottom: "7px",
-      height: "45px"
+      height: "45px",
    },
    select: {
-      width: "100px"
+      width: "100px",
    },
    form_helper_text: {
-      color: "red"
-   }
+      color: "red",
+   },
 });
 
-const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
-   {
-      todoList_ID,
-      changeValueSelectCallback,
-      selectValue,
-      addTaskCallback
-   }
-) => {
+export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props) => {
+   // ============================= DESTRUCTURING PROPS  ===============================================================
+   const { todoList_ID, changeValueSelectCallback, selectValue, addTaskCallback, } = props
+
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
 
@@ -53,7 +49,7 @@ const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
    const [errorInput, setErrorInput] = useState(false)
 
    // ============================= HANDLERS ===========================================================================
-   const onClickAddTaskHandler = () => {
+   const onClickAddTaskHandler = useCallback(() => {
       if (!selectValue) {
          setErrorSelect(true)
       }
@@ -65,18 +61,18 @@ const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
          setValueTask("")
          changeValueSelectCallback(todoList_ID, null)
       }
-   }
-   const changeValueSelectHandler = (e: ChangeEvent<{ value: unknown }>) => {
+   }, [setErrorSelect, setErrorInput, addTaskCallback, setValueTask, changeValueSelectCallback, todoList_ID, errorInput, errorSelect, selectValue, valueTask])
+   const changeValueSelectHandler = useCallback((e: ChangeEvent<{ value: unknown }>) => {
       changeValueSelectCallback(todoList_ID, e.target.value as FilterPriorityTaskType)
       setErrorSelect(false)
-   }
-   const onChangeTextTaskHandler = (e: ChangeEvent<HTMLInputElement>) => {
+   }, [changeValueSelectCallback, setErrorSelect, todoList_ID])
+   const onChangeTextTaskHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
       setValueTask(e.currentTarget.value)
       setErrorInput(false)
-   }
-   const onEnterHandler = (e: KeyboardEvent<HTMLDivElement>) => {
+   }, [setValueTask, setErrorInput])
+   const onEnterHandler = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
       e.key === "Enter" && onClickAddTaskHandler()
-   }
+   }, [onClickAddTaskHandler])
 
    return (
       <Grid container className={classes.grid_container}>
@@ -110,6 +106,4 @@ const AddTaskTodoList: React.FC<AddTaskTodoListType> = (
          </IconButton>
       </Grid>
    );
-}
-
-export const MemoizedAddTaskTodoList = React.memo(AddTaskTodoList)
+})
