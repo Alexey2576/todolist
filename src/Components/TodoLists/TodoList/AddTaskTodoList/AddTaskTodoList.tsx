@@ -10,7 +10,7 @@ import {
    TextField
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {FilterPriorityTaskType} from "../../../App";
+import {FilterPriorityTaskType} from "../../../../App";
 import {makeStyles} from "@material-ui/core/styles";
 
 export type AddTaskTodoListType = {

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Grid} from "@material-ui/core";
 import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../App";
-import {TasksStateType} from "../Reducer/TasksReducer/tasksReducer";
-import {TodoListsStateType} from "../Reducer/TodoListsReducer/todoListsReducer";
+import {TasksStateType} from "../../Reducers/TasksReducer/tasksReducer";
+import {TodoListsStateType} from "../../Reducers/TodoListsReducer/todoListsReducer";
 import {TodoList} from "./TodoList/TodoList";
 
 export type TodoListsType = {
@@ -20,7 +20,7 @@ export type TodoListsType = {
 export const TodoLists: React.FC<TodoListsType> = React.memo((props)  => {
    return (
       <Grid container spacing={3}>
-         { props.todoListsState.map(tl => <TodoList todoList={tl} {...props}/>) }
+         { props.todoListsState.map(tl => <TodoList key={tl.todoList_ID} todoList={tl} {...props}/>) }
       </Grid>
    );
 });

@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../../App";
+import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../../../App";
 import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {makeStyles} from "@material-ui/core/styles";

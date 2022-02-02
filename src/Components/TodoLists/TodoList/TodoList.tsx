@@ -1,14 +1,14 @@
-import {TodoListsStateType} from "../../Reducer/TodoListsReducer/todoListsReducer";
-import {TasksStateType} from "../../Reducer/TasksReducer/tasksReducer";
+import {TodoListsStateType} from "../../../Reducers/TodoListsReducer/todoListsReducer";
+import {TasksStateType} from "../../../Reducers/TasksReducer/tasksReducer";
 import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../../App";
 import React from "react";
-import {TaskType} from "../ListTasksTodoList/TaskTodoList/TaskTodoList";
+import {TaskType} from "./ListTasksTodoList/TaskTodoList/TaskTodoList";
 import {Grid, Paper} from "@material-ui/core";
-import {TitleTodoLists} from "../TitleTodoList/TitleTodoList";
-import {AddTaskTodoList} from "../AddTaskTodoList/AddTaskTodoList";
-import {LinearProgressTasks} from "../LinearProgressTasks/LinearProgressTasks";
-import {ListTasksTodoList} from "../ListTasksTodoList/ListTasksTodoList";
-import {FilterButtons} from "../FilterButtons/FilterButtons";
+import {TitleTodoLists} from "./TitleTodoList/TitleTodoList";
+import {AddTaskTodoList} from "./AddTaskTodoList/AddTaskTodoList";
+import {LinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
+import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
+import {FilterButtons} from "./FilterButtons/FilterButtons";
 
 export type TodoListType = {
    todoList: TodoListsStateType

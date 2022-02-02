@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {Typography} from "@material-ui/core";
-import {FilterPriorityTaskType} from "../../../../../App";
-import {EditableSpan} from "../../../../EditableSpan/EditableSpan";
+import {FilterPriorityTaskType} from "../../../../../../App";
+import {EditableSpan} from "../../../../../EditableSpan/EditableSpan";
 
 export type TaskTitleType = {
    task_title: string

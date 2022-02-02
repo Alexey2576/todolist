@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {Checkbox, Grid, IconButton, ListItem} from "@material-ui/core";
 import {TaskTitle} from "./TaskTittle/TaskTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {FilterPriorityTaskType} from "../../../../App";
+import {FilterPriorityTaskType} from "../../../../../App";
 import {makeStyles} from "@material-ui/core/styles";
 
 export type TaskType = {

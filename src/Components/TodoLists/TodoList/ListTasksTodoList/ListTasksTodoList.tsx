@@ -15,7 +15,7 @@ export const ListTasksTodoList: React.FC<ListTasksTodoListType> = React.memo((pr
    return (
       <List component="nav"
             aria-label="mailbox folders">
-         { tasks.map(task => <TaskTodoList task={task} {...props}/>) }
+         { tasks.map(task => <TaskTodoList key={task.task_ID} task={task} {...props}/>) }
       </List>
    );
 });
