@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import {Typography} from "@material-ui/core";
-import {FilterPriorityTaskType} from "../../../../../../App";
 import {EditableSpan} from "../../../../../EditableSpan/EditableSpan";
+import {FilterPriorityTask} from "../../../../../../API/tasks-api";
 
 export type TaskTitleType = {
    task_title: string
-   task_priority: FilterPriorityTaskType
+   task_priority: FilterPriorityTask
 }
 
 export const TaskTitle: React.FC<TaskTitleType> = React.memo((props) => {

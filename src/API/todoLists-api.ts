@@ -1,6 +1,9 @@
 import {instanceAxios} from "./settings-api";
+import {OwnTodoListType} from "../Reducers/TodoListsReducer/todoListsReducer";
 
-type TodoListType = {
+
+
+export type TodoListsStateType = OwnTodoListType & {
    id: string
    title: string
    addedDate: string
@@ -18,10 +21,10 @@ export type CommonResponseType<T = {}> = {
 
 export const todoListsApi = {
    getTodoLists: () => {
-      return instanceAxios.get<TodoListType[]>(`todo-lists`).then(res => res.data)
+      return instanceAxios.get<TodoListsStateType[]>(`todo-lists`).then(res => res.data)
    },
    createTodoList: (title: string) => {
-      return instanceAxios.post<CommonResponseType<{ item: TodoListType }>>(`todo-lists`, { title }).then(res => res.data)
+      return instanceAxios.post<CommonResponseType<{ item: TodoListsStateType }>>(`todo-lists`, { title }).then(res => res.data)
    },
    deleteTodoList: (todolistId: string) => {
       return instanceAxios.delete<CommonResponseType>(`todo-lists/${todolistId}`).then(res => res.data)

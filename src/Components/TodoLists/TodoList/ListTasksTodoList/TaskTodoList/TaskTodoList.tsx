@@ -2,20 +2,14 @@ import React, {useCallback, useState} from 'react';
 import {Checkbox, Grid, IconButton, ListItem} from "@material-ui/core";
 import {TaskTitle} from "./TaskTittle/TaskTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {FilterPriorityTaskType} from "../../../../../App";
 import {makeStyles} from "@material-ui/core/styles";
+import {FilterStatusTask, TaskType} from "../../../../../API/tasks-api";
 
-export type TaskType = {
-   task_ID: string,
-   checked: boolean
-   task_title: string
-   task_priority: FilterPriorityTaskType
-}
 export type TaskTodoListType = {
    todoList_ID: string
    task: TaskType
    removeTaskCallback: (todoList_ID: string, task_ID: string) => void
-   changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: boolean) => void
+   changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: FilterStatusTask) => void
 }
 
 const useStyles = makeStyles({
@@ -43,13 +37,13 @@ export const TaskTodoList: React.FC<TaskTodoListType> = React.memo((props) => {
    const [isDisable, setIsDisable] = useState(true)
 
    // =================================== HANDLERS =====================================================================
-   const onClickRemoveTaskHandler = useCallback(() => removeTaskCallback(todoList_ID, task.task_ID), [removeTaskCallback, todoList_ID, task.task_ID])
-   const onChangeCheckedTaskHandler = useCallback(() => changeCheckedTaskCallback(todoList_ID, task.task_ID, !task.checked), [changeCheckedTaskCallback, todoList_ID, task.task_ID, task.checked])
+   const onClickRemoveTaskHandler = useCallback(() => removeTaskCallback(todoList_ID, task.id), [removeTaskCallback, todoList_ID, task.id])
+   const onChangeCheckedTaskHandler = useCallback(() => changeCheckedTaskCallback(todoList_ID, task.id, task.status === FilterStatusTask.New ? FilterStatusTask.Completed : FilterStatusTask.New), [changeCheckedTaskCallback, todoList_ID, task.id, task.status])
    const onMouseOverHandler = useCallback(() => setIsDisable(false), [setIsDisable])
    const onMouseOut = useCallback(() => setIsDisable(true), [setIsDisable])
 
    // =================================== CONSTANTS ====================================================================
-   const opacityTask = !task.checked ? "100%" : "40%"
+   const opacityTask = task.status === FilterStatusTask.New ? "100%" : "40%"
    const opacityIconButton = isDisable ? "0%" : "100%"
 
    return (
@@ -63,12 +57,12 @@ export const TaskTodoList: React.FC<TaskTodoListType> = React.memo((props) => {
                          opacity: opacityTask,
                          padding: "2px",
                       }}>
-               <Checkbox checked={task.checked}
+               <Checkbox checked={task.status === FilterStatusTask.Completed}
                          onChange={onChangeCheckedTaskHandler}
                          inputProps={{'aria-label': 'controlled'}}/>
-               <TaskTitle key={task.task_ID}
-                          task_title={task.task_title}
-                          task_priority={task.task_priority}/>
+               <TaskTitle key={task.id}
+                          task_title={task.title}
+                          task_priority={task.priority}/>
                <IconButton aria-label="delete"
                            onClick={onClickRemoveTaskHandler}
                            size={"small"}

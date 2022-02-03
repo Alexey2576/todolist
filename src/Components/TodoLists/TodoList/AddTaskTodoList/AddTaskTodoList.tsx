@@ -10,14 +10,14 @@ import {
    TextField
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {FilterPriorityTaskType} from "../../../../App";
 import {makeStyles} from "@material-ui/core/styles";
+import {FilterPriorityTask} from "../../../../API/tasks-api";
 
 export type AddTaskTodoListType = {
    todoList_ID: string
-   selectValue: FilterPriorityTaskType
-   changeValueSelectCallback: (todoList_ID: string, selectValue: FilterPriorityTaskType) => void
-   addTaskCallback: (todoList_ID: string, value: string, selectValue: FilterPriorityTaskType) => void
+   selectPriorityValue: FilterPriorityTask
+   changeValueSelectCallback: (todoList_ID: string, selectPriorityValue: FilterPriorityTask) => void
+   addTaskCallback: (todoList_ID: string, value: string, selectPriorityValue: FilterPriorityTask) => void
 }
 
 const useStyles = makeStyles({
@@ -38,7 +38,7 @@ const useStyles = makeStyles({
 
 export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props) => {
    // ============================= DESTRUCTURING PROPS  ===============================================================
-   const { todoList_ID, changeValueSelectCallback, selectValue, addTaskCallback, } = props
+   const { todoList_ID, changeValueSelectCallback, selectPriorityValue, addTaskCallback, } = props
 
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
@@ -50,20 +50,20 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props)
 
    // ============================= HANDLERS ===========================================================================
    const onClickAddTaskHandler = useCallback(() => {
-      if (!selectValue) {
+      if (!selectPriorityValue) {
          setErrorSelect(true)
       }
       else if (!valueTask.trim()) {
          setErrorInput(true)
       }
       else if (!errorInput && !errorSelect) {
-         addTaskCallback(todoList_ID, valueTask.trim(), selectValue)
+         addTaskCallback(todoList_ID, valueTask.trim(), selectPriorityValue)
          setValueTask("")
-         changeValueSelectCallback(todoList_ID, null)
+         changeValueSelectCallback(todoList_ID, FilterPriorityTask.null)
       }
-   }, [setErrorSelect, setErrorInput, addTaskCallback, setValueTask, changeValueSelectCallback, todoList_ID, errorInput, errorSelect, selectValue, valueTask])
+   }, [setErrorSelect, setErrorInput, addTaskCallback, setValueTask, changeValueSelectCallback, todoList_ID, errorInput, errorSelect, selectPriorityValue, valueTask])
    const changeValueSelectHandler = useCallback((e: ChangeEvent<{ value: unknown }>) => {
-      changeValueSelectCallback(todoList_ID, e.target.value as FilterPriorityTaskType)
+      changeValueSelectCallback(todoList_ID, e.target.value as FilterPriorityTask)
       setErrorSelect(false)
    }, [changeValueSelectCallback, setErrorSelect, todoList_ID])
    const onChangeTextTaskHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -91,13 +91,13 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props)
                labelId="demo-simple-select-outlined-label"
                className={classes.select}
                id="demo-simple-select-outlined"
-               value={selectValue}
+               value={selectPriorityValue}
                error={errorSelect}
                onChange={changeValueSelectHandler}
                label="Priority">
-               <MenuItem value={"High"}>High</MenuItem>
-               <MenuItem value={"Middle"}>Middle</MenuItem>
-               <MenuItem value={"Low"}>Low</MenuItem>
+               <MenuItem value={FilterPriorityTask.High}>High</MenuItem>
+               <MenuItem value={FilterPriorityTask.Middle}>Middle</MenuItem>
+               <MenuItem value={FilterPriorityTask.Low}>Low</MenuItem>
             </Select>
             {errorSelect && <FormHelperText className={classes.form_helper_text}>Enter priority</FormHelperText>}
          </FormControl>

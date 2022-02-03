@@ -1,15 +1,15 @@
 import React, {useCallback} from 'react';
-import {FilterCheckedTaskType, FilterPriorityTaskType} from "../../../../App";
 import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {makeStyles} from "@material-ui/core/styles";
+import {FilterPriorityTask, FilterStatusTask} from "../../../../API/tasks-api";
 
 export type FilterButtonsType = {
    todoList_ID: string
-   filterPriority: FilterPriorityTaskType
-   filterChecked: FilterCheckedTaskType
-   changeFilterCheckedTodoList: (todoList_ID: string, filterChecked: FilterCheckedTaskType) => void
-   changeFilterPriorityTodoList: (todoList_ID: string, filterPriority: FilterPriorityTaskType) => void
+   filterPriority: FilterPriorityTask
+   filterStatus: FilterStatusTask
+   changeFilterStatusTodoListCallback: (todoList_ID: string, filterStatus: FilterStatusTask) => void
+   changeFilterPriorityTodoList: (todoList_ID: string, filterPriority: FilterPriorityTask) => void
 }
 
 const useStyles = makeStyles({
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 });
 
 export const FilterButtons: React.FC<FilterButtonsType> = React.memo((props) => {
-   const { todoList_ID, filterChecked, changeFilterCheckedTodoList, changeFilterPriorityTodoList, } = props
+   const { todoList_ID, filterStatus, changeFilterStatusTodoListCallback, changeFilterPriorityTodoList, } = props
 
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
@@ -31,9 +31,9 @@ export const FilterButtons: React.FC<FilterButtonsType> = React.memo((props) => 
 
    // =================================== HANDLERS =====================================================================
    // ==== Button Group ===
-   const setAllHandler = useCallback(() => changeFilterCheckedTodoList(todoList_ID, "All"), [changeFilterCheckedTodoList, todoList_ID])
-   const setActiveHandler = useCallback(() => changeFilterCheckedTodoList(todoList_ID, "Active"), [changeFilterCheckedTodoList, todoList_ID])
-   const setCompletedHandler = useCallback(() => changeFilterCheckedTodoList(todoList_ID, "Completed"), [changeFilterCheckedTodoList, todoList_ID])
+   const setAllHandler = useCallback(() => changeFilterStatusTodoListCallback(todoList_ID, FilterStatusTask.All), [changeFilterStatusTodoListCallback, todoList_ID])
+   const setActiveHandler = useCallback(() => changeFilterStatusTodoListCallback(todoList_ID, FilterStatusTask.New), [changeFilterStatusTodoListCallback, todoList_ID])
+   const setCompletedHandler = useCallback(() => changeFilterStatusTodoListCallback(todoList_ID, FilterStatusTask.Completed), [changeFilterStatusTodoListCallback, todoList_ID])
 
    // ==== Menu (DOTS) ===
    const handleClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget), [setAnchorEl])
@@ -41,19 +41,19 @@ export const FilterButtons: React.FC<FilterButtonsType> = React.memo((props) => 
 
    // ==== Menu ===
    const handleCloseAllHandler = useCallback(() => {
-      changeFilterPriorityTodoList(todoList_ID, "All")
+      changeFilterPriorityTodoList(todoList_ID, FilterPriorityTask.All)
       setAnchorEl(null);
    }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
    const handleCloseHighHandler = useCallback(() => {
-      changeFilterPriorityTodoList(todoList_ID, "High")
+      changeFilterPriorityTodoList(todoList_ID, FilterPriorityTask.High)
       setAnchorEl(null);
    }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
    const handleCloseMiddleHandler = useCallback(() => {
-      changeFilterPriorityTodoList(todoList_ID, "Middle")
+      changeFilterPriorityTodoList(todoList_ID, FilterPriorityTask.Middle)
       setAnchorEl(null);
    }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
    const handleCloseLowHandler = useCallback(() => {
-      changeFilterPriorityTodoList(todoList_ID, "Low")
+      changeFilterPriorityTodoList(todoList_ID, FilterPriorityTask.Low)
       setAnchorEl(null);
    }, [changeFilterPriorityTodoList, setAnchorEl, todoList_ID]);
 
@@ -61,11 +61,11 @@ export const FilterButtons: React.FC<FilterButtonsType> = React.memo((props) => 
       <Grid item className={classes.grid_item}>
          <ButtonGroup fullWidth color={"primary"}>
             <Button onClick={setAllHandler}
-                    variant={filterChecked === "All" ? "contained" : "outlined"}>All</Button>
+                    variant={filterStatus === FilterStatusTask.All ? "contained" : "outlined"}>All</Button>
             <Button onClick={setActiveHandler}
-                    variant={filterChecked === "Active" ? "contained" : "outlined"}>Active</Button>
+                    variant={filterStatus === FilterStatusTask.New ? "contained" : "outlined"}>Active</Button>
             <Button onClick={setCompletedHandler}
-                    variant={filterChecked === "Completed" ? "contained" : "outlined"}>Completed</Button>
+                    variant={filterStatus === FilterStatusTask.Completed ? "contained" : "outlined"}>Completed</Button>
          </ButtonGroup>
          <IconButton aria-controls="simple-menu"
                      aria-haspopup="true"
