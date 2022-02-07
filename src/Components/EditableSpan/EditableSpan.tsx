@@ -3,8 +3,11 @@ import {TextField, Typography} from "@material-ui/core";
 
 type EditableSpanType = {
    value: string
+   editMode: boolean
    onChangeTextTitle: (value: string) => void
-   variant: 'h1'
+   setEditModeCallback: (editMode: boolean) => void
+   variant:
+      | 'h1'
       | 'h2'
       | 'h3'
       | 'h4'
@@ -23,15 +26,12 @@ type EditableSpanType = {
 
 export const EditableSpan: React.FC<EditableSpanType> = React.memo((props) => {
    // ============================= DESTRUCTURING PROPS  ===============================================================
-   const { value, onChangeTextTitle, variant, } =  props
-
-   // ============================= USE STATE ==========================================================================
-   const [editMode, setEditMode] = useState<boolean>(false)
+   const { value, onChangeTextTitle, variant, editMode, setEditModeCallback, } =  props
 
    // ============================= HANDLERS ===========================================================================
-   const onKeyPressHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && setEditMode(false), [setEditMode])
-   const onBlurHandler = useCallback(() => setEditMode(false), [setEditMode])
-   const onDoubleClickHandler = useCallback(() => setEditMode(true), [setEditMode])
+   const onKeyPressHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && setEditModeCallback(false), [setEditModeCallback])
+   const onBlurHandler = useCallback(() => setEditModeCallback(false), [setEditModeCallback])
+   const onDoubleClickHandler = useCallback(() => setEditModeCallback(true), [setEditModeCallback])
    const onChangeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => onChangeTextTitle(e.currentTarget.value), [onChangeTextTitle])
    return (
       <div>

@@ -1,23 +1,5 @@
-import {instanceAxios} from "./settings-api";
-import {OwnTodoListType} from "../Reducers/TodoListsReducer/todoListsReducer";
-
-
-
-export type TodoListsStateType = OwnTodoListType & {
-   id: string
-   title: string
-   addedDate: string
-   order: number
-}
-
-export type CommonResponseType<T = {}> = {
-   data: T
-   messages: string[]
-   fieldsErrors: string[]
-   resultCode: number
-}
-
-
+import {CommonResponseType, instanceAxios} from "./settings-api";
+import {TodoListsStateType} from "../Reducers/TodoListsReducer/todoListsReducer";
 
 export const todoListsApi = {
    getTodoLists: () => {

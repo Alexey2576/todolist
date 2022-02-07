@@ -3,13 +3,14 @@ import {Checkbox, Grid, IconButton, ListItem} from "@material-ui/core";
 import {TaskTitle} from "./TaskTittle/TaskTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {makeStyles} from "@material-ui/core/styles";
-import {FilterStatusTask, TaskType} from "../../../../../API/tasks-api";
+import {FilterStatusTask, TaskType} from "../../../../../Reducers/TasksReducer/tasksReducer";
 
 export type TaskTodoListType = {
    todoList_ID: string
    task: TaskType
    removeTaskCallback: (todoList_ID: string, task_ID: string) => void
-   changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: FilterStatusTask) => void
+   changeStatusTaskCallback: (todoList_ID: string, task_ID: string, checked: FilterStatusTask) => void
+   changeTitleTaskCallback: (todoList_ID: string, task_ID: string, title: string) => void
 }
 
 const useStyles = makeStyles({
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
 
 export const TaskTodoList: React.FC<TaskTodoListType> = React.memo((props) => {
    // ============================= DESTRUCTURING PROPS  ===============================================================
-   const {todoList_ID, task, removeTaskCallback, changeCheckedTaskCallback,} = props
+   const {todoList_ID, task, removeTaskCallback, changeStatusTaskCallback, changeTitleTaskCallback } = props
 
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
@@ -38,7 +39,7 @@ export const TaskTodoList: React.FC<TaskTodoListType> = React.memo((props) => {
 
    // =================================== HANDLERS =====================================================================
    const onClickRemoveTaskHandler = useCallback(() => removeTaskCallback(todoList_ID, task.id), [removeTaskCallback, todoList_ID, task.id])
-   const onChangeCheckedTaskHandler = useCallback(() => changeCheckedTaskCallback(todoList_ID, task.id, task.status === FilterStatusTask.New ? FilterStatusTask.Completed : FilterStatusTask.New), [changeCheckedTaskCallback, todoList_ID, task.id, task.status])
+   const onChangeCheckedTaskHandler = useCallback(() => changeStatusTaskCallback(todoList_ID, task.id, task.status === FilterStatusTask.New ? FilterStatusTask.Completed : FilterStatusTask.New), [changeStatusTaskCallback, todoList_ID, task.id, task.status])
    const onMouseOverHandler = useCallback(() => setIsDisable(false), [setIsDisable])
    const onMouseOut = useCallback(() => setIsDisable(true), [setIsDisable])
 
@@ -61,8 +62,11 @@ export const TaskTodoList: React.FC<TaskTodoListType> = React.memo((props) => {
                          onChange={onChangeCheckedTaskHandler}
                          inputProps={{'aria-label': 'controlled'}}/>
                <TaskTitle key={task.id}
+                          task_ID={task.id}
+                          todoList_ID={todoList_ID}
                           task_title={task.title}
-                          task_priority={task.priority}/>
+                          task_priority={task.priority}
+                          changeTitleTaskCallback={changeTitleTaskCallback}/>
                <IconButton aria-label="delete"
                            onClick={onClickRemoveTaskHandler}
                            size={"small"}

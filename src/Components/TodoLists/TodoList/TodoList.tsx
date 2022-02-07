@@ -1,13 +1,20 @@
-import {TasksStateType} from "../../../Reducers/TasksReducer/tasksReducer";
-import React from "react";
+import {
+   FilterPriorityTask,
+   FilterStatusTask,
+   TasksStateType,
+   TaskType
+} from "../../../Reducers/TasksReducer/tasksReducer";
+import React, {useEffect} from "react";
 import {Grid, Paper} from "@material-ui/core";
 import {TitleTodoLists} from "./TitleTodoList/TitleTodoList";
 import {AddTaskTodoList} from "./AddTaskTodoList/AddTaskTodoList";
 import {LinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
 import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
 import {FilterButtons} from "./FilterButtons/FilterButtons";
-import {TodoListsStateType} from "../../../API/todoLists-api";
-import {FilterPriorityTask, FilterStatusTask, TaskType} from "../../../API/tasks-api";
+import {useDispatch} from "react-redux";
+import {getTasksTC} from "../../../Reducers/TasksReducer/tasksThunks";
+import {ThunkDispatchType} from "../../../Reducers/store";
+import {TodoListsStateType} from "../../../Reducers/TodoListsReducer/todoListsReducer";
 
 export type TodoListType = {
    todoList: TodoListsStateType
@@ -18,7 +25,9 @@ export type TodoListType = {
    changeFilterStatusTodoListCallback: (todoList_ID: string, filterStatus: FilterStatusTask) => void
    changeFilterPriorityTodoList: (todoList_ID: string, filterPriority: FilterPriorityTask) => void
    changeValueSelectCallback: (todoList_ID: string, selectPriorityValue: FilterPriorityTask) => void
-   changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: FilterStatusTask) => void
+   changeStatusTaskCallback: (todoList_ID: string, task_ID: string, checked: FilterStatusTask) => void
+   changeTitleTodoListCallback: (todoList_ID: string, valueTitle: string) => void
+   changeTitleTaskCallback: (todoList_ID: string, task_ID: string, title: string) => void
 }
 export const TodoList: React.FC<TodoListType> = React.memo((props) => {
    // ============================= DESTRUCTURING PROPS  ===============================================================
@@ -53,6 +62,13 @@ export const TodoList: React.FC<TodoListType> = React.memo((props) => {
    const filteredTasks = getFilteredCheckedTasksCallback(todoList.id, todoList.filterStatus, todoList.filterPriority)
    const numberOfAllTasks = tasksState[todoList.id].length
    const numberOfCompletedTasks = tasksState[todoList.id].filter(t => t.status === FilterStatusTask.Completed).length
+
+   //========================================= USE EFFECT ===============================================================
+   const dispatch = useDispatch<ThunkDispatchType>()
+   useEffect(() => {
+      dispatch(getTasksTC(todoList.id))
+   }, [dispatch, todoList.id])
+
    return (
       <Grid item spacing={6} md={4} xs={3}>
          <Paper elevation={7} style={{padding: "10px"}}>

@@ -66,7 +66,7 @@ export const AppBarTodoList: React.FC<AppBarTodoListType> = (
                <MenuIcon/>
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-               News
+               My TodoLists
             </Typography>
             <Button color="inherit">Login</Button>
          </Toolbar>

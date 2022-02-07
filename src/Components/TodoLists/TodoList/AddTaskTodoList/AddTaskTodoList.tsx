@@ -11,11 +11,11 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import {makeStyles} from "@material-ui/core/styles";
-import {FilterPriorityTask} from "../../../../API/tasks-api";
+import {FilterPriorityTask} from "../../../../Reducers/TasksReducer/tasksReducer";
 
 export type AddTaskTodoListType = {
    todoList_ID: string
-   selectPriorityValue: FilterPriorityTask
+   selectPriorityValue: FilterPriorityTask | null
    changeValueSelectCallback: (todoList_ID: string, selectPriorityValue: FilterPriorityTask) => void
    addTaskCallback: (todoList_ID: string, value: string, selectPriorityValue: FilterPriorityTask) => void
 }

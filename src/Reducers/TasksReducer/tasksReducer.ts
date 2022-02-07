@@ -1,92 +1,16 @@
-import {v1} from "uuid";
 import {ActionsTasksType} from "./tasksActions";
-import {FilterPriorityTask, FilterStatusTask, TaskType} from "../../API/tasks-api";
 
-export type TasksStateType = {
-   [todoList_ID: string]: TaskType[]
-}
-
-const initialTasksState: TasksStateType = {
-   "todoList_ID_1": [
-      {
-         id: v1(),
-         title: "Task 1",
-         description: null,
-         todoListId: "todoList_ID_1",
-         order: 0,
-         status: FilterStatusTask.New,
-         priority: FilterPriorityTask.High,
-         startDate: null,
-         deadline: null,
-         addedDate: "2022"
-      },
-      {
-         id: v1(),
-         title: "Task 2",
-         description: null,
-         todoListId: "todoList_ID_1",
-         order: 0,
-         status: FilterStatusTask.New,
-         priority: FilterPriorityTask.Middle,
-         startDate: null,
-         deadline: null,
-         addedDate: "2022"
-      },
-      {
-         id: v1(),
-         title: "Task 3",
-         description: null,
-         todoListId: "todoList_ID_1",
-         order: 0,
-         status: FilterStatusTask.New,
-         priority: FilterPriorityTask.Low,
-         startDate: null,
-         deadline: null,
-         addedDate: "2022"
-      },
-   ],
-   "todoList_ID_2": [
-      {
-         id: v1(),
-         title: "Task 4",
-         description: null,
-         todoListId: "todoList_ID_2",
-         order: 0,
-         status: FilterStatusTask.New,
-         priority: FilterPriorityTask.High,
-         startDate: null,
-         deadline: null,
-         addedDate: "2022"
-      },
-      {
-         id: v1(),
-         title: "Task 5",
-         description: null,
-         todoListId: "todoList_ID_2",
-         order: 0,
-         status: FilterStatusTask.New,
-         priority: FilterPriorityTask.Middle,
-         startDate: null,
-         deadline: null,
-         addedDate: "2022"
-      },
-      {
-         id: v1(),
-         title: "Task 6",
-         description: null,
-         todoListId: "todoList_ID_2",
-         order: 0,
-         status: FilterStatusTask.New,
-         priority: FilterPriorityTask.Low,
-         startDate: null,
-         deadline: null,
-         addedDate: "2022"
-      },
-   ]
-}
-
-export const tasksReducer = (state: TasksStateType = initialTasksState, action: ActionsTasksType): TasksStateType => {
+export const tasksReducer = (state: TasksStateType = {}, action: ActionsTasksType): TasksStateType => {
    switch (action.type) {
+      case "SET_ALL_TODOLIST":
+         const newState = {...state}
+         action.todoLists.forEach(tl => newState[tl.id] = [])
+         return newState
+      case "SET_ALL_TASKS":
+         return {
+            ...state,
+            [action.todoListID]: action.tasks
+         }
       case "REMOVE_TASK":
          return {
             ...state,
@@ -95,30 +19,18 @@ export const tasksReducer = (state: TasksStateType = initialTasksState, action: 
       case "ADD_TASK":
          return {
             ...state,
-            [action.todoList_ID]: [...state[action.todoList_ID], {
-               id: v1(),
-               title: action.title,
-               description: null,
-               todoListId: action.todoList_ID,
-               order: 0,
-               status: FilterStatusTask.New,
-               priority: action.selectPriorityValue,
-               startDate: null,
-               deadline: null,
-               addedDate: "2022"}]
+            [action.todoList_ID]: [action.task, ...state[action.todoList_ID]]
          }
-      case "SET_CHECKED_TASK":
+      case "UPDATE_TASK":
          return {
             ...state,
-            [action.todoList_ID]: state[action.todoList_ID].map(t => t.id === action.task_ID ? {...t, status: action.checked} : t)
-         }
-      case "CHANGE_TASK_TITLE":
-         return {
-            ...state,
-            [action.todoList_ID]: state[action.todoList_ID].map(t => t.id === action.task_ID ? {...t, task_title: action.newTitle} : t)
+            [action.todoList_ID]: state[action.todoList_ID].map(t => t.id === action.task_ID ? {
+               ...t,
+               ...action.updateTaskBody,
+            } : t)
          }
       case "ADD_TODOLIST":
-         return {...state, [action.todoList_ID]: []}
+         return {...state, [action.todoList.id]: []}
       case "REMOVE_TODOLIST":
          const copyState = {...state}
          delete copyState[action.todoList_ID]
@@ -126,5 +38,46 @@ export const tasksReducer = (state: TasksStateType = initialTasksState, action: 
       default:
          return state
    }
+}
+
+//========================================= TYPES ======================================================================
+export enum FilterPriorityTask {
+   All = 0,
+   Low = 1,
+   Middle = 2,
+   High = 3,
+   Urgently = 4,
+   Later = 5,
+   null = "",
+}
+export enum FilterStatusTask {
+   New = 0,
+   InProgress = 1,
+   Completed = 2,
+   Draft = 3,
+   All = 4,
+}
+export type UpdateDomainBodyTaskType = {
+   title: string
+   description: string
+   status: number
+   priority: FilterPriorityTask
+   startDate: string
+   deadline: string
+}
+export type TaskType = {
+   id: string
+   title: string
+   description: string
+   todoListId: string
+   order: number
+   status: FilterStatusTask
+   priority: FilterPriorityTask
+   startDate: string
+   deadline: string
+   addedDate: string
+}
+export type TasksStateType = {
+   [todoList_ID: string]: TaskType[]
 }
 

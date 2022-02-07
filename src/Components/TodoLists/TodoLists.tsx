@@ -1,9 +1,8 @@
 import React from 'react';
 import {Grid} from "@material-ui/core";
-import {TasksStateType} from "../../Reducers/TasksReducer/tasksReducer";
+import {FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Reducers/TasksReducer/tasksReducer";
 import {TodoList} from "./TodoList/TodoList";
-import {FilterPriorityTask, FilterStatusTask} from "../../API/tasks-api";
-import {TodoListsStateType} from "../../API/todoLists-api";
+import {TodoListsStateType} from "../../Reducers/TodoListsReducer/todoListsReducer";
 
 export type TodoListsType = {
    tasksState: TasksStateType
@@ -14,7 +13,9 @@ export type TodoListsType = {
    changeFilterStatusTodoListCallback: (todoList_ID: string, filterStatus: FilterStatusTask) => void
    changeFilterPriorityTodoList: (todoList_ID: string, filterPriority: FilterPriorityTask) => void
    changeValueSelectCallback: (todoList_ID: string, selectPriorityValue: FilterPriorityTask) => void
-   changeCheckedTaskCallback: (todoList_ID: string, task_ID: string, checked: FilterStatusTask) => void
+   changeStatusTaskCallback: (todoList_ID: string, task_ID: string, checked: FilterStatusTask) => void
+   changeTitleTodoListCallback: (todoList_ID: string, valueTitle: string) => void
+   changeTitleTaskCallback: (todoList_ID: string, task_ID: string, title: string) => void
 }
 
 export const TodoLists: React.FC<TodoListsType> = React.memo((props)  => {
