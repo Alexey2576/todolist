@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import {AppBar, Button, IconButton, LinearProgress, Toolbar, Typography} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {useAppSelector} from "../../Redux/store";
+import {useAppDispatch, useAppSelector} from "../../Redux/store";
+import {logoutTC} from "../../Redux/Auth/authThunks";
 
 const drawerWidth = 240;
 
@@ -47,10 +48,13 @@ export const AppBarTodoList: React.FC<AppBarTodoListType> = (
       handleDrawerOpenCallback
    }
 ) => {
+   const dispatch = useAppDispatch()
+   const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
    const isFetching = useAppSelector<boolean>(state => state.app.isFetching)
    const classes = useStyles();
 
    const handleDrawerOpen = () => handleDrawerOpenCallback()
+   const onLogoutHandle = () => dispatch(logoutTC());
 
    return (
       <AppBar position="sticky"
@@ -70,7 +74,7 @@ export const AppBarTodoList: React.FC<AppBarTodoListType> = (
             <Typography variant="h6" className={classes.title}>
                My TodoLists
             </Typography>
-            <Button color="inherit">Login</Button>
+            {isLoggedIn && <Button color="inherit" onClick={onLogoutHandle}>Logout</Button>}
          </Toolbar>
          {isFetching && <LinearProgress/>}
       </AppBar>

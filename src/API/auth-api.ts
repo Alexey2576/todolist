@@ -7,6 +7,11 @@ export const authAPI = {
          .post<LoginDataType, AxiosResponse<CommonResponseType<{ userId: number }>>>(`auth/login`, data)
          .then(res => res.data)
    },
+   logout() {
+      return instanceAxios
+         .delete<CommonResponseType>(`auth/login`)
+         .then(res => res.data)
+   },
    me() {
       return instanceAxios
          .get<CommonResponseType<MeType>>(`auth/me`)
