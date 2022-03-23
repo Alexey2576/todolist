@@ -1,7 +1,7 @@
 import React from 'react';
 import {List} from "@material-ui/core";
 import {TaskTodoList} from "./TaskTodoList/TaskTodoList";
-import {FilterStatusTask, TaskType} from "../../../../Reducers/TasksReducer/tasksReducer";
+import {FilterStatusTask, ProgressTaskType, TaskType} from "../../../../Redux/Tasks/tasksReducer";
 
 export type ListTasksTodoListType = {
    todoList_ID: string
@@ -13,11 +13,17 @@ export type ListTasksTodoListType = {
 
 export const ListTasksTodoList: React.FC<ListTasksTodoListType> = React.memo((props) => {
    // ============================= DESTRUCTURING PROPS  ===============================================================
-   const { tasks, } = props
+   const {tasks,} = props
    return (
       <List component="nav"
             aria-label="mailbox folders">
-         { tasks.map(task => <TaskTodoList key={task.id} task={task} {...props}/>) }
+         {tasks.map(task => {
+            return (
+               <>
+                  <TaskTodoList key={task.id} task={task} {...props}/>
+               </>
+            )
+         })}
       </List>
    );
 });

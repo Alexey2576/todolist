@@ -1,5 +1,5 @@
-import {TodoListsStateType} from "./todoListsReducer";
-import {FilterPriorityTask, FilterStatusTask} from "../TasksReducer/tasksReducer";
+import {ProgressTodoListType, TodoListsStateType} from "./todoListsReducer";
+import {FilterPriorityTask, FilterStatusTask} from "../Tasks/tasksReducer";
 
 export type ActionsTodoListsType =
    | ReturnType<typeof removeTodoListAC>
@@ -9,6 +9,7 @@ export type ActionsTodoListsType =
    | ReturnType<typeof setValueSelectAC>
    | ReturnType<typeof changeTitleTodoListAC>
    | ReturnType<typeof setAllTodoListsAC>
+   | ReturnType<typeof setProgressTodoListAC>
 
 export const removeTodoListAC = (todoList_ID: string) => ({type: "REMOVE_TODOLIST", todoList_ID} as const)
 export const addTodoListAC = (todoList: TodoListsStateType) => ({type: "ADD_TODOLIST", todoList} as const)
@@ -17,3 +18,4 @@ export const changeFilterCheckedTodoListAC = (todoList_ID: string, filterStatus:
 export const changeFilterPriorityTodoListAC = (todoList_ID: string, filterPriority: FilterPriorityTask) => ({type: "CHANGE_FILTER_PRIORITY_TODOLIST", todoList_ID, filterPriority} as const)
 export const setValueSelectAC = (todoList_ID: string, selectPriorityValue: FilterPriorityTask) => ({type: "SET_VALUE_SELECT", todoList_ID, selectPriorityValue} as const)
 export const setAllTodoListsAC = (todoLists: TodoListsStateType[]) => ({type: "SET_ALL_TODOLIST", todoLists} as const)
+export const setProgressTodoListAC = (todoList_ID: string, progress: ProgressTodoListType) => ({type: "SET_PROGRESS_TODOLIST", todoList_ID, progress} as const)

@@ -1,9 +1,9 @@
 import React, {useCallback, useState} from 'react';
-import {Checkbox, Grid, IconButton, ListItem} from "@material-ui/core";
+import {Checkbox, CircularProgress, Grid, IconButton, ListItem} from "@material-ui/core";
 import {TaskTitle} from "./TaskTittle/TaskTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {makeStyles} from "@material-ui/core/styles";
-import {FilterStatusTask, TaskType} from "../../../../../Reducers/TasksReducer/tasksReducer";
+import {FilterStatusTask, TaskType} from "../../../../../Redux/Tasks/tasksReducer";
 
 export type TaskTodoListType = {
    todoList_ID: string
@@ -29,29 +29,42 @@ const useStyles = makeStyles({
 
 export const TaskTodoList: React.FC<TaskTodoListType> = React.memo((props) => {
    // ============================= DESTRUCTURING PROPS  ===============================================================
-   const {todoList_ID, task, removeTaskCallback, changeStatusTaskCallback, changeTitleTaskCallback } = props
+   const {
+      todoList_ID,
+      task,
+      removeTaskCallback,
+      changeStatusTaskCallback,
+      changeTitleTaskCallback,
+   } = props
 
-   // ============================= USE STYLES CONSTANT ================================================================
-   const classes = useStyles();
 
    // ============================= USE STATE ==========================================================================
    const [isDisable, setIsDisable] = useState(true)
 
-   // =================================== HANDLERS =====================================================================
-   const onClickRemoveTaskHandler = useCallback(() => removeTaskCallback(todoList_ID, task.id), [removeTaskCallback, todoList_ID, task.id])
-   const onChangeCheckedTaskHandler = useCallback(() => changeStatusTaskCallback(todoList_ID, task.id, task.status === FilterStatusTask.New ? FilterStatusTask.Completed : FilterStatusTask.New), [changeStatusTaskCallback, todoList_ID, task.id, task.status])
-   const onMouseOverHandler = useCallback(() => setIsDisable(false), [setIsDisable])
-   const onMouseOut = useCallback(() => setIsDisable(true), [setIsDisable])
+   // ============================= USE STYLES CONSTANT ================================================================
+   const classes = useStyles();
 
    // =================================== CONSTANTS ====================================================================
    const opacityTask = task.status === FilterStatusTask.New ? "100%" : "40%"
    const opacityIconButton = isDisable ? "0%" : "100%"
+
+   // =================================== HANDLERS =====================================================================
+   const onClickRemoveTaskHandler = useCallback(() => {
+      removeTaskCallback(todoList_ID, task.id)
+      setIsDisable(false)
+   }, [removeTaskCallback, todoList_ID, task.id])
+   const onChangeCheckedTaskHandler = useCallback(() => {
+      changeStatusTaskCallback(todoList_ID, task.id, task.status === FilterStatusTask.New ? FilterStatusTask.Completed : FilterStatusTask.New)
+   }, [changeStatusTaskCallback, todoList_ID, task.id, task.status])
+   const onMouseOverHandler = useCallback(() => setIsDisable(false), [setIsDisable])
+   const onMouseOut = useCallback(() => setIsDisable(true), [setIsDisable])
 
    return (
       <Grid container className={classes.grid_container}>
          <Grid item className={classes.grid_item}>
             <ListItem button
                       divider
+                      disabled={task.progress === "remove-task"}
                       onMouseOver={onMouseOverHandler}
                       onMouseOut={onMouseOut}
                       style={{
@@ -73,10 +86,13 @@ export const TaskTodoList: React.FC<TaskTodoListType> = React.memo((props) => {
                            style={{
                               opacity: opacityIconButton,
                            }}>
-                  <DeleteIcon/>
+                  {task.progress === "remove-task" ? <CircularProgress size={24}/>: <DeleteIcon/>}
                </IconButton>
             </ListItem>
+
          </Grid>
+
+
       </Grid>
    );
 });

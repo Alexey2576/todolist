@@ -1,10 +1,10 @@
 import {ActionsTodoListsType} from "./todoListsActions";
-import {FilterPriorityTask, FilterStatusTask} from "../TasksReducer/tasksReducer";
+import {FilterPriorityTask, FilterStatusTask} from "../Tasks/tasksReducer";
 
 export const todoListsReducer = (state: TodoListsStateType[] = [], action: ActionsTodoListsType): TodoListsStateType[] => {
    switch (action.type) {
       case "SET_ALL_TODOLIST":
-         return action.todoLists.map(tl => ({...tl, filterPriority: FilterPriorityTask.All, filterStatus: FilterStatusTask.All, selectPriorityValue: null}))
+         return action.todoLists.map(tl => ({...tl, filterPriority: FilterPriorityTask.All, filterStatus: FilterStatusTask.All, selectPriorityValue: null, progress: null}))
       case "REMOVE_TODOLIST":
          return state.filter(tl => tl.id !== action.todoList_ID)
       case "ADD_TODOLIST":
@@ -20,6 +20,8 @@ export const todoListsReducer = (state: TodoListsStateType[] = [], action: Actio
          return state.map(tl => tl.id === action.todoList_ID ? {...tl, filterPriority: action.filterPriority} : tl)
       case "SET_VALUE_SELECT":
          return state.map(tl => tl.id === action.todoList_ID ? {...tl, selectPriorityValue: action.selectPriorityValue} : tl)
+      case "SET_PROGRESS_TODOLIST":
+         return state.map(tl => tl.id === action.todoList_ID ? {...tl, progress: action.progress} : tl)
       default: return state
    }
 }
@@ -31,8 +33,11 @@ export type TodoListsStateType = OwnTodoListType & {
    addedDate: string
    order: number
 }
+
 export type  OwnTodoListType = {
    filterPriority: FilterPriorityTask,
    filterStatus: FilterStatusTask,
    selectPriorityValue: FilterPriorityTask | null
+   progress: ProgressTodoListType
 }
+export type ProgressTodoListType = "add-task" | "remove-todolist" | null

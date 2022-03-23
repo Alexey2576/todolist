@@ -1,5 +1,5 @@
 import {CommonResponseType, instanceAxios} from "./settings-api";
-import {TodoListsStateType} from "../Reducers/TodoListsReducer/todoListsReducer";
+import {TodoListsStateType} from "../Redux/TodoLists/todoListsReducer";
 
 export const todoListsApi = {
    getTodoLists: () => {

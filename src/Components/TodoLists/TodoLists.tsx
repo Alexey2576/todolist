@@ -1,8 +1,8 @@
 import React from 'react';
 import {Grid} from "@material-ui/core";
-import {FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Reducers/TasksReducer/tasksReducer";
+import {FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Redux/Tasks/tasksReducer";
 import {TodoList} from "./TodoList/TodoList";
-import {TodoListsStateType} from "../../Reducers/TodoListsReducer/todoListsReducer";
+import {TodoListsStateType} from "../../Redux/TodoLists/todoListsReducer";
 
 export type TodoListsType = {
    tasksState: TasksStateType

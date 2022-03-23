@@ -1,5 +1,5 @@
 import axios from "axios";
-import {TaskType} from "../Reducers/TasksReducer/tasksReducer";
+import {TaskType} from "../Redux/Tasks/tasksReducer";
 
 export const instanceAxios = axios.create({
    baseURL: "https://social-network.samuraijs.com/api/1.1/",

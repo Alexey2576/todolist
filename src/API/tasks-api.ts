@@ -1,5 +1,5 @@
 import {CommonResponseType, getTasksType, instanceAxios} from "./settings-api";
-import {TaskType, UpdateDomainBodyTaskType} from "../Reducers/TasksReducer/tasksReducer";
+import {TaskType, UpdateDomainBodyTaskType} from "../Redux/Tasks/tasksReducer";
 
 export const tasksApi = {
    getTasks: (todolistId: string, count: number, page: number) => {

@@ -19,7 +19,7 @@ export const tasksReducer = (state: TasksStateType = {}, action: ActionsTasksTyp
       case "ADD_TASK":
          return {
             ...state,
-            [action.todoList_ID]: [action.task, ...state[action.todoList_ID]]
+            [action.todoList_ID]: [{...action.task, progress: null}, ...state[action.todoList_ID]]
          }
       case "UPDATE_TASK":
          return {
@@ -27,6 +27,14 @@ export const tasksReducer = (state: TasksStateType = {}, action: ActionsTasksTyp
             [action.todoList_ID]: state[action.todoList_ID].map(t => t.id === action.task_ID ? {
                ...t,
                ...action.updateTaskBody,
+            } : t)
+         }
+      case "SET_PROGRESS_TASK":
+         return {
+            ...state,
+            [action.todoList_ID]: state[action.todoList_ID].map(t => t.id === action.task_ID ? {
+               ...t,
+               progress: action.progress
             } : t)
          }
       case "ADD_TODOLIST":
@@ -65,7 +73,7 @@ export type UpdateDomainBodyTaskType = {
    startDate: string
    deadline: string
 }
-export type TaskType = {
+export type TaskType = OwnTaskType & {
    id: string
    title: string
    description: string
@@ -77,6 +85,10 @@ export type TaskType = {
    deadline: string
    addedDate: string
 }
+export type OwnTaskType = {
+   progress: ProgressTaskType
+}
+export type ProgressTaskType = "add-task" | "remove-task" | "change-task" | null
 export type TasksStateType = {
    [todoList_ID: string]: TaskType[]
 }

@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {makeStyles} from "@material-ui/core/styles";
-import {FilterPriorityTask, FilterStatusTask} from "../../../../Reducers/TasksReducer/tasksReducer";
+import {FilterPriorityTask, FilterStatusTask} from "../../../../Redux/Tasks/tasksReducer";
 
 export type FilterButtonsType = {
    todoList_ID: string

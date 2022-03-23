@@ -1,8 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import {AppBar, Button, IconButton, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Button, IconButton, LinearProgress, Toolbar, Typography} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {useAppSelector} from "../../Redux/store";
 
 const drawerWidth = 240;
 
@@ -46,12 +47,13 @@ export const AppBarTodoList: React.FC<AppBarTodoListType> = (
       handleDrawerOpenCallback
    }
 ) => {
+   const isFetching = useAppSelector<boolean>(state => state.app.isFetching)
    const classes = useStyles();
 
    const handleDrawerOpen = () => handleDrawerOpenCallback()
 
    return (
-      <AppBar position="fixed"
+      <AppBar position="sticky"
               className={clsx(classes.appBar, {
                  [classes.appBarShift]: open,
               })}>
@@ -70,6 +72,7 @@ export const AppBarTodoList: React.FC<AppBarTodoListType> = (
             </Typography>
             <Button color="inherit">Login</Button>
          </Toolbar>
+         {isFetching && <LinearProgress/>}
       </AppBar>
    );
 };

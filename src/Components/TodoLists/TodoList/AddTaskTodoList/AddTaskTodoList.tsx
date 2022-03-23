@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react';
 import {
+   CircularProgress,
    FormControl,
    FormHelperText,
    Grid,
@@ -11,10 +12,12 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import {makeStyles} from "@material-ui/core/styles";
-import {FilterPriorityTask} from "../../../../Reducers/TasksReducer/tasksReducer";
+import {FilterPriorityTask} from "../../../../Redux/Tasks/tasksReducer";
+import {ProgressTodoListType} from "../../../../Redux/TodoLists/todoListsReducer";
 
 export type AddTaskTodoListType = {
    todoList_ID: string
+   progressTodoList: ProgressTodoListType
    selectPriorityValue: FilterPriorityTask | null
    changeValueSelectCallback: (todoList_ID: string, selectPriorityValue: FilterPriorityTask) => void
    addTaskCallback: (todoList_ID: string, value: string, selectPriorityValue: FilterPriorityTask) => void
@@ -28,6 +31,9 @@ const useStyles = makeStyles({
       marginBottom: "7px",
       height: "45px",
    },
+   text_field: {
+      marginRight: "10px",
+   },
    select: {
       width: "100px",
    },
@@ -38,7 +44,8 @@ const useStyles = makeStyles({
 
 export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props) => {
    // ============================= DESTRUCTURING PROPS  ===============================================================
-   const { todoList_ID, changeValueSelectCallback, selectPriorityValue, addTaskCallback, } = props
+   const {todoList_ID, changeValueSelectCallback, selectPriorityValue,
+      addTaskCallback, progressTodoList, } = props
 
    // ============================= USE STYLES CONSTANT ================================================================
    const classes = useStyles();
@@ -52,11 +59,9 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props)
    const onClickAddTaskHandler = useCallback(() => {
       if (!selectPriorityValue) {
          setErrorSelect(true)
-      }
-      else if (!valueTask.trim()) {
+      } else if (!valueTask.trim()) {
          setErrorInput(true)
-      }
-      else if (!errorInput && !errorSelect) {
+      } else if (!errorInput && !errorSelect) {
          addTaskCallback(todoList_ID, valueTask.trim(), selectPriorityValue)
          setValueTask("")
          changeValueSelectCallback(todoList_ID, FilterPriorityTask.null)
@@ -76,7 +81,9 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props)
 
    return (
       <Grid container className={classes.grid_container}>
-         <TextField id="outlined-basic"
+         <TextField className={classes.text_field}
+                    id="outlined-basic"
+                    disabled={progressTodoList === "add-task"}
                     label="Add new task title"
                     variant="outlined"
                     size={"small"}
@@ -90,6 +97,7 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props)
             <Select
                labelId="demo-simple-select-outlined-label"
                className={classes.select}
+               disabled={progressTodoList === "add-task"}
                id="demo-simple-select-outlined"
                value={selectPriorityValue}
                error={errorSelect}
@@ -101,8 +109,8 @@ export const AddTaskTodoList: React.FC<AddTaskTodoListType> = React.memo((props)
             </Select>
             {errorSelect && <FormHelperText className={classes.form_helper_text}>Enter priority</FormHelperText>}
          </FormControl>
-         <IconButton onClick={onClickAddTaskHandler}>
-            <AddIcon/>
+         <IconButton onClick={onClickAddTaskHandler} disabled={progressTodoList === "add-task"}>
+            {progressTodoList === "add-task" ? <CircularProgress size={24}/> : <AddIcon/>}
          </IconButton>
       </Grid>
    );

@@ -3,7 +3,7 @@ import {
    FilterStatusTask,
    TasksStateType,
    TaskType
-} from "../../../Reducers/TasksReducer/tasksReducer";
+} from "../../../Redux/Tasks/tasksReducer";
 import React, {useEffect} from "react";
 import {Grid, Paper} from "@material-ui/core";
 import {TitleTodoLists} from "./TitleTodoList/TitleTodoList";
@@ -12,9 +12,9 @@ import {LinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
 import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
 import {FilterButtons} from "./FilterButtons/FilterButtons";
 import {useDispatch} from "react-redux";
-import {getTasksTC} from "../../../Reducers/TasksReducer/tasksThunks";
-import {ThunkDispatchType} from "../../../Reducers/store";
-import {TodoListsStateType} from "../../../Reducers/TodoListsReducer/todoListsReducer";
+import {getTasksTC} from "../../../Redux/Tasks/tasksThunks";
+import {ThunkDispatchType} from "../../../Redux/store";
+import {TodoListsStateType} from "../../../Redux/TodoLists/todoListsReducer";
 
 export type TodoListType = {
    todoList: TodoListsStateType
@@ -70,16 +70,18 @@ export const TodoList: React.FC<TodoListType> = React.memo((props) => {
    }, [dispatch, todoList.id])
 
    return (
-      <Grid item spacing={6} md={4} xs={3}>
+      <Grid item>
          <Paper elevation={7} style={{padding: "10px"}}>
             <TitleTodoLists todoList_ID={todoList.id}
                             title={todoList.title}
                             {...props}/>
             <AddTaskTodoList todoList_ID={todoList.id}
+                             progressTodoList={todoList.progress}
                              selectPriorityValue={todoList.selectPriorityValue}
                              {...props}/>
-            <LinearProgressTasks numberOfAllTasks={numberOfAllTasks}
-                                 numberOfCompletedTasks={numberOfCompletedTasks}/>
+            {numberOfAllTasks !== 0 &&
+               <LinearProgressTasks numberOfAllTasks={numberOfAllTasks}
+                                    numberOfCompletedTasks={numberOfCompletedTasks}/>}
             <ListTasksTodoList todoList_ID={todoList.id}
                                tasks={filteredTasks}
                                {...props}/>

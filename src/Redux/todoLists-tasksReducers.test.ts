@@ -1,8 +1,8 @@
-import {addTodoListAC, todoListsReducer} from "./TodoListsReducer/todoListsReducer";
+import {addTodoListAC, todoListsReducer} from "./TodoLists/todoListsReducer";
 import {v1} from "uuid";
-import {tasksReducer} from "./TasksReducer/tasksReducer";
-import {startTasksState} from "./TasksReducer/tasksReducer.test";
-import {startTodoListState} from "./TodoListsReducer/todoListsReducer.test";
+import {tasksReducer} from "./Tasks/tasksReducer";
+import {startTasksState} from "./Tasks/tasksReducer.test";
+import {startTodoListState} from "./TodoLists/todoListsReducer.test";
 
 test('tests tasks and todoLists for adding new todoList should be corrected', () => {
    const action = addTodoListAC(v1(), "New TodoList")
