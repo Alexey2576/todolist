@@ -1,22 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import {AppBarTodoList} from "./AppBarTodoList/AppBarTodoList";
-import {Container} from "@material-ui/core";
 import {useAppDispatch, useAppSelector} from "../Redux/store";
-import {getTodoListsTC} from "../Redux/TodoLists/todoListsThunks";
 import {CustomSnackbar} from "./Commons/Snackbar/CustomSnackbar";
 import {Login} from "../Features/Login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
 import NotFound from "./Commons/NotFound/NotFound";
 import {AuthorizedApp} from "./AuthorizedApp/AuthorizedApp";
+import {initializeAppTC} from "../Redux/App/appThunks";
+import CircularProgress from "@mui/material/CircularProgress";
+import Container from "@mui/material/Container";
 
 export const App = () => {
+   const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
+
    const [open, setOpen] = useState(false);
    const dispatch = useAppDispatch()
    const handleDrawerOpenCallback = () => setOpen(true)
    //========================================= USE EFFECT ==========================================================================================================================================================================
    useEffect(() => {
-      dispatch(getTodoListsTC())
-   }, [dispatch])
+      dispatch(initializeAppTC())
+   }, [])
+
+   if (!isInitialized) {
+      return <div
+         style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+         <CircularProgress/>
+      </div>
+
+   }
 
    return (
       <div>

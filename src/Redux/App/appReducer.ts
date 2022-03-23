@@ -2,11 +2,13 @@ import {ActionsAppType} from "./appActions";
 
 const initialState: AppStateType = {
    isFetching: false,
+   isInitialized: false,
    errorMessage: "",
 }
 
 export const appReducer = (state: AppStateType = initialState, action: ActionsAppType): AppStateType => {
    switch (action.type) {
+      case "SET_IS_INITIALIZED":
       case "SET_IS_FETCHING_DATA":
       case "SET_IS_ERROR_GETTING_DATA":
          return {...state, ...action.payload}
@@ -17,5 +19,6 @@ export const appReducer = (state: AppStateType = initialState, action: ActionsAp
 
 type AppStateType = {
    isFetching: boolean
+   isInitialized: boolean
    errorMessage: string
 }

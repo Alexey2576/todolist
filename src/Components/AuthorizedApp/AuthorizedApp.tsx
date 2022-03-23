@@ -1,8 +1,13 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {SideBar} from "./SideBar/SideBar";
 import {AddNewTodoList} from "./AddNewTodoList/AddNewTodoList";
 import {TodoLists} from "../TodoLists/TodoLists";
-import {addTodoListTC, changeTitleTodoListTC, removeTodoListTC} from "../../Redux/TodoLists/todoListsThunks";
+import {
+   addTodoListTC,
+   changeTitleTodoListTC,
+   getTodoListsTC,
+   removeTodoListTC
+} from "../../Redux/TodoLists/todoListsThunks";
 import {FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Redux/Tasks/tasksReducer";
 import {addTaskTC, removeTaskTC, updateTaskTC} from "../../Redux/Tasks/tasksThunks";
 import {
@@ -33,6 +38,10 @@ export const AuthorizedApp: React.FC<AuthorizedAppType> = ({open, setOpen}) => {
    const changeTitleTodoListCallback = useCallback((todoList_ID: string, title: string) => dispatch(changeTitleTodoListTC(todoList_ID, title)), [dispatch])
 
    const handleDrawerCloseCallback = () => setOpen(false)
+
+   useEffect(() => {
+      dispatch(getTodoListsTC())
+   }, [])
 
    if (!isLoggedIn) {
       return <Navigate to={"/login"}/>

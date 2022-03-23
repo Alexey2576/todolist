@@ -6,6 +6,11 @@ export const authAPI = {
       return instanceAxios
          .post<LoginDataType, AxiosResponse<CommonResponseType<{ userId: number }>>>(`auth/login`, data)
          .then(res => res.data)
+   },
+   me() {
+      return instanceAxios
+         .get<CommonResponseType<MeType>>(`auth/me`)
+         .then(res => res.data)
    }
 }
 
@@ -14,4 +19,10 @@ export type LoginDataType = {
    password: string
    rememberMe?: boolean
    captcha?: string
+}
+
+export type MeType = {
+   id: number,
+   email: string
+   login: string
 }
