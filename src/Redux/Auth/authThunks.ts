@@ -1,30 +1,30 @@
-import {ThunkType} from "../store";
 import {authAPI, LoginDataType} from "../../API/auth-api";
-import {setIsErrorGettingDataAC, setIsFetchingDataAC} from "../App/appActions";
-import {setIsLoggedInAC} from "./authActions";
+import {setIsLoggedInAC} from "./authReducer";
+import {Dispatch} from "redux";
+import {setIsErrorGettingDataAC, setIsFetchingDataAC} from "../App/appReducer";
 
-export const loginTC = (loggedData: LoginDataType): ThunkType => async dispatch => {
-   dispatch(setIsFetchingDataAC(true))
+export const loginTC = (loggedData: LoginDataType) => async (dispatch: Dispatch) => {
+   dispatch(setIsFetchingDataAC({isFetching: true}))
    try {
       const data = await authAPI.login(loggedData)
       if (data.resultCode === 0) {
-         dispatch(setIsLoggedInAC(true))
+         dispatch(setIsLoggedInAC({isLoggedIn: true}))
       } else {
-         dispatch(setIsErrorGettingDataAC(data.messages[0]))
+         dispatch(setIsErrorGettingDataAC({errorMessage: data.messages[0]}))
       }
    } catch (e) {
 
    } finally {
-      dispatch(setIsFetchingDataAC(false))
+      dispatch(setIsFetchingDataAC({isFetching: false}))
    }
 }
 
-export const logoutTC = (): ThunkType => async dispatch => {
-   dispatch(setIsFetchingDataAC(true))
+export const logoutTC = () => async (dispatch: Dispatch) => {
+   dispatch(setIsFetchingDataAC({isFetching: true}))
    try {
       const data = await authAPI.logout()
       if (data.resultCode === 0) {
-         dispatch(setIsLoggedInAC(false))
+         dispatch(setIsLoggedInAC({isLoggedIn: false}))
       } else {
          dispatch(setIsErrorGettingDataAC(data.messages[0]))
       }
