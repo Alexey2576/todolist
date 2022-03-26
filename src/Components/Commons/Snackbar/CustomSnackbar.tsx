@@ -2,8 +2,8 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import {setIsErrorGettingDataAC} from "../../../Redux/App/appActions";
 import {useAppDispatch, useAppSelector} from "../../../Redux/store";
+import {setIsErrorGettingDataAC} from "../../../Redux/App/appReducer";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
    props,
@@ -20,7 +20,7 @@ export const CustomSnackbar = () => {
       if (reason === 'clickaway') {
          return;
       }
-      dispatch(setIsErrorGettingDataAC(""))
+      dispatch(setIsErrorGettingDataAC({errorMessage: ""}))
    };
 
    return (

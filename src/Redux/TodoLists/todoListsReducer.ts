@@ -1,30 +1,56 @@
-import {ActionsTodoListsType} from "./todoListsActions";
 import {FilterPriorityTask, FilterStatusTask} from "../Tasks/tasksReducer";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export const todoListsReducer = (state: TodoListsStateType[] = [], action: ActionsTodoListsType): TodoListsStateType[] => {
-   switch (action.type) {
-      case "SET_ALL_TODOLIST":
-         return action.todoLists.map(tl => ({...tl, filterPriority: FilterPriorityTask.All, filterStatus: FilterStatusTask.All, selectPriorityValue: null, progress: null}))
-      case "REMOVE_TODOLIST":
-         return state.filter(tl => tl.id !== action.todoList_ID)
-      case "ADD_TODOLIST":
-         return [
-            action.todoList,
-            ...state
-         ]
-      case "CHANGE_TITLE_TODOLIST":
-         return state.map(tl => tl.id === action.todoList_ID ? {...tl, title: action.newTitle} : tl)
-      case "CHANGE_FILTER_STATUS_TODOLIST":
-         return state.map(tl => tl.id === action.todoList_ID ? {...tl, filterStatus: action.filterStatus} : tl)
-      case "CHANGE_FILTER_PRIORITY_TODOLIST":
-         return state.map(tl => tl.id === action.todoList_ID ? {...tl, filterPriority: action.filterPriority} : tl)
-      case "SET_VALUE_SELECT":
-         return state.map(tl => tl.id === action.todoList_ID ? {...tl, selectPriorityValue: action.selectPriorityValue} : tl)
-      case "SET_PROGRESS_TODOLIST":
-         return state.map(tl => tl.id === action.todoList_ID ? {...tl, progress: action.progress} : tl)
-      default: return state
-   }
-}
+const slice = createSlice({
+   name: "todoList",
+   initialState: [] as TodoListsStateType[] ,
+   reducers: {
+      removeTodoListAC(state, action: PayloadAction<{ todoList_ID: string }>) {
+         const index = state.findIndex(tl => tl.id === action.payload.todoList_ID)
+         if (index !== -1) {
+            state.splice(index , 1)
+         }
+      },
+      addTodoListAC(state, action: PayloadAction<{ todoList: TodoListsStateType }>) {
+         state.push(action.payload.todoList)
+      },
+      changeTitleTodoListAC(state, action: PayloadAction<{ todoList_ID: string, newTitle: string }>) {
+         const index = state.findIndex(tl => tl.id === action.payload.todoList_ID)
+         state[index].title = action.payload.newTitle
+      },
+      changeFilterCheckedTodoListAC(state, action: PayloadAction<{ todoList_ID: string, filterStatus: FilterStatusTask }>) {
+         const index = state.findIndex(tl => tl.id === action.payload.todoList_ID)
+         state[index].filterStatus = action.payload.filterStatus
+      },
+      changeFilterPriorityTodoListAC(state, action: PayloadAction<{ todoList_ID: string, filterPriority: FilterPriorityTask }>) {
+         const index = state.findIndex(tl => tl.id === action.payload.todoList_ID)
+         state[index].filterPriority = action.payload.filterPriority
+      },
+      setValueSelectAC(state, action: PayloadAction<{ todoList_ID: string, selectPriorityValue: FilterPriorityTask }>) {
+         const index = state.findIndex(tl => tl.id === action.payload.todoList_ID)
+         state[index].selectPriorityValue = action.payload.selectPriorityValue
+      },
+      setAllTodoListsAC(state, action: PayloadAction<{ todoLists: TodoListsStateType[] }>) {
+         return action.payload.todoLists.map(tl => ({...tl, filterPriority: FilterPriorityTask.All, filterStatus: FilterStatusTask.All, selectPriorityValue: null, progress: null}))
+      },
+      setProgressTodoListAC(state, action: PayloadAction<{ todoList_ID: string, progress: ProgressTodoListType }>) {
+         const index = state.findIndex(tl => tl.id === action.payload.todoList_ID)
+         state[index].progress = action.payload.progress
+      },
+   },
+})
+
+export const todoListsReducer = slice.reducer
+export const {
+   changeTitleTodoListAC,
+   removeTodoListAC,
+   setValueSelectAC,
+   changeFilterCheckedTodoListAC,
+   changeFilterPriorityTodoListAC,
+   setAllTodoListsAC,
+   setProgressTodoListAC,
+   addTodoListAC,
+} = slice.actions
 
 //========================================= TYPES ======================================================================
 export type TodoListsStateType = OwnTodoListType & {
@@ -33,7 +59,6 @@ export type TodoListsStateType = OwnTodoListType & {
    addedDate: string
    order: number
 }
-
 export type  OwnTodoListType = {
    filterPriority: FilterPriorityTask,
    filterStatus: FilterStatusTask,

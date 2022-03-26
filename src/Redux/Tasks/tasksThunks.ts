@@ -1,25 +1,32 @@
-import {RootStateType, ThunkType} from "../store";
-import {addTaskAC, removeTaskAC, setAllTasksTodoListAC, setProgressTaskAC, updateTaskAC} from "./tasksActions";
+import {AppDispatch, RootStateType} from "../store";
 import {tasksApi} from "../../API/tasks-api";
-import {FilterPriorityTask, UpdateDomainBodyTaskType} from "./tasksReducer";
-import {setProgressTodoListAC} from "../TodoLists/todoListsActions";
-import {setIsErrorGettingDataAC, setIsFetchingDataAC} from "../App/appActions";
+import {
+   addTaskAC,
+   FilterPriorityTask,
+   removeTaskAC,
+   setAllTasksTodoListAC,
+   setProgressTaskAC,
+   UpdateDomainBodyTaskType,
+   updateTaskAC
+} from "./tasksReducer";
+import {setIsErrorGettingDataAC, setIsFetchingDataAC} from "../App/appReducer";
+import {setProgressTodoListAC} from "../TodoLists/todoListsReducer";
 
-export const getTasksTC = (todoListID: string): ThunkType => async dispatch => {
+export const getTasksTC = (todoListID: string) => async (dispatch: AppDispatch) => {
    try {
       const data = await tasksApi.getTasks(todoListID, 10, 1)
       if (data) {
-         dispatch(setAllTasksTodoListAC(todoListID, data.items))
-         dispatch(setIsFetchingDataAC(false))
+         dispatch(setAllTasksTodoListAC({todoListID, tasks: data.items}))
+         dispatch(setIsFetchingDataAC({isFetching: false}))
       }
    } catch (e) {
       
    }
 }
 
-export const addTaskTC = (title: string, todoList_ID: string, selectPriorityValue: FilterPriorityTask): ThunkType => async dispatch => {
+export const addTaskTC = (title: string, todoList_ID: string, selectPriorityValue: FilterPriorityTask) => async (dispatch: AppDispatch) => {
    try {
-      dispatch(setProgressTodoListAC(todoList_ID, "add-task"))
+      dispatch(setProgressTodoListAC({todoList_ID, progress: "add-task"}))
       const data = await tasksApi.createTask(todoList_ID, title)
       if (data.resultCode === 0) {
          const updateDomainTaskBody: UpdateDomainBodyTaskType = {
@@ -30,35 +37,35 @@ export const addTaskTC = (title: string, todoList_ID: string, selectPriorityValu
             startDate: data.data.item.startDate,
             deadline: data.data.item.deadline,
          }
-         dispatch(addTaskAC(title, todoList_ID, selectPriorityValue, data.data.item))
+         dispatch(addTaskAC({title, todoList_ID, selectPriorityValue, task: data.data.item}))
          const updateTask = await tasksApi.updateTask(todoList_ID, data.data.item.id, updateDomainTaskBody)
          if (data.resultCode === 0) {
-            dispatch(updateTaskAC(todoList_ID, data.data.item.id, updateTask.data.item))
+            dispatch(updateTaskAC({todoList_ID, task_ID: data.data.item.id, updateTaskBody: updateTask.data.item}))
          }
       } else {
-         dispatch(setIsErrorGettingDataAC(data.messages[0]))
+         dispatch(setIsErrorGettingDataAC({errorMessage: data.messages[0]}))
       }
    } catch (e) {
-      dispatch(setIsErrorGettingDataAC("Some error"))
+      dispatch(setIsErrorGettingDataAC({errorMessage: "Some error"}))
    } finally {
-      dispatch(setProgressTodoListAC(todoList_ID, null))
+      dispatch(setProgressTodoListAC({todoList_ID, progress: null}))
    }
 }
 
-export const removeTaskTC = (todoList_ID: string, task_ID: string): ThunkType => async dispatch => {
+export const removeTaskTC = (todoList_ID: string, task_ID: string) => async (dispatch: AppDispatch) => {
    try {
-      dispatch(setProgressTaskAC(todoList_ID, task_ID, "remove-task"))
+      dispatch(setProgressTaskAC({todoList_ID, task_ID, progress: "remove-task"}))
       const data = await tasksApi.deleteTask(todoList_ID, task_ID)
       if (data.resultCode === 0) {
-         dispatch(removeTaskAC(todoList_ID, task_ID))
-         dispatch(setProgressTaskAC(todoList_ID, task_ID, null))
+         dispatch(removeTaskAC({todoList_ID, task_ID}))
+         dispatch(setProgressTaskAC({todoList_ID, task_ID, progress: null}))
       }
    } catch (e) {
-      dispatch(setIsErrorGettingDataAC("Some error"))
+      dispatch(setIsErrorGettingDataAC({errorMessage: "Some error"}))
    }
 }
 
-export const updateTaskTC = (todoList_ID: string, task_ID: string, updateTaskBody: UpdateBodyTaskType): ThunkType => async (dispatch, getState: () => RootStateType) => {
+export const updateTaskTC = (todoList_ID: string, task_ID: string, updateTaskBody: UpdateBodyTaskType) => async (dispatch: AppDispatch, getState: () => RootStateType) => {
    try {
       const task = getState().tasks[todoList_ID].find(t => t.id === task_ID)
       if (!task) {
@@ -76,7 +83,7 @@ export const updateTaskTC = (todoList_ID: string, task_ID: string, updateTaskBod
 
       const updateData = await tasksApi.updateTask(todoList_ID, task.id, updateDomainTaskBody)
       if (updateData.resultCode === 0) {
-         dispatch(updateTaskAC(todoList_ID, task.id, updateData.data.item))
+         dispatch(updateTaskAC({todoList_ID, task_ID: task.id, updateTaskBody: updateData.data.item}))
       }
    } catch (e) {
       

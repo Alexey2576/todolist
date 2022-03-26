@@ -26,11 +26,11 @@ export const logoutTC = () => async (dispatch: Dispatch) => {
       if (data.resultCode === 0) {
          dispatch(setIsLoggedInAC({isLoggedIn: false}))
       } else {
-         dispatch(setIsErrorGettingDataAC(data.messages[0]))
+         dispatch(setIsErrorGettingDataAC({errorMessage: data.messages[0]}))
       }
    } catch (e) {
 
    } finally {
-      dispatch(setIsFetchingDataAC(false))
+      dispatch(setIsFetchingDataAC({isFetching: false}))
    }
 }

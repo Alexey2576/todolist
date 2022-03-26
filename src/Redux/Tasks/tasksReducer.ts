@@ -1,52 +1,51 @@
-import {ActionsTasksType} from "./tasksActions";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {addTodoListAC, removeTodoListAC, setAllTodoListsAC} from "../TodoLists/todoListsReducer";
 
-export const tasksReducer = (state: TasksStateType = {}, action: ActionsTasksType): TasksStateType => {
-   switch (action.type) {
-      case "SET_ALL_TODOLIST":
-         const newState = {...state}
-         action.todoLists.forEach(tl => newState[tl.id] = [])
-         return newState
-      case "SET_ALL_TASKS":
-         return {
-            ...state,
-            [action.todoListID]: action.tasks
-         }
-      case "REMOVE_TASK":
-         return {
-            ...state,
-            [action.todoList_ID]: state[action.todoList_ID].filter(t => t.id !== action.task_ID)
-         }
-      case "ADD_TASK":
-         return {
-            ...state,
-            [action.todoList_ID]: [{...action.task, progress: null}, ...state[action.todoList_ID]]
-         }
-      case "UPDATE_TASK":
-         return {
-            ...state,
-            [action.todoList_ID]: state[action.todoList_ID].map(t => t.id === action.task_ID ? {
-               ...t,
-               ...action.updateTaskBody,
-            } : t)
-         }
-      case "SET_PROGRESS_TASK":
-         return {
-            ...state,
-            [action.todoList_ID]: state[action.todoList_ID].map(t => t.id === action.task_ID ? {
-               ...t,
-               progress: action.progress
-            } : t)
-         }
-      case "ADD_TODOLIST":
-         return {...state, [action.todoList.id]: []}
-      case "REMOVE_TODOLIST":
-         const copyState = {...state}
-         delete copyState[action.todoList_ID]
-         return copyState
-      default:
-         return state
-   }
-}
+const slice = createSlice({
+   name: "task",
+   initialState: {} as TasksStateType,
+   reducers: {
+      addTaskAC(state, action: PayloadAction<{ title: string, todoList_ID: string, selectPriorityValue: FilterPriorityTask, task: TaskType }>) {
+         state[action.payload.todoList_ID].unshift({...action.payload.task, progress: null})
+      },
+      removeTaskAC(state, action: PayloadAction<{ todoList_ID: string, task_ID: string }>) {
+         const index = state[action.payload.todoList_ID].findIndex(t => t.id === action.payload.task_ID)
+         state[action.payload.todoList_ID].splice(index, 1)
+      },
+      setAllTasksTodoListAC(state, action: PayloadAction<{ todoListID: string, tasks: TaskType[] }>) {
+         state[action.payload.todoListID] = action.payload.tasks
+      },
+      updateTaskAC(state, action: PayloadAction<{ todoList_ID: string, task_ID: string, updateTaskBody: UpdateDomainBodyTaskType }>) {
+         const index = state[action.payload.todoList_ID].findIndex(t => t.id === action.payload.task_ID)
+         state[action.payload.todoList_ID][index] = {...state[action.payload.todoList_ID][index], ...action.payload.updateTaskBody}
+      },
+      setProgressTaskAC(state, action: PayloadAction<{ todoList_ID: string, task_ID: string, progress: ProgressTaskType }>) {
+         const index = state[action.payload.todoList_ID].findIndex(t => t.id === action.payload.task_ID)
+         state[action.payload.todoList_ID][index].progress = action.payload.progress
+      },
+   },
+   extraReducers: (builder) => {
+      builder
+         .addCase(addTodoListAC, (state, action) => {
+           state[action.payload.todoList.id] = []
+         })
+         .addCase(removeTodoListAC, (state, action) => {
+            delete state[action.payload.todoList_ID]
+         })
+         .addCase(setAllTodoListsAC, (state, action) => {
+            action.payload.todoLists.forEach(tl => state[tl.id] = [])
+         })
+   },
+})
+
+export const tasksReducer = slice.reducer
+export const {
+   setProgressTaskAC,
+   updateTaskAC,
+   addTaskAC,
+   removeTaskAC,
+   setAllTasksTodoListAC,
+} = slice.actions
 
 //========================================= TYPES ======================================================================
 export enum FilterPriorityTask {
@@ -58,6 +57,7 @@ export enum FilterPriorityTask {
    Later = 5,
    null = "",
 }
+
 export enum FilterStatusTask {
    New = 0,
    InProgress = 1,
@@ -65,6 +65,7 @@ export enum FilterStatusTask {
    Draft = 3,
    All = 4,
 }
+
 export type UpdateDomainBodyTaskType = {
    title: string
    description: string

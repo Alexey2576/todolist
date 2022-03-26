@@ -11,10 +11,9 @@ import {AddTaskTodoList} from "./AddTaskTodoList/AddTaskTodoList";
 import {LinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
 import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
 import {FilterButtons} from "./FilterButtons/FilterButtons";
-import {useDispatch} from "react-redux";
 import {getTasksTC} from "../../../Redux/Tasks/tasksThunks";
-import {ThunkDispatchType} from "../../../Redux/store";
 import {TodoListsStateType} from "../../../Redux/TodoLists/todoListsReducer";
+import {useAppDispatch} from "../../../Redux/store";
 
 export type TodoListType = {
    todoList: TodoListsStateType
@@ -64,7 +63,7 @@ export const TodoList: React.FC<TodoListType> = React.memo((props) => {
    const numberOfCompletedTasks = tasksState[todoList.id].filter(t => t.status === FilterStatusTask.Completed).length
 
    //========================================= USE EFFECT ===============================================================
-   const dispatch = useDispatch<ThunkDispatchType>()
+   const dispatch = useAppDispatch()
    useEffect(() => {
       dispatch(getTasksTC(todoList.id))
    }, [dispatch, todoList.id])
@@ -80,8 +79,8 @@ export const TodoList: React.FC<TodoListType> = React.memo((props) => {
                              selectPriorityValue={todoList.selectPriorityValue}
                              {...props}/>
             {numberOfAllTasks !== 0 &&
-               <LinearProgressTasks numberOfAllTasks={numberOfAllTasks}
-                                    numberOfCompletedTasks={numberOfCompletedTasks}/>}
+            <LinearProgressTasks numberOfAllTasks={numberOfAllTasks}
+                                 numberOfCompletedTasks={numberOfCompletedTasks}/>}
             <ListTasksTodoList todoList_ID={todoList.id}
                                tasks={filteredTasks}
                                {...props}/>

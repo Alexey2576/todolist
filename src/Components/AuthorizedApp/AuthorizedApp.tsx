@@ -10,13 +10,13 @@ import {
 } from "../../Redux/TodoLists/todoListsThunks";
 import {FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Redux/Tasks/tasksReducer";
 import {addTaskTC, removeTaskTC, updateTaskTC} from "../../Redux/Tasks/tasksThunks";
+import {useAppDispatch, useAppSelector} from "../../Redux/store";
 import {
    changeFilterCheckedTodoListAC,
    changeFilterPriorityTodoListAC,
-   setValueSelectAC
-} from "../../Redux/TodoLists/todoListsActions";
-import {useAppDispatch, useAppSelector} from "../../Redux/store";
-import {TodoListsStateType} from "../../Redux/TodoLists/todoListsReducer";
+   setValueSelectAC,
+   TodoListsStateType
+} from "../../Redux/TodoLists/todoListsReducer";
 import {Navigate} from "react-router-dom";
 
 export const AuthorizedApp: React.FC<AuthorizedAppType> = ({open, setOpen}) => {
@@ -30,9 +30,18 @@ export const AuthorizedApp: React.FC<AuthorizedAppType> = ({open, setOpen}) => {
    const addTaskCallback = useCallback((todoList_ID: string, value: string, selectPriorityValue: FilterPriorityTask) => value.length && dispatch(addTaskTC(value, todoList_ID, selectPriorityValue)), [dispatch])
    const removeTaskCallback = useCallback((todoList_ID: string, task_ID: string) => dispatch(removeTaskTC(todoList_ID, task_ID)), [dispatch])
    const removeTodoListCallback = useCallback((todoList_ID: string) => dispatch(removeTodoListTC(todoList_ID)), [dispatch])
-   const changeFilterStatusTodoListCallback = useCallback((todoList_ID: string, filterStatus: FilterStatusTask) => dispatch(changeFilterCheckedTodoListAC(todoList_ID, filterStatus)), [dispatch])
-   const changeFilterPriorityTodoListCallback = useCallback((todoList_ID: string, filterPriority: FilterPriorityTask) => dispatch(changeFilterPriorityTodoListAC(todoList_ID, filterPriority)), [dispatch])
-   const changeValueSelectCallback = useCallback((todoList_ID: string, selectPriorityValue: FilterPriorityTask) => dispatch(setValueSelectAC(todoList_ID, selectPriorityValue)), [dispatch])
+   const changeFilterStatusTodoListCallback = useCallback((todoList_ID: string, filterStatus: FilterStatusTask) => dispatch(changeFilterCheckedTodoListAC({
+      todoList_ID,
+      filterStatus
+   })), [dispatch])
+   const changeFilterPriorityTodoListCallback = useCallback((todoList_ID: string, filterPriority: FilterPriorityTask) => dispatch(changeFilterPriorityTodoListAC({
+      todoList_ID,
+      filterPriority
+   })), [dispatch])
+   const changeValueSelectCallback = useCallback((todoList_ID: string, selectPriorityValue: FilterPriorityTask) => dispatch(setValueSelectAC({
+      todoList_ID,
+      selectPriorityValue
+   })), [dispatch])
    const changeStatusTaskCallback = useCallback((todoList_ID: string, task_ID: string, status: FilterStatusTask) => dispatch(updateTaskTC(todoList_ID, task_ID, {status})), [dispatch])
    const changeTitleTaskCallback = useCallback((todoList_ID: string, task_ID: string, title: string) => dispatch(updateTaskTC(todoList_ID, task_ID, {title})), [dispatch])
    const changeTitleTodoListCallback = useCallback((todoList_ID: string, title: string) => dispatch(changeTitleTodoListTC(todoList_ID, title)), [dispatch])
