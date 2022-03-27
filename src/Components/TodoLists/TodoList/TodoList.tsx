@@ -1,6 +1,6 @@
 import {
    FilterPriorityTask,
-   FilterStatusTask,
+   FilterStatusTask, getTasksTC,
    TasksStateType,
    TaskType
 } from "../../../Redux/Tasks/tasksReducer";
@@ -11,7 +11,6 @@ import {AddTaskTodoList} from "./AddTaskTodoList/AddTaskTodoList";
 import {LinearProgressTasks} from "./LinearProgressTasks/LinearProgressTasks";
 import {ListTasksTodoList} from "./ListTasksTodoList/ListTasksTodoList";
 import {FilterButtons} from "./FilterButtons/FilterButtons";
-import {getTasksTC} from "../../../Redux/Tasks/tasksThunks";
 import {TodoListsStateType} from "../../../Redux/TodoLists/todoListsReducer";
 import {useAppDispatch} from "../../../Redux/store";
 

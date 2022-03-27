@@ -1,56 +1,13 @@
 import {AppDispatch, RootStateType} from "../store";
 import {tasksApi} from "../../API/tasks-api";
 import {
-   addTaskAC,
    FilterPriorityTask,
    removeTaskAC,
-   setAllTasksTodoListAC,
    setProgressTaskAC,
    UpdateDomainBodyTaskType,
    updateTaskAC
 } from "./tasksReducer";
-import {setIsErrorGettingDataAC, setIsFetchingDataAC} from "../App/appReducer";
-import {setProgressTodoListAC} from "../TodoLists/todoListsReducer";
-
-export const getTasksTC = (todoListID: string) => async (dispatch: AppDispatch) => {
-   try {
-      const data = await tasksApi.getTasks(todoListID, 10, 1)
-      if (data) {
-         dispatch(setAllTasksTodoListAC({todoListID, tasks: data.items}))
-         dispatch(setIsFetchingDataAC({isFetching: false}))
-      }
-   } catch (e) {
-      
-   }
-}
-
-export const addTaskTC = (title: string, todoList_ID: string, selectPriorityValue: FilterPriorityTask) => async (dispatch: AppDispatch) => {
-   try {
-      dispatch(setProgressTodoListAC({todoList_ID, progress: "add-task"}))
-      const data = await tasksApi.createTask(todoList_ID, title)
-      if (data.resultCode === 0) {
-         const updateDomainTaskBody: UpdateDomainBodyTaskType = {
-            title: data.data.item.title,
-            description: data.data.item.description,
-            status: data.data.item.status,
-            priority: selectPriorityValue,
-            startDate: data.data.item.startDate,
-            deadline: data.data.item.deadline,
-         }
-         dispatch(addTaskAC({title, todoList_ID, selectPriorityValue, task: data.data.item}))
-         const updateTask = await tasksApi.updateTask(todoList_ID, data.data.item.id, updateDomainTaskBody)
-         if (data.resultCode === 0) {
-            dispatch(updateTaskAC({todoList_ID, task_ID: data.data.item.id, updateTaskBody: updateTask.data.item}))
-         }
-      } else {
-         dispatch(setIsErrorGettingDataAC({errorMessage: data.messages[0]}))
-      }
-   } catch (e) {
-      dispatch(setIsErrorGettingDataAC({errorMessage: "Some error"}))
-   } finally {
-      dispatch(setProgressTodoListAC({todoList_ID, progress: null}))
-   }
-}
+import {setIsErrorGettingDataAC} from "../App/appReducer";
 
 export const removeTaskTC = (todoList_ID: string, task_ID: string) => async (dispatch: AppDispatch) => {
    try {

@@ -8,8 +8,8 @@ import {
    getTodoListsTC,
    removeTodoListTC
 } from "../../Redux/TodoLists/todoListsThunks";
-import {FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Redux/Tasks/tasksReducer";
-import {addTaskTC, removeTaskTC, updateTaskTC} from "../../Redux/Tasks/tasksThunks";
+import {addTaskTC, FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Redux/Tasks/tasksReducer";
+import {removeTaskTC, updateTaskTC} from "../../Redux/Tasks/tasksThunks";
 import {useAppDispatch, useAppSelector} from "../../Redux/store";
 import {
    changeFilterCheckedTodoListAC,
@@ -27,7 +27,11 @@ export const AuthorizedApp: React.FC<AuthorizedAppType> = ({open, setOpen}) => {
 
    //========================================= TODOLIST CALLBACKS ==========================================================================================================================================================================
    const addTodoListCallback = useCallback((title: string) => dispatch(addTodoListTC(title)), [dispatch])
-   const addTaskCallback = useCallback((todoList_ID: string, value: string, selectPriorityValue: FilterPriorityTask) => value.length && dispatch(addTaskTC(value, todoList_ID, selectPriorityValue)), [dispatch])
+   const addTaskCallback = useCallback((todoList_ID: string, title: string, selectPriorityValue: FilterPriorityTask) => title.length && dispatch(addTaskTC({
+      title,
+      todoList_ID,
+      selectPriorityValue
+   })), [dispatch])
    const removeTaskCallback = useCallback((todoList_ID: string, task_ID: string) => dispatch(removeTaskTC(todoList_ID, task_ID)), [dispatch])
    const removeTodoListCallback = useCallback((todoList_ID: string) => dispatch(removeTodoListTC(todoList_ID)), [dispatch])
    const changeFilterStatusTodoListCallback = useCallback((todoList_ID: string, filterStatus: FilterStatusTask) => dispatch(changeFilterCheckedTodoListAC({
