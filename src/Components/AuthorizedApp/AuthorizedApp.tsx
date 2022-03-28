@@ -8,8 +8,13 @@ import {
    getTodoListsTC,
    removeTodoListTC
 } from "../../Redux/TodoLists/todoListsThunks";
-import {addTaskTC, FilterPriorityTask, FilterStatusTask, TasksStateType} from "../../Redux/Tasks/tasksReducer";
-import {removeTaskTC, updateTaskTC} from "../../Redux/Tasks/tasksThunks";
+import {
+   addTaskTC,
+   FilterPriorityTask,
+   FilterStatusTask,
+   removeTaskTC,
+   TasksStateType, updateTaskTC
+} from "../../Redux/Tasks/tasksReducer";
 import {useAppDispatch, useAppSelector} from "../../Redux/store";
 import {
    changeFilterCheckedTodoListAC,
@@ -32,7 +37,10 @@ export const AuthorizedApp: React.FC<AuthorizedAppType> = ({open, setOpen}) => {
       todoList_ID,
       selectPriorityValue
    })), [dispatch])
-   const removeTaskCallback = useCallback((todoList_ID: string, task_ID: string) => dispatch(removeTaskTC(todoList_ID, task_ID)), [dispatch])
+   const removeTaskCallback = useCallback((todoList_ID: string, task_ID: string) => dispatch(removeTaskTC({
+      todoList_ID,
+      task_ID
+   })), [dispatch])
    const removeTodoListCallback = useCallback((todoList_ID: string) => dispatch(removeTodoListTC(todoList_ID)), [dispatch])
    const changeFilterStatusTodoListCallback = useCallback((todoList_ID: string, filterStatus: FilterStatusTask) => dispatch(changeFilterCheckedTodoListAC({
       todoList_ID,
@@ -46,8 +54,16 @@ export const AuthorizedApp: React.FC<AuthorizedAppType> = ({open, setOpen}) => {
       todoList_ID,
       selectPriorityValue
    })), [dispatch])
-   const changeStatusTaskCallback = useCallback((todoList_ID: string, task_ID: string, status: FilterStatusTask) => dispatch(updateTaskTC(todoList_ID, task_ID, {status})), [dispatch])
-   const changeTitleTaskCallback = useCallback((todoList_ID: string, task_ID: string, title: string) => dispatch(updateTaskTC(todoList_ID, task_ID, {title})), [dispatch])
+   const changeStatusTaskCallback = useCallback((todoList_ID: string, task_ID: string, status: FilterStatusTask) => dispatch(updateTaskTC({
+      todoList_ID,
+      task_ID,
+      updateTaskBody: {status}
+   })), [dispatch])
+   const changeTitleTaskCallback = useCallback((todoList_ID: string, task_ID: string, title: string) => dispatch(updateTaskTC({
+      todoList_ID,
+      task_ID,
+      updateTaskBody: {title}
+   })), [dispatch])
    const changeTitleTodoListCallback = useCallback((todoList_ID: string, title: string) => dispatch(changeTitleTodoListTC(todoList_ID, title)), [dispatch])
 
    const handleDrawerCloseCallback = () => setOpen(false)
