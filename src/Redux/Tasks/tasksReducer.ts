@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {addTodoListAC, removeTodoListAC, setAllTodoListsAC, setProgressTodoListAC} from "../TodoLists/todoListsReducer";
+import {addTodoListTC, getTodoListsTC, removeTodoListTC, setProgressTodoListAC} from "../TodoLists/todoListsReducer";
 import {tasksApi} from "../../API/tasks-api";
 import {setIsErrorGettingDataAC, setIsFetchingDataAC} from "../App/appReducer";
 import {RootStateType} from "../store";
@@ -117,13 +117,13 @@ const slice = createSlice({
    },
    extraReducers: (builder) => {
       builder
-         .addCase(addTodoListAC, (state, action) => {
+         .addCase(addTodoListTC.fulfilled, (state, action) => {
             state[action.payload.todoList.id] = []
          })
-         .addCase(removeTodoListAC, (state, action) => {
+         .addCase(removeTodoListTC.fulfilled, (state, action) => {
             delete state[action.payload.todoList_ID]
          })
-         .addCase(setAllTodoListsAC, (state, action) => {
+         .addCase(getTodoListsTC.fulfilled, (state, action) => {
             action.payload.todoLists.forEach(tl => state[tl.id] = [])
          })
          .addCase(getTasksTC.fulfilled, (state, action) => {

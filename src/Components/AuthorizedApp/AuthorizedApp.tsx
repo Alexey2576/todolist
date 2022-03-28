@@ -3,12 +3,6 @@ import {SideBar} from "./SideBar/SideBar";
 import {AddNewTodoList} from "./AddNewTodoList/AddNewTodoList";
 import {TodoLists} from "../TodoLists/TodoLists";
 import {
-   addTodoListTC,
-   changeTitleTodoListTC,
-   getTodoListsTC,
-   removeTodoListTC
-} from "../../Redux/TodoLists/todoListsThunks";
-import {
    addTaskTC,
    FilterPriorityTask,
    FilterStatusTask,
@@ -17,8 +11,9 @@ import {
 } from "../../Redux/Tasks/tasksReducer";
 import {useAppDispatch, useAppSelector} from "../../Redux/store";
 import {
+   addTodoListTC,
    changeFilterCheckedTodoListAC,
-   changeFilterPriorityTodoListAC,
+   changeFilterPriorityTodoListAC, changeTitleTodoListTC, getTodoListsTC, removeTodoListTC,
    setValueSelectAC,
    TodoListsStateType
 } from "../../Redux/TodoLists/todoListsReducer";
@@ -64,7 +59,10 @@ export const AuthorizedApp: React.FC<AuthorizedAppType> = ({open, setOpen}) => {
       task_ID,
       updateTaskBody: {title}
    })), [dispatch])
-   const changeTitleTodoListCallback = useCallback((todoList_ID: string, title: string) => dispatch(changeTitleTodoListTC(todoList_ID, title)), [dispatch])
+   const changeTitleTodoListCallback = useCallback((todoList_ID: string, newTitle: string) => dispatch(changeTitleTodoListTC({
+      todoList_ID,
+      newTitle
+   })), [dispatch])
 
    const handleDrawerCloseCallback = () => setOpen(false)
 
