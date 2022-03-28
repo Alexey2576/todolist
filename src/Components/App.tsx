@@ -6,10 +6,10 @@ import {Login} from "../Features/Login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
 import NotFound from "./Commons/NotFound/NotFound";
 import {AuthorizedApp} from "./AuthorizedApp/AuthorizedApp";
-import {initializeAppTC} from "../Redux/App/appThunks";
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import {useDispatch} from "react-redux";
+import {initializeAppTC} from "../Redux/App/appReducer";
 
 export const App = () => {
    const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
@@ -27,7 +27,6 @@ export const App = () => {
          style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
          <CircularProgress/>
       </div>
-
    }
 
    return (

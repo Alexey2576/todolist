@@ -4,7 +4,7 @@ import {AppBar, Button, IconButton, LinearProgress, Toolbar, Typography} from "@
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {useAppDispatch, useAppSelector} from "../../Redux/store";
-import {logoutTC} from "../../Redux/Auth/authThunks";
+import {logoutTC} from "../../Redux/Auth/authReducer";
 
 const drawerWidth = 240;
 

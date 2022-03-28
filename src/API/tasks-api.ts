@@ -1,9 +1,9 @@
-import {CommonResponseType, getTasksType, instanceAxios} from "./settings-api";
+import {CommonResponseType, instanceAxios, ResponseFetchingTasksType} from "./settings-api";
 import {TaskType, UpdateDomainBodyTaskType} from "../Redux/Tasks/tasksReducer";
 
 export const tasksApi = {
    getTasks: (todolistId: string, count: number, page: number) => {
-      return instanceAxios.get<getTasksType>(`todo-lists/${todolistId}/tasks?count=${count}&page=${page}`).then(res => res.data)
+      return instanceAxios.get<ResponseFetchingTasksType>(`todo-lists/${todolistId}/tasks?count=${count}&page=${page}`).then(res => res.data)
    },
    createTask: (todolistId: string, title: string) => {
       return instanceAxios.post<CommonResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks`, {title}).then(res => res.data)

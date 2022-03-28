@@ -7,13 +7,14 @@ import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {useFormik} from "formik";
+import {FormikHelpers, useFormik} from "formik";
 import {useAppDispatch, useAppSelector} from "../../Redux/store";
-import {loginTC} from "../../Redux/Auth/authThunks";
 import {Navigate} from "react-router-dom";
+import {loginTC} from "../../Redux/Auth/authReducer";
+import {LoginDataType} from "../../API/auth-api";
 
 export const Login = () => {
-   const dispatch = useAppDispatch()
+   const dispatch: any = useAppDispatch()
    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
 
    const formik = useFormik({
@@ -35,12 +36,17 @@ export const Login = () => {
          } else if (values.password.length <= 8) {
             errors.password = 'Password must be 8 characters or more';
          }
-
          return errors;
       },
 
-      onSubmit: (values) => {
-         dispatch(loginTC(values))
+      onSubmit: async (loggedData: LoginDataType, formikHelpers: FormikHelpers<LoginDataType>) => {
+         const action = await dispatch(loginTC(loggedData))
+         if (loginTC.rejected.type.match(action)) {
+            if (action.payload.fieldsError.length) {
+               const error = action.payload.fieldsError[0]
+               formikHelpers.setFieldError(error.fieldError, error.errorMessage)
+            }
+         }
       },
    });
 

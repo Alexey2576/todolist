@@ -13,11 +13,16 @@ export const instanceAxios = axios.create({
 export type CommonResponseType<T = {}> = {
    data: T
    messages: string[]
-   fieldsErrors: string[]
+   fieldsErrors: FieldsErrorType[]
    resultCode: number
 }
-export type getTasksType = {
+
+export type FieldsErrorType = {
+   errorMessage: string
+   fieldError: string
+}
+export type ResponseFetchingTasksType = {
    items: TaskType[]
    totalCount: number
-   error: null | string
+   error: string
 }

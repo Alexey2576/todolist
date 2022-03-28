@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import {appReducer} from "./App/appReducer";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {authReducer} from "./Auth/authReducer";
-import {configureStore, MiddlewareArray} from "@reduxjs/toolkit";
+import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 
 export const store = configureStore({
    reducer: {
@@ -13,7 +13,7 @@ export const store = configureStore({
       app: appReducer,
       auth: authReducer,
    },
-   middleware: new MiddlewareArray().concat(thunk)
+   middleware: getDefaultMiddleware().concat(thunk)
 })
 
 
@@ -21,5 +21,5 @@ export const store = configureStore({
 export type RootStateType = ReturnType<typeof store.getState>
 
 export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<any>()
+export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootStateType> = useSelector
