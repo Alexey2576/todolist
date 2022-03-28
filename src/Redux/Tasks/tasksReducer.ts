@@ -94,7 +94,7 @@ export const updateTaskTC = createAsyncThunk("task/updateTask", async (param: Up
 
       const data = await tasksApi.updateTask(todoList_ID, task.id, updateDomainTaskBody)
       if (data.resultCode === 0) {
-         dispatch(updateTaskAC({todoList_ID, task_ID: task.id, updateTaskBody: data.data.item}))
+         return {todoList_ID, task_ID: task.id, updateTaskBody: data.data.item}
       } else {
          dispatch(setIsErrorGettingDataAC({errorMessage: data.messages[0]}))
          return rejectWithValue({errorMessage: data.messages[0]})
@@ -110,10 +110,6 @@ const slice = createSlice({
    name: "task",
    initialState: {} as TasksStateType,
    reducers: {
-      updateTaskAC(state, action: PayloadAction<{ todoList_ID: string, task_ID: string, updateTaskBody: UpdateDomainBodyTaskType }>) {
-         const index = state[action.payload.todoList_ID].findIndex(t => t.id === action.payload.task_ID)
-         state[action.payload.todoList_ID][index] = {...state[action.payload.todoList_ID][index], ...action.payload.updateTaskBody}
-      },
       setProgressTaskAC(state, action: PayloadAction<{ todoList_ID: string, task_ID: string, progress: ProgressTaskType }>) {
          const index = state[action.payload.todoList_ID].findIndex(t => t.id === action.payload.task_ID)
          state[action.payload.todoList_ID][index].progress = action.payload.progress
@@ -140,15 +136,16 @@ const slice = createSlice({
             const index = state[action.payload.todoList_ID].findIndex(t => t.id === action.payload.task_ID)
             state[action.payload.todoList_ID].splice(index, 1)
          })
+         .addCase(updateTaskTC.fulfilled, (state, action) => {
+            const index = state[action.payload.todoList_ID].findIndex(t => t.id === action.payload.task_ID)
+            state[action.payload.todoList_ID][index] = {...state[action.payload.todoList_ID][index], ...action.payload.updateTaskBody}
+         })
 
    },
 })
 
 export const tasksReducer = slice.reducer
-export const {
-   setProgressTaskAC,
-   updateTaskAC,
-} = slice.actions
+export const {setProgressTaskAC} = slice.actions
 
 //========================================= TYPES ======================================================================
 export enum FilterPriorityTask {
