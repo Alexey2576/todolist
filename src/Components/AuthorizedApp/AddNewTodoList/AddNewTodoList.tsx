@@ -1,55 +1,37 @@
-import React, {ChangeEvent, useState} from 'react';
-import {CircularProgress, Grid, IconButton, TextField} from "@material-ui/core";
-import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
-import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
-import {RootStateType} from "../../../Redux/store";
+import {todoListsActions} from "../../../Redux";
+import {makeStyles} from "@material-ui/core/styles";
+import {useActions} from "../../../Utils/useActions";
+import React, {ChangeEvent, memo, useState} from 'react';
+import {Grid, IconButton, TextField} from "@material-ui/core";
+import {selectIsFetching} from "../../../Redux/App/Selectors";
+import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 
-export type AddNewTodoListType = {
-   addTodoListCallback: (title: string) => void
-}
-
-const useStyles = makeStyles({
-   grid_container: {
-      display: "flex",
-      justifyContent: "center",
-   },
-   grid_item: {
-      margin: "100px 0 40px 0",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-   },
-})
-
-export const AddNewTodoList: React.FC<AddNewTodoListType> = React.memo(({ addTodoListCallback, }) => {
-   const isFetching = useSelector<RootStateType, boolean>(state => state.app.isFetching)
-
-   // ============================= USE STYLES CONSTANT ================================================================
+export const AddNewTodoList = memo(() => {
    const classes = useStyles();
-
-   // ============================= USE STATE ================================================================
+   const isFetching = useSelector(selectIsFetching)
+   const {addTodoList} = useActions(todoListsActions)
    const [newTodoListTitle, setNewTodoListTitle] = useState("")
 
-   // ============================= HANDLERS ===========================================================================
    const addTodoListHandler = () => {
-      addTodoListCallback(newTodoListTitle)
+      addTodoList(newTodoListTitle)
       setNewTodoListTitle("")
    }
-   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTodoListTitle(e.currentTarget.value)
+   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
+      setNewTodoListTitle(e.currentTarget.value)
 
    return (
       <Grid container className={classes.grid_container}>
          <Grid item className={classes.grid_item}>
             <TextField
-               id="outlined-textarea"
-               label="New Todo list"
-               placeholder="Enter title"
                multiline
-               variant="outlined"
-               value={newTodoListTitle}
-               onChange={onChangeHandler}
                size={"small"}
+               variant="outlined"
+               label="New Todo list"
+               id="outlined-textarea"
+               value={newTodoListTitle}
+               placeholder="Enter title"
+               onChange={onChangeHandler}
             />
             <IconButton onClick={addTodoListHandler} disabled={isFetching}>
                <CreateNewFolderIcon/>
@@ -58,3 +40,16 @@ export const AddNewTodoList: React.FC<AddNewTodoListType> = React.memo(({ addTod
       </Grid>
    );
 });
+
+const useStyles = makeStyles({
+   grid_container: {
+      display: "flex",
+      justifyContent: "center",
+   },
+   grid_item: {
+      display: "flex",
+      alignItems: "center",
+      margin: "100px 0 40px 0",
+      justifyContent: "center",
+   },
+})

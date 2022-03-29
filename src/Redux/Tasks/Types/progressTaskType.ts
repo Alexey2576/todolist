@@ -1,0 +1,1 @@
+export type ProgressTaskType = "add-task" | "remove-task" | "change-task" | null

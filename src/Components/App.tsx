@@ -1,32 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {AppBarTodoList} from "./AppBarTodoList/AppBarTodoList";
+import {appActions} from "../Redux";
 import {useAppSelector} from "../Redux/store";
-import {CustomSnackbar} from "./Commons/Snackbar/CustomSnackbar";
 import {Login} from "../Features/Login/Login";
-import {Navigate, Route, Routes} from "react-router-dom";
-import NotFound from "./Commons/NotFound/NotFound";
-import {AuthorizedApp} from "./AuthorizedApp/AuthorizedApp";
-import CircularProgress from "@mui/material/CircularProgress";
+import {useActions} from "../Utils/useActions";
 import Container from "@mui/material/Container";
-import {useDispatch} from "react-redux";
-import {initializeAppTC} from "../Redux/App/appReducer";
+import React, {useEffect, useState} from 'react';
+import NotFound from "./Commons/NotFound/NotFound";
+import {Navigate, Route, Routes} from "react-router-dom";
+import {selectIsInitialized} from "../Redux/App/Selectors";
+import {AuthorizedApp} from "./AuthorizedApp/AuthorizedApp";
+import {AppBarTodoList} from "./AppBarTodoList/AppBarTodoList";
+import {CustomSnackbar} from "./Commons/Snackbar/CustomSnackbar";
+import {CircularPreloader} from "./CircularPreloader/CircularPreloader";
 
 export const App = () => {
-   const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
-
+   const {initializeApp} = useActions(appActions)
    const [open, setOpen] = useState(false);
-   const dispatch = useDispatch()
+   const isInitialized = useAppSelector(selectIsInitialized)
+
    const handleDrawerOpenCallback = () => setOpen(true)
-   //========================================= USE EFFECT ==========================================================================================================================================================================
+
    useEffect(() => {
-      dispatch(initializeAppTC())
+      initializeApp()
    }, [])
 
    if (!isInitialized) {
-      return <div
-         style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
-         <CircularProgress/>
-      </div>
+      return <CircularPreloader/>
    }
 
    return (

@@ -1,7 +1,7 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {authAPI} from "../../API/auth-api";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export const initializeAppTC = createAsyncThunk(
+export const initializeApp = createAsyncThunk(
    "app/initializeApp",
    async (_, {dispatch, rejectWithValue}) => {
       try {
@@ -9,40 +9,44 @@ export const initializeAppTC = createAsyncThunk(
          if (data.resultCode === 0) {
             return {isLoggedIn: true}
          } else {
-            dispatch(setIsErrorGettingDataAC({errorMessage: data.messages[0]}))
+            dispatch(setIsErrorGettingData({errorMessage: data.messages[0]}))
             return rejectWithValue({errorMessage: data.messages[0]})
          }
       } catch (e) {
-         dispatch(setIsErrorGettingDataAC({errorMessage: "Some error"}))
+         dispatch(setIsErrorGettingData({errorMessage: "Some error"}))
          return rejectWithValue({errorMessage: "Some error"})
       }
    })
 
-const slice = createSlice({
+export const asyncActions = {
+   initializeApp
+}
+
+export const slice = createSlice({
    name: "app",
    initialState: {
+      errorMessage: "",
       isFetching: false,
       isInitialized: false,
-      errorMessage: "",
    },
    reducers: {
-      setIsFetchingDataAC(state, action: PayloadAction<{ isFetching: boolean }>) {
+      setIsFetchingData: (state, action: PayloadAction<{ isFetching: boolean }>) => {
          state.isFetching = action.payload.isFetching
       },
-      setIsErrorGettingDataAC(state, action: PayloadAction<{ errorMessage: string }>) {
+      setIsErrorGettingData: (state, action: PayloadAction<{ errorMessage: string }>) => {
          state.errorMessage = action.payload.errorMessage
       },
    },
    extraReducers: builder => {
       builder
-         .addCase(initializeAppTC.fulfilled, (state) => {
+         .addCase(initializeApp.fulfilled, (state) => {
             state.isInitialized = true
          })
-         .addCase(initializeAppTC.rejected, (state) => {
+         .addCase(initializeApp.rejected, (state) => {
             state.isInitialized = true
          })
    }
 })
 
 export const appReducer = slice.reducer
-export const {setIsErrorGettingDataAC, setIsFetchingDataAC} = slice.actions
+export const {setIsErrorGettingData, setIsFetchingData} = slice.actions

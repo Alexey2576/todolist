@@ -1,0 +1,1 @@
+export type ProgressTodoListType = "add-task" | "remove-todolist" | null
