@@ -3,12 +3,11 @@ import {makeStyles} from "@material-ui/core/styles";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {FilterPriorityTask, FilterStatusTask} from "../../../../../Redux/Tasks/Enums";
 import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {
-   changeFilterCheckedTodoList,
-   changeFilterPriorityTodoList
-} from "../../../../../Redux/TodoLists/todoListsReducer";
+import {useActions} from "../../../../../Utils/useActions";
+import {todoListsActions} from "../../../../../Redux";
 
 export const FilterButtons: FC<FilterButtonsType> = memo(({todoList_ID, filterStatus}) => {
+   const {changeFilterCheckedTodoList, changeFilterPriorityTodoList} = useActions(todoListsActions)
    const classes = useStyles();
    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -45,12 +44,23 @@ export const FilterButtons: FC<FilterButtonsType> = memo(({todoList_ID, filterSt
    return (
       <Grid item className={classes.grid_item}>
          <ButtonGroup fullWidth color={"primary"}>
-            <Button onClick={setAllHandler}
-                    variant={filterStatus === FilterStatusTask.All ? "contained" : "outlined"}>All</Button>
-            <Button onClick={setActiveHandler}
-                    variant={filterStatus === FilterStatusTask.New ? "contained" : "outlined"}>Active</Button>
+            <Button
+               onClick={setAllHandler}
+               variant={filterStatus === FilterStatusTask.All ? "contained" : "outlined"}
+            >
+               All
+            </Button>
+            <Button
+               onClick={setActiveHandler}
+               variant={filterStatus === FilterStatusTask.New ? "contained" : "outlined"}
+            >
+               Active
+            </Button>
             <Button onClick={setCompletedHandler}
-                    variant={filterStatus === FilterStatusTask.Completed ? "contained" : "outlined"}>Completed</Button>
+                    variant={filterStatus === FilterStatusTask.Completed ? "contained" : "outlined"}
+            >
+               Completed
+            </Button>
          </ButtonGroup>
          <IconButton aria-controls="simple-menu"
                      aria-haspopup="true"

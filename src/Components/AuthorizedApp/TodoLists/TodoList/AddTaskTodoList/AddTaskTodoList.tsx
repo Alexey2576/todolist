@@ -1,7 +1,9 @@
 import AddIcon from "@material-ui/icons/Add";
 import {makeStyles} from "@material-ui/core/styles";
 import {useActions} from "../../../../../Utils/useActions";
+import {FilterPriorityTask} from "../../../../../Redux/Tasks/Enums";
 import {tasksActions, todoListsActions} from "../../../../../Redux";
+import {ProgressTodoListType} from "../../../../../Redux/TodoLists/Types";
 import React, {ChangeEvent, FC, KeyboardEvent, memo, useCallback, useState} from 'react';
 import {
    Grid,
@@ -14,8 +16,6 @@ import {
    FormHelperText,
    CircularProgress
 } from "@material-ui/core";
-import {FilterPriorityTask} from "../../../../../Redux/Tasks/Enums";
-import {ProgressTodoListType} from "../../../../../Redux/TodoLists/Types";
 
 export const AddTaskTodoList: FC<AddTaskTodoListType> = memo((props) => {
    const {todoList_ID, selectPriorityValue, progressTodoList} = props
@@ -70,25 +70,25 @@ export const AddTaskTodoList: FC<AddTaskTodoListType> = memo((props) => {
             <InputLabel id="demo-simple-select-outlined-label">Priority</InputLabel>
             {
                errorSelect &&
-                  <FormHelperText className={classes.form_helper_text}>
-                    Enter priority
-                  </FormHelperText>
+               <FormHelperText className={classes.form_helper_text}>
+                 Enter priority
+               </FormHelperText>
             }
+            <Select
+               label="Priority"
+               error={errorSelect}
+               className={classes.select}
+               value={selectPriorityValue}
+               id="demo-simple-select-outlined"
+               onChange={changeValueSelectHandler}
+               disabled={progressTodoList === "add-task"}
+               labelId="demo-simple-select-outlined-label"
+            >
+               <MenuItem value={FilterPriorityTask.High}>High</MenuItem>
+               <MenuItem value={FilterPriorityTask.Middle}>Middle</MenuItem>
+               <MenuItem value={FilterPriorityTask.Low}>Low</MenuItem>
+            </Select>
          </FormControl>
-         <Select
-            label="Priority"
-            error={errorSelect}
-            className={classes.select}
-            value={selectPriorityValue}
-            id="demo-simple-select-outlined"
-            onChange={changeValueSelectHandler}
-            disabled={progressTodoList === "add-task"}
-            labelId="demo-simple-select-outlined-label"
-         >
-            <MenuItem value={FilterPriorityTask.High}>High</MenuItem>
-            <MenuItem value={FilterPriorityTask.Middle}>Middle</MenuItem>
-            <MenuItem value={FilterPriorityTask.Low}>Low</MenuItem>
-         </Select>
          <IconButton
             onClick={onClickAddTaskHandler}
             disabled={progressTodoList === "add-task"}
