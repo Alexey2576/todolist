@@ -1,22 +1,24 @@
 import React from 'react'
 import Grid from '@mui/material/Grid';
+import {authActions} from "../../Redux";
+import {Navigate} from "react-router-dom";
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import {FormikHelpers, useFormik} from "formik";
-import {useAppDispatch, useAppSelector} from "../../Redux/store";
-import {Navigate} from "react-router-dom";
-import {loginTC} from "../../Redux/Auth/authReducer";
 import {LoginDataType} from "../../API/auth-api";
+import {useActions} from "../../Utils/useActions";
+import FormControl from '@mui/material/FormControl';
 import {selectIsLoggedIn} from "../../Redux/Auth/Selectors";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import {useAppDispatch, useAppSelector} from "../../Redux/store";
 
 export const Login = () => {
    const dispatch: any = useAppDispatch()
-   const isLoggedIn = useAppSelector<boolean>(selectIsLoggedIn)
+   const {login} = useActions(authActions)
+   const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
    const formik = useFormik({
       initialValues: {
@@ -39,10 +41,9 @@ export const Login = () => {
          }
          return errors;
       },
-
       onSubmit: async (loggedData: LoginDataType, formikHelpers: FormikHelpers<LoginDataType>) => {
-         const action = await dispatch(loginTC(loggedData))
-         if (loginTC.rejected.type.match(action)) {
+         const action = await dispatch(login(loggedData))
+         if (login.rejected.type.match(action)) {
             if (action.payload.fieldsError.length) {
                const error = action.payload.fieldsError[0]
                formikHelpers.setFieldError(error.fieldError, error.errorMessage)
@@ -77,7 +78,6 @@ export const Login = () => {
                      {...formik.getFieldProps('email')}
                   />
                   {formik.touched.email && formik.errors.email && <div style={{ color: "red" }}>{formik.errors.email}</div>}
-
                   <TextField
                      type="password"
                      label="Password"
@@ -85,7 +85,6 @@ export const Login = () => {
                      {...formik.getFieldProps('password')}
                   />
                   {formik.touched.password && formik.errors.password && <div style={{ color: "red" }}>{formik.errors.password}</div>}
-
                   <FormControlLabel
                      label={'Remember me'}
                      control={
@@ -93,7 +92,6 @@ export const Login = () => {
                            {...formik.getFieldProps('rememberMe')}
                         />
                      }
-
                   />
                   <Button
                      type={'submit'}

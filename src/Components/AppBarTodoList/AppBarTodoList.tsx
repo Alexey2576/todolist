@@ -1,10 +1,62 @@
-import React from 'react';
 import clsx from 'clsx';
-import {AppBar, Button, IconButton, LinearProgress, Toolbar, Typography} from "@material-ui/core";
+import React, {FC, memo} from 'react';
+import {authActions} from "../../Redux";
 import MenuIcon from "@material-ui/icons/Menu";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {useAppDispatch, useAppSelector} from "../../Redux/store";
-import {logoutTC} from "../../Redux/Auth/authReducer";
+import {useAppSelector} from "../../Redux/store";
+import {useActions} from "../../Utils/useActions";
+import {selectIsFetching} from "../../Redux/App/Selectors";
+import {selectIsLoggedIn} from "../../Redux/Auth/Selectors";
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import {AppBar, Button, IconButton, LinearProgress, Toolbar, Typography} from "@material-ui/core";
+
+export const AppBarTodoList: FC<AppBarTodoListType> = memo(({open, handleDrawerOpenCallback}) => {
+   const classes = useStyles()
+   const {logout} = useActions(authActions)
+   const isLoggedIn = useAppSelector(selectIsLoggedIn)
+   const isFetching = useAppSelector(selectIsFetching)
+
+   const onLogoutHandle = () => logout()
+   const handleDrawerOpen = () => handleDrawerOpenCallback()
+
+   return (
+      <AppBar
+         position="sticky"
+         className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+         })}
+      >
+         <Toolbar>
+            <IconButton
+               color="inherit"
+               aria-label="open drawer"
+               onClick={handleDrawerOpen}
+               edge="start"
+               className={clsx(classes.menuButton, {
+                  [classes.hide]: open,
+               })}
+            >
+               <MenuIcon/>
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+               My TodoLists
+            </Typography>
+            {
+               isLoggedIn &&
+               <Button color="inherit" onClick={onLogoutHandle}>
+                 Logout
+               </Button>
+            }
+         </Toolbar>
+         {
+            isFetching && <LinearProgress/>}
+      </AppBar>
+   )
+})
+
+export type AppBarTodoListType = {
+   open: boolean
+   handleDrawerOpenCallback: () => void
+}
 
 const drawerWidth = 240;
 
@@ -35,48 +87,4 @@ const useStyles = makeStyles((theme: Theme) =>
          display: 'none',
       },
    }),
-);
-
-export type AppBarTodoListType = {
-   open: boolean
-   handleDrawerOpenCallback: () => void
-}
-
-export const AppBarTodoList: React.FC<AppBarTodoListType> = (
-   {
-      open,
-      handleDrawerOpenCallback
-   }
-) => {
-   const dispatch = useAppDispatch()
-   const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
-   const isFetching = useAppSelector<boolean>(state => state.app.isFetching)
-   const classes = useStyles();
-
-   const handleDrawerOpen = () => handleDrawerOpenCallback()
-   const onLogoutHandle = () => dispatch(logoutTC());
-
-   return (
-      <AppBar position="sticky"
-              className={clsx(classes.appBar, {
-                 [classes.appBarShift]: open,
-              })}>
-         <Toolbar>
-            <IconButton color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        className={clsx(classes.menuButton, {
-                           [classes.hide]: open,
-                        })}>
-               <MenuIcon/>
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-               My TodoLists
-            </Typography>
-            {isLoggedIn && <Button color="inherit" onClick={onLogoutHandle}>Logout</Button>}
-         </Toolbar>
-         {isFetching && <LinearProgress/>}
-      </AppBar>
-   );
-};
+)

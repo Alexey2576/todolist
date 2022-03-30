@@ -3,7 +3,7 @@ import {authAPI, LoginDataType} from "../../API/auth-api";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {initializeApp, setIsErrorGettingData, setIsFetchingData} from "../App/appReducer";
 
-export const loginTC = createAsyncThunk<undefined, LoginDataType, {
+const login = createAsyncThunk<undefined, LoginDataType, {
    rejectValue: { errorMessage: string, fieldsError?: FieldsErrorType[] }
 }>(
    "auth/login",
@@ -26,7 +26,7 @@ export const loginTC = createAsyncThunk<undefined, LoginDataType, {
       }
    })
 
-export const logoutTC = createAsyncThunk<undefined, undefined, { rejectValue: { errorMessage: string } }>(
+const logout = createAsyncThunk<undefined, undefined, { rejectValue: { errorMessage: string } }>(
    "auth/logout",
    async (_, {dispatch, rejectWithValue}
    ) => {
@@ -47,6 +47,11 @@ export const logoutTC = createAsyncThunk<undefined, undefined, { rejectValue: { 
       }
    })
 
+export const asyncActions = {
+   login,
+   logout,
+}
+
 const slice = createSlice({
    name: "auth",
    initialState: {
@@ -55,10 +60,10 @@ const slice = createSlice({
    reducers: {},
    extraReducers: builder => {
       builder
-         .addCase(loginTC.fulfilled, (state) => {
+         .addCase(login.fulfilled, (state) => {
             state.isLoggedIn = true
          })
-         .addCase(logoutTC.fulfilled, (state) => {
+         .addCase(logout.fulfilled, (state) => {
             state.isLoggedIn = false
          })
          .addCase(initializeApp.fulfilled, (state) => {

@@ -1,16 +1,82 @@
-import React from 'react';
 import clsx from 'clsx';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
+import React, {FC, memo} from 'react';
 import List from '@material-ui/core/List';
+import Drawer from '@material-ui/core/Drawer';
+import MailIcon from '@material-ui/icons/Mail';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
+import IconButton from '@material-ui/core/IconButton';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+
+export type SideBarType = {
+   open: boolean
+   handleDrawerCloseCallback: () => void
+}
+export const SideBar: FC<SideBarType> = memo(({open, handleDrawerCloseCallback}) => {
+   const classes = useStyles()
+
+   const handleDrawerClose = () => handleDrawerCloseCallback();
+
+   return (
+      <Drawer
+         variant="permanent"
+         className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+         })}
+         classes={{
+            paper: clsx({
+               [classes.drawerOpen]: open,
+               [classes.drawerClose]: !open,
+            }),
+         }}
+      >
+         <div className={classes.toolbar}>
+            <IconButton onClick={handleDrawerClose}
+               // className={clsx({
+               //    [classes.hide]: !open,
+               // })}
+            >
+               <ChevronLeftIcon/>
+            </IconButton>
+         </div>
+         <Divider/>
+         <List>
+            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+               <ListItem button key={text}>
+                  <ListItemIcon>
+                     {
+                        index % 2 === 0
+                           ? <InboxIcon/>
+                           : <MailIcon/>
+                     }
+                  </ListItemIcon>
+                  <ListItemText primary={text}/>
+               </ListItem>
+            ))}
+         </List>
+         <Divider/>
+         <List>
+            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+               <ListItem button key={text}>
+                  <ListItemIcon>
+                     {
+                        index % 2 === 0
+                           ? <InboxIcon/>
+                           : <MailIcon/>
+                     }
+                  </ListItemIcon>
+                  <ListItemText primary={text}/>
+               </ListItem>
+            ))}
+         </List>
+      </Drawer>
+   );
+})
 
 const drawerWidth = 240;
 
@@ -44,7 +110,6 @@ const useStyles = makeStyles((theme: Theme) =>
          alignItems: 'center',
          justifyContent: 'flex-end',
          padding: theme.spacing(0, 1),
-         // necessary for content to be below app bar
          ...theme.mixins.toolbar,
       },
       content: {
@@ -55,62 +120,4 @@ const useStyles = makeStyles((theme: Theme) =>
          display: 'none'
       }
    }),
-);
-export type SideBarType = {
-   open: boolean
-   handleDrawerCloseCallback: () => void
-}
-export const SideBar: React.FC<SideBarType> = (
-   {
-      open,
-      handleDrawerCloseCallback
-   }
-) => {
-   const classes = useStyles();
-
-   const handleDrawerClose = () => handleDrawerCloseCallback();
-
-   return (
-      <Drawer
-         variant="permanent"
-         className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-         })}
-         classes={{
-            paper: clsx({
-               [classes.drawerOpen]: open,
-               [classes.drawerClose]: !open,
-            }),
-         }}
-      >
-         <div className={classes.toolbar}>
-            <IconButton onClick={handleDrawerClose}
-                        // className={clsx({
-                        //    [classes.hide]: !open,
-                        // })}
-            >
-               <ChevronLeftIcon/>
-            </IconButton>
-         </div>
-         <Divider/>
-         <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-               <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                  <ListItemText primary={text}/>
-               </ListItem>
-            ))}
-         </List>
-         <Divider/>
-         <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-               <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                  <ListItemText primary={text}/>
-               </ListItem>
-            ))}
-         </List>
-      </Drawer>
-   );
-}
+)

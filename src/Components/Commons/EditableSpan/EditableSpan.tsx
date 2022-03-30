@@ -1,5 +1,42 @@
-import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react'
 import {TextField, Typography} from "@material-ui/core";
+import React, {ChangeEvent, FC, KeyboardEvent, memo, useCallback} from 'react'
+
+
+export const EditableSpan: FC<EditableSpanType> = memo((props) => {
+   const {value, onChangeTextTitle, variant, editMode, setEditModeCallback,} = props
+
+   const onBlurHandler = useCallback(() =>
+      setEditModeCallback(false), [setEditModeCallback])
+   const onDoubleClickHandler = useCallback(() =>
+      setEditModeCallback(true), [setEditModeCallback])
+   const onChangeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) =>
+      onChangeTextTitle(e.currentTarget.value), [onChangeTextTitle])
+   const onKeyPressHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) =>
+   e.key === "Enter" && setEditModeCallback(false), [setEditModeCallback])
+
+   return (
+      <div>
+         {
+            editMode
+               ? <TextField
+                  autoFocus
+                  value={value}
+                  onBlur={onBlurHandler}
+                  onChange={onChangeHandler}
+                  onKeyPress={onKeyPressHandler}
+                  id="standard-basic" size={"small"}
+               />
+               : <Typography
+                  gutterBottom
+                  variant={variant}
+                  onDoubleClick={onDoubleClickHandler}
+               >
+                  {value}
+               </Typography>
+         }
+      </div>
+   )
+})
 
 type EditableSpanType = {
    value: string
@@ -24,28 +61,3 @@ type EditableSpanType = {
       | 'inherit'
 }
 
-export const EditableSpan: React.FC<EditableSpanType> = React.memo((props) => {
-   // ============================= DESTRUCTURING PROPS  ===============================================================
-   const { value, onChangeTextTitle, variant, editMode, setEditModeCallback, } =  props
-
-   // ============================= HANDLERS ===========================================================================
-   const onKeyPressHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && setEditModeCallback(false), [setEditModeCallback])
-   const onBlurHandler = useCallback(() => setEditModeCallback(false), [setEditModeCallback])
-   const onDoubleClickHandler = useCallback(() => setEditModeCallback(true), [setEditModeCallback])
-   const onChangeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => onChangeTextTitle(e.currentTarget.value), [onChangeTextTitle])
-   return (
-      <div>
-         {editMode
-            ? <TextField autoFocus
-                         id="standard-basic" size={"small"}
-                         value={value}
-                         onChange={onChangeHandler}
-                         onBlur={onBlurHandler}
-                         onKeyPress={onKeyPressHandler}/>
-            : <Typography gutterBottom
-                          variant={variant}
-                          onDoubleClick={onDoubleClickHandler}>{value}</Typography>
-         }
-      </div>
-   )
-})

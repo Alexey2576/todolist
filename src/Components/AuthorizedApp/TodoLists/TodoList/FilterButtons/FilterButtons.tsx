@@ -1,10 +1,10 @@
 import React, {FC, memo, useCallback} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
+import {todoListsActions} from "../../../../../Redux";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {useActions} from "../../../../../Utils/useActions";
 import {FilterPriorityTask, FilterStatusTask} from "../../../../../Redux/Tasks/Enums";
 import {Button, ButtonGroup, Grid, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {useActions} from "../../../../../Utils/useActions";
-import {todoListsActions} from "../../../../../Redux";
 
 export const FilterButtons: FC<FilterButtonsType> = memo(({todoList_ID, filterStatus}) => {
    const {changeFilterCheckedTodoList, changeFilterPriorityTodoList} = useActions(todoListsActions)
