@@ -36,8 +36,8 @@ export const Login = () => {
 
          if (!values.password) {
             errors.password = 'Required';
-         } else if (values.password.length <= 8) {
-            errors.password = 'Password must be 8 characters or more';
+         } else if (values.password.length < 2) {
+            errors.password = 'Password must be 3 characters or more';
          }
          return errors;
       },
@@ -57,18 +57,18 @@ export const Login = () => {
    }
 
    return <Grid container justifyContent={'center'}>
-      <Grid item justifyContent={'center'}>
+      <Grid item justifyContent={'center'} alignItems={'center'} marginTop={'60px'}>
          <form onSubmit={formik.handleSubmit}>
             <FormControl>
                <FormLabel>
                   <p>To log in get registered
                      <a href={'https://social-network.samuraijs.com/'}
-                        target={'_blank'}> here
+                        target='_blank'> here
                      </a>
                   </p>
                   <p>or use common test account credentials:</p>
-                  <p>Email: free@samuraijs.com</p>
-                  <p>Password: free</p>
+                  <p>Email: alexeynikinitin@yandex.by</p>
+                  <p>Password: M7L85fu96huisXG</p>
                </FormLabel>
                <FormGroup>
                   <TextField
